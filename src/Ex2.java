@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -40,11 +42,11 @@ public class Ex2 {
      * @param graphObject - an JsonObject that represent directed weighted graph
      * @return list of Nodes that represent all the graph Nodes
      */
-    private static ArrayList<Node> jsonToNode(JsonObject graphObject){
+    private static HashMap<Integer, Node> jsonToNode(JsonObject graphObject){
         // declare our var that we gonna work with inside the loop
         int tempId;
         String[] pointsCor;  // x = idx 0, y = idx 1, z = idx 3
-        ArrayList<Node> listOfNodes = new ArrayList<Node>();
+        HashMap<Integer, Node> mapOfNodes = new HashMap<Integer, Node>();
 
         JsonArray arrOfNodes = graphObject.get("Nodes").getAsJsonArray(); // get all the edge objects
 
@@ -56,11 +58,12 @@ public class Ex2 {
             // idx 0 = x, idx 1 = y, idx 2 = z
             pointsCor = nodeJsonObj.get("pos").getAsString().split(",");
             // construct the Node and add it to the output list
-            listOfNodes.add(new Node(new Point3D(Double.parseDouble(pointsCor[0]), Double.parseDouble(pointsCor[1]),
-                    Double.parseDouble(pointsCor[2])), nodeJsonObj.get("id").getAsInt()));
+            tempId = nodeJsonObj.get("id").getAsInt();
+            mapOfNodes.put(tempId, new Node(new Point3D(Double.parseDouble(pointsCor[0]), Double.parseDouble(pointsCor[1]),
+                    Double.parseDouble(pointsCor[2])), tempId));
         }
 
-        return listOfNodes;
+        return mapOfNodes;
     }
 
 

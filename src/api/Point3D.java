@@ -15,6 +15,12 @@ public class Point3D implements GeoLocation {
         this._z = z;
     }
 
+    public Point3D(GeoLocation location) {
+        this._x = location.x();
+        this._y = location.y();
+        this._z = location.z();
+    }
+
     @Override
     public double x() {
         return this._x;
