@@ -7,7 +7,7 @@ exercise two of object oriented programming of Ariel university
 1. simple Objects: Node (imp NodeData), Edge (imp NodeData), Point(imp GeoLocation) <br>
 2. Object Dwg (imp DirectedWeightedGraph) <br>
 3. Object DwgMagic (imp DirectedWeightedGraphAlgotithms) <br>
-3.1 algorithms that we need for bullet 3
+3.1 algorithms that we need for bullet 3 <br>
 4. GUI Dwg, DwgMagic <br>
 
 ### 0. load json file input
@@ -49,6 +49,9 @@ c. shortestPathDist <br>
 d. tsp <br>
 e. save the Dwg object that class worken on to json file <br>
 f. load from Dwg from json file (same as "0. load json file input" <br>
+
+#####
+g. edited - we dont must to but for better TESTS, we shall make "generator" that make kinda random graphs
 
 #### algorithms that we need for bullet 3
  is connected: <br>
