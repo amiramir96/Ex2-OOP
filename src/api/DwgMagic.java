@@ -3,22 +3,26 @@ package api;
 import java.util.List;
 
 public class DwgMagic implements DirectedWeightedGraphAlgorithms{
+    private Dwg currGraph;
 
     public DwgMagic(Dwg dwg) {
+        this.currGraph = dwg;
+        
     }
 
     @Override
     public void init(DirectedWeightedGraph g) {
+        this.currGraph = (Dwg) g;
     }
 
     @Override
     public DirectedWeightedGraph getGraph() {
-        return null;
+        return this.currGraph;
     }
 
     @Override
     public DirectedWeightedGraph copy() {
-        return null;
+        return new Dwg(this.currGraph);
     }
 
     @Override

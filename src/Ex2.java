@@ -7,7 +7,6 @@ import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -17,25 +16,45 @@ import java.util.HashMap;
 public class Ex2 {
 
     /**
-     *
+     * key for each edge is : ""+edge.src()+","+edge.dest() -> for example: "0,5" is edge from node_id 0 to node_id 5
      * @param graphObject an JsonObject that represent directed weighted graph
-     * @return list of Edges that represent all the graph edges
+     * @return hashMap<String, Edge> that represent all the graph edges
      */
-     private static ArrayList<Edge> jsonToEdge(JsonObject graphObject){
-        // declare our var that we gonna work with inside the loop
-        ArrayList<Edge> listOfEdges = new ArrayList<Edge>();
+     private static HashMap<String, Edge> jsonToEdge(JsonObject graphObject){
+//        // declare our var that we gonna work with inside the loop
+//        ArrayList<Edge> listOfEdges = new ArrayList<Edge>();
+//
+//        JsonArray arrOfEdges = graphObject.get("Edges").getAsJsonArray(); // get all the edge objects
+//        JsonObject edgeJsonObj; // temporary var
+//
+//        for (JsonElement edge : arrOfEdges){
+//            edgeJsonObj = edge.getAsJsonObject(); // convert from element to object, so we would be able to pull the data as strings names
+//            // construct the edge and add it to the output list
+//            listOfEdges.add(new Edge(edgeJsonObj.get("src").getAsInt(), edgeJsonObj.get("w").getAsDouble()
+//                    , edgeJsonObj.get("dest").getAsInt()));
+//        }
+//
+//        return listOfEdges;
 
-        JsonArray arrOfEdges = graphObject.get("Edges").getAsJsonArray(); // get all the edge objects
-        JsonObject edgeJsonObj; // temporary var
 
-        for (JsonElement edge : arrOfEdges){
-            edgeJsonObj = edge.getAsJsonObject(); // convert from element to object, so we would be able to pull the data as strings names
-            // construct the edge and add it to the output list
-            listOfEdges.add(new Edge(edgeJsonObj.get("src").getAsInt(), edgeJsonObj.get("w").getAsDouble()
-                    , edgeJsonObj.get("dest").getAsInt()));
-        }
+         // declare our var that we gonna work with inside the loop
+         int tempSrc, tempDest;
+         HashMap<String, Edge> mapOfEdges = new HashMap<String, Edge>();
 
-        return listOfEdges;
+         JsonArray arrOfEdges = graphObject.get("Edges").getAsJsonArray(); // get all the edge objects
+
+         JsonObject edgeJsonObj; // temporary var
+
+         for (JsonElement edge : arrOfEdges){
+             edgeJsonObj = edge.getAsJsonObject(); // convert from element to object, so we would be able to pull the data as strings names
+             // construct the Node and add it to the output list
+             tempSrc = edgeJsonObj.get("src").getAsInt();
+             tempDest = edgeJsonObj.get("dest").getAsInt();
+             mapOfEdges.put(""+tempSrc+","+tempDest, new Edge(tempSrc, edgeJsonObj.get("w").getAsDouble()
+                     , tempDest));
+         }
+
+         return mapOfEdges;
     }
 
     /**

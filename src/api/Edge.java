@@ -13,6 +13,14 @@ public class Edge implements EdgeData{
         this.metaData = "";
     }
 
+    public Edge(Edge e){
+        this._src = e.getSrc();
+        this._weight = e.getWeight();
+        this._dest = e.getDest();
+        this.tag = e.getTag();
+        this.metaData = e.getInfo();
+    }
+
     @Override
     public int getSrc() {
         return this._src;
