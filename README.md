@@ -27,7 +27,7 @@ that means we probable have to xfer the geoLocation data of nodes to something t
 
 ### 2. Object Dwg (imp DirectedWeightedGraph) 
 **what is done:** <br>
-kinda everything
+kinda everything <br>
 <br>
 **what have to be done:** <br>
 in theory: the minimum of objects that we shall "save" in memory is: once all the nodes, once all the edges <br>
@@ -39,8 +39,8 @@ another issue, we shall adjust this obj to work with GUI as neccessary (if there
 
 ### 3. Object DwgMagic (imp DirectedWeightedGraphAlgotithms) 
 **what is done:** <br>
-basic funcs (1 line code xD)
-center function (base on dijkstra)
+basic funcs (1 line code xD)<br>
+center function (base on dijkstra)<br>
 <br>
 **what have to be done:** <br>
 a. isConnected <br>
