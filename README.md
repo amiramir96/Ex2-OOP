@@ -11,25 +11,25 @@ exercise two of object oriented programming of Ariel university
 4. GUI Dwg, DwgMagic <br>
 
 ### 0. load json file input
-what is done: <br>
+**what is done:** <br>
 loading json files<br>
 <br>
-what have to be done: <br>
+**what have to be done:** <br>
 maybe xfer the functions from Ex2 class to another class that will hold all the functions for load/saving json files (cuz we have at DwgMagic same task + save func)
 
 ### 1. simple Objects: Node (imp NodeData), Edge (imp NodeData), Point(imp GeoLocation) 
-what is done: <br>
+**what is done:** <br>
 kinda everything <br>
 <br>
-what have to be done: <br>
+**what have to be done:** <br>
 to adjust objects (if neccessary) for GUI needes <br>
 that means we probable have to xfer the geoLocation data of nodes to something that will always match to the window sizes <br>
 
 ### 2. Object Dwg (imp DirectedWeightedGraph) 
-what is done: <br>
+**what is done:** <br>
 kinda everything
 <br>
-what have to be done: <br>
+**what have to be done:** <br>
 in theory: the minimum of objects that we shall "save" in memory is: once all the nodes, once all the edges <br>
 in my imp (which is very rough and i didnt thought more than few mins on that) there is once all nodes, and 3 times all the edges (its only pointers to the obj but still..) <br>
 also, if we stay with this memory architecture, i have to edit the constructors to be more efficient (will take me prob like 1h +-) <br>
@@ -38,11 +38,11 @@ another issue, we shall adjust this obj to work with GUI as neccessary (if there
 
 
 ### 3. Object DwgMagic (imp DirectedWeightedGraphAlgotithms) 
-what is done: <br>
+**what is done:** <br>
 basic funcs (1 line code xD)
 center function (base on dijkstra)
 <br>
-what have to be done: <br>
+**what have to be done:** <br>
 a. isConnected <br>
 b. shortestPath <br>
 c. shortestPathDist <br>
