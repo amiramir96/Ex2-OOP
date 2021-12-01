@@ -40,7 +40,7 @@ another issue, we shall adjust this obj to work with GUI as neccessary (if there
 ### 3. Object DwgMagic (imp DirectedWeightedGraphAlgotithms) 
 **what is done:** <br>
 basic funcs (1 line code xD)<br>
-center function (base on dijkstra)<br
+center function (base on dijkstra)<br>
 b. shortestPath (base on dijkstra)<br>
 c. shortestPathDist (base on dijkstra)<br>
 <br>
