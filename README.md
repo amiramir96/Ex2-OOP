@@ -41,11 +41,11 @@ another issue, we shall adjust this obj to work with GUI as neccessary (if there
 **what is done:** <br>
 basic funcs (1 line code xD)<br>
 center function (base on dijkstra)<br>
+a. isConnected <br>
 b. shortestPath (base on dijkstra)<br>
 c. shortestPathDist (base on dijkstra)<br>
 <br>
 **what have to be done:** <br>
-a. isConnected <br>
 
 d. tsp <br>
 e. save the Dwg object that class worken on to json file <br>
@@ -56,9 +56,9 @@ g. edited - we dont must to but for better TESTS, we shall make "generator" that
 
 #### algorithms that we need for bullet 3
  is connected: <br>
-<\t>    1. DFS for <br>
+<\t>   ** 1. DFS - is done ** <br>
 <\t>    2. transpose edges for is connected (we can not impliment that if we stay with same data structres cuz we have there hashmap of all transpose edges) <br>
- shortestPath / Dist: <br>
+ shortestPath / Dist: **is done**<br>
 djiksta **done both versa - distance only && can hold list of the shortest path** <br> 
  tsp: <br>
  Option1. kruskel or prim MST algos + DFS <br> 
