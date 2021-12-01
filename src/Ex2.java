@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 
 /**
@@ -132,6 +133,16 @@ public class Ex2 {
 
     //bdika bdika
     public static void main(String[] args){
-        Dwg d = (Dwg) getGrapg("C:\\Users\\Amir\\IdeaProjects\\Ex2-OOP\\data\\G1.json");
+        System.out.println("lets start");
+        DwgMagic d = (DwgMagic) getGrapgAlgo("C:\\Users\\Amir\\IdeaProjects\\Ex2-OOP\\data\\G1.json");
+        System.out.println("ended const");
+        System.out.println(d.getGraph().nodeSize()+"  "+d.getGraph().edgeSize());
+        System.out.println("start dijkstra");
+//        System.out.println(d.center().getKey());
+        System.out.println(d.shortestPathDist(2, 12));
+        System.out.println(d.shortestPath(2, 12));
+        System.out.println("end dijkstra");
+
+
     }
 }

@@ -53,4 +53,9 @@ public class Edge implements EdgeData{
     public void setTag(int t) {
         this.tag = t;
     }
+
+    @Override
+    public String toString(){
+        return "from: "+this._src+" to: "+this._dest+" weight: "+this._weight;
+    }
 }
