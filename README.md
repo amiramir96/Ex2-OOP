@@ -56,7 +56,7 @@ g. edited - we dont must to but for better TESTS, we shall make "generator" that
 
 #### algorithms that we need for bullet 3
  is connected: <br>
-<\t>   ** 1. DFS - is done ** <br>
+<\t>    1. DFS - **is done** <br>
 <\t>    2. transpose edges for is connected (we can not impliment that if we stay with same data structres cuz we have there hashmap of all transpose edges) <br>
  shortestPath / Dist: **is done**<br>
 djiksta **done both versa - distance only && can hold list of the shortest path** <br> 
