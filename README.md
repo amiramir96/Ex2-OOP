@@ -58,7 +58,7 @@ g. edited - we dont must to but for better TESTS, we shall make "generator" that
 <\t>    1. DFS for <br>
 <\t>    2. transpose edges for is connected (we can not impliment that if we stay with same data structres cuz we have there hashmap of all transpose edges) <br>
  shortestPath / Dist: <br>
-BFS, and save there the nodes for the path in another func/same func <br>
+djiksta, and save there the nodes for the path in another func/same func (Amir note: i did it without saving path, ill add this feature tommorow) <br> 
  tsp: <br>
  Option1. kruskel or prim MST algos + DFS <br> 
  Option2. kruskel/prim MST + christofides <br> 
