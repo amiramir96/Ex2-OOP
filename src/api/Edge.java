@@ -13,7 +13,7 @@ public class Edge implements EdgeData{
         this.metaData = "";
     }
 
-    public Edge(Edge e){
+    public Edge(EdgeData e){
         this._src = e.getSrc();
         this._weight = e.getWeight();
         this._dest = e.getDest();
