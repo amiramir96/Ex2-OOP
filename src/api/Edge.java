@@ -1,5 +1,8 @@
 package api;
 
+/**
+ * implemented as writen in the interface EdgeData
+ */
 public class Edge implements EdgeData{
     private int _src, _dest, tag;
     private double _weight;

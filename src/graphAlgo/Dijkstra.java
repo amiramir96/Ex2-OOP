@@ -31,7 +31,15 @@ public class Dijkstra {
             distMap.put(tempN.getKey(), Double.POSITIVE_INFINITY);
             visitMap.put(tempN.getKey(), false);
         }
-        PriorityQueue<NodeData> minHeap = new PriorityQueue<>(2 * distMap.size());
+
+        // credit stack overflow https://stackoverflow.com/questions/2555284/java-priority-queue-with-a-custom-anonymous-comparator
+        // compare through id ("serial number")
+        PriorityQueue<NodeData> minHeap = new PriorityQueue<>(2 * distMap.size(), new Comparator<NodeData>() {
+            @Override
+            public int compare(NodeData o1, NodeData o2) {
+                return o1.getKey() - o2.getKey();
+            }
+        });
 
         // init the src node to be distance 0 and add it to our priority queue
         distMap.replace(src.getKey(), 0.0);
@@ -84,7 +92,14 @@ public class Dijkstra {
             distMap.put(tempN.getKey(), Double.POSITIVE_INFINITY);
             visitMap.put(tempN.getKey(), false);
         }
-        PriorityQueue<NodeData> minHeap = new PriorityQueue<>(2 * distMap.size());
+        // credit stack overflow https://stackoverflow.com/questions/2555284/java-priority-queue-with-a-custom-anonymous-comparator
+        // compare through id ("serial number")
+        PriorityQueue<NodeData> minHeap = new PriorityQueue<>(2 * distMap.size(), new Comparator<NodeData>() {
+            @Override
+            public int compare(NodeData o1, NodeData o2) {
+                return o1.getKey() - o2.getKey();
+            }
+        });
 
         // init the src node to be distance 0 and add it to our priority queue
         distMap.replace(src.getKey(), 0.0);

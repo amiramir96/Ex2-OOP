@@ -2,7 +2,10 @@ package api;
 
 import java.util.Iterator;
 
-public class Node implements NodeData, Comparable<Node>{
+/**
+ * implement as writen in the interface.
+ */
+public class Node implements NodeData{
     private Point3D cord;
     private int _id;
     private int tag;
@@ -76,17 +79,4 @@ public class Node implements NodeData, Comparable<Node>{
         return "node_id: "+this._id+" weight: "+this.weight;
     }
 
-    @Override
-    public int compareTo(Node n) {
-//        if (this.getWeight() - n.getWeight() == 0){
-//            return 0;
-//        }
-//        else if (this.getWeight() - n.getWeight() > 0){
-//            return -1;
-//        }
-//        else {
-//            return 1;
-//        }
-        return Double.compare(this.getKey(), n.getKey());
-    }
 }
