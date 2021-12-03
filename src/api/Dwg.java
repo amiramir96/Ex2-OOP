@@ -54,20 +54,26 @@ public class Dwg implements DirectedWeightedGraph{
         //construct hashmaps for edges via nodes
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
-        for (NodeData n : nodeMap.values()){
-            // const hashmap for each node
-            this.edgeOutMap.put(n.getKey(), new HashMap<>());
-            this.edgeInMap.put(n.getKey(), new HashMap<>());
-        }
+//        for (NodeData n : nodeMap.values()){
+//            // const hashmap for each node
+//            this.edgeOutMap.put(n.getKey(), new HashMap<>());
+//            this.edgeInMap.put(n.getKey(), new HashMap<>());
+//        }
 
         int tempSrc, tempDest;
         Iterator<EdgeData> iter = this.edgeMap.values().iterator();
         EdgeData tempE;
-        while(iter.hasNext()){ // is stable since we dont remove any item from the map
+        while(iter.hasNext()){ // is stable since we doשמע nt remove any item from the map
             // set at each hashmap of node i, the relevant edges
             tempE = iter.next();
             tempSrc = tempE.getSrc();
             tempDest = tempE.getDest();
+            if (!this.edgeOutMap.containsKey(tempSrc)) {
+                this.edgeOutMap.put(tempSrc, new HashMap<>());
+            }
+            if (!this.edgeInMap.containsKey(tempDest)) {
+                this.edgeInMap.put(tempDest, new HashMap<>());
+            }
             this.edgeOutMap.get(tempSrc).put(""+tempSrc+","+tempDest, tempE);
             this.edgeInMap.get(tempDest).put(""+tempDest+","+tempSrc, tempE);
         }
@@ -76,7 +82,7 @@ public class Dwg implements DirectedWeightedGraph{
     /**
      * deep copy - deep copy for maps, edges, node!!! everything is new.
      * doing the same proccess as above constructor
-     * @param existingDwg
+     * @param existingDwg - graph that already exists
      */
     public Dwg(DirectedWeightedGraph existingDwg){
         this.nodeSize = existingDwg.nodeSize();
@@ -88,24 +94,32 @@ public class Dwg implements DirectedWeightedGraph{
         this.nodeMap = new HashMap<>();
         while(itNode.hasNext()){
             tempN = itNode.next();
+            tempN = new Node(tempN);
             this.nodeMap.put(tempN.getKey(), new Node(tempN));
         }
         this.edgeMap = new HashMap<>();
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
-        for (NodeData n : nodeMap.values()){
-            // const hashmap for each node
-            this.edgeOutMap.put(n.getKey(), new HashMap<>());
-            this.edgeInMap.put(n.getKey(), new HashMap<>());
-        }
+//        for (NodeData n : nodeMap.values()){
+//            // const hashmap for each node
+//            this.edgeOutMap.put(n.getKey(), new HashMap<>());
+//            this.edgeInMap.put(n.getKey(), new HashMap<>());
+//        }
 
         Iterator<EdgeData> itEdge = existingDwg.edgeIter();
         EdgeData tempE;
         int tempSrc, tempDest;
         while(itEdge.hasNext()){
             tempE = itEdge.next();
+            tempE = new Edge(tempE);
             tempSrc = tempE.getSrc();
             tempDest = tempE.getDest();
+            if (!this.edgeOutMap.containsKey(tempSrc)) {
+                this.edgeOutMap.put(tempSrc, new HashMap<>());
+            }
+            if (!this.edgeInMap.containsKey(tempDest)) {
+                this.edgeInMap.put(tempDest, new HashMap<>());
+            }
             this.edgeMap.put(""+tempSrc+","+tempDest, new Edge(tempE));
             this.edgeOutMap.get(tempSrc).put(""+tempSrc+","+tempDest, new Edge(tempE));
             this.edgeInMap.get(tempDest).put(""+tempDest+","+tempSrc, new Edge (tempE));
@@ -137,7 +151,7 @@ public class Dwg implements DirectedWeightedGraph{
      */
     @Override
     public void addNode(NodeData n) {
-        this.nodeMap.put(n.getKey(), new Node(n));
+        this.nodeMap.put(n.getKey(), n);
         this.mc++;
         this.nodeSize++;
     }
@@ -315,6 +329,12 @@ public class Dwg implements DirectedWeightedGraph{
         this.edgeOutMap.get(src).remove(""+src+","+dest);
         this.edgeInMap.get(dest).remove(""+dest+","+src);
         this.edgeSize--;
+        if (this.edgeOutMap.get(src).isEmpty()){
+            this.edgeOutMap.remove(src);
+        }
+        if (this.edgeInMap.get(dest).isEmpty()){
+            this.edgeInMap.remove(dest);
+        }
         this.mc++;
         return removedEdge;
     }
