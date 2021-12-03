@@ -174,7 +174,10 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
             this.mc = 0;
             return true;
         }
-        catch (Exception err){ // dont bomb the program run
+        catch (NullPointerException e){ // dont print shit trace for gui
+            return false;
+        }
+        catch (Exception e){ // dont bomb the program
             return false;
         }
     }

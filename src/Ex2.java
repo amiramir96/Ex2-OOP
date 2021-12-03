@@ -4,10 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import FileWorkout.*;
+import graphics.Window;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -89,7 +92,7 @@ public class Ex2 {
     /**
      * This static function will be used to test your implementation
      * @param json_file - a json file (e.g., G1.json - G3.gson)
-     * @return
+     * @return directed weighted graph
      */
     public static DirectedWeightedGraph getGrapg(String json_file) {
         File jsonGraphFile = new File(json_file); // get file
@@ -111,7 +114,7 @@ public class Ex2 {
     /**
      * This static function will be used to test your implementation
      * @param json_file - a json file (e.g., G1.json - G3.gson)
-     * @return
+     * @return dwg algorithms
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
         DirectedWeightedGraph workGraph;
@@ -135,19 +138,32 @@ public class Ex2 {
     //bdika bdika
     public static void main(String[] args){
         System.out.println("lets start");
-        DwgMagic d = (DwgMagic) getGrapgAlgo("C:\\Users\\Amir\\IdeaProjects\\Ex2-OOP\\data\\G3.json");
-        System.out.println("ended const");
-        System.out.println(d.getGraph().nodeSize()+"  "+d.getGraph().edgeSize());
-        System.out.println("start dijkstra");
-        System.out.println(d.center().getKey());
-        System.out.println(d.shortestPathDist(2, 42));
-        System.out.println(d.shortestPath(2, 42));
-        System.out.println("end dijkstra");
-        System.out.println(d.isConnected());
-        System.out.println("end is connected");
-        d.load("C:\\Users\\Amir\\IdeaProjects\\Ex2-OOP\\data\\G1.jsonasda");
-        System.out.println("end is connected");
-        System.out.println("end is connected");
+        DwgMagic d = (DwgMagic) getGrapgAlgo("C:\\Users\\Amir\\IdeaProjects\\Ex2-OOP\\data\\G1.json");
+//        System.out.println("ended const");
+//        System.out.println(d.getGraph().nodeSize()+"  "+d.getGraph().edgeSize());
+//        System.out.println("start dijkstra");
+//        System.out.println(d.center().getKey());
+//        System.out.println(d.shortestPathDist(2, 12));
+//        System.out.println(d.shortestPath(2, 12));
+//        System.out.println("end dijkstra");
+//        System.out.println(d.isConnected());
+//        System.out.println("end is connected");
+//        d.load("C:\\Users\\Amir\\IdeaProjects\\Ex2-OOP\\data\\G1.jsonasda");
+//        System.out.println("end is connected");
+//        System.out.println("end is connected");
+        Window w = new Window(d);
+
+//        int bla = 0;
+//        DirectedWeightedGraph asd =d.getGraph();
+//        Iterator<EdgeData> iteraa = asd.edgeIter();
+//        while (iteraa.hasNext()){
+//            EdgeData edy = iteraa.next();
+//            if (bla ==3){
+//                asd.connect(0,4,1.6);
+//            }
+//            System.out.println(edy.getWeight());
+//            bla+=1;
+//        }
 
     }
 }
