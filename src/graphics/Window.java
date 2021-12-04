@@ -12,6 +12,7 @@ public class Window extends JFrame {
 
     DirectedWeightedGraphAlgorithms currAlgo;
     Menu menu;
+
     public Window(DirectedWeightedGraphAlgorithms algos){
 
         this.currAlgo = algos;
@@ -29,6 +30,9 @@ public class Window extends JFrame {
         // init icon
         ImageIcon im = new ImageIcon("dwg.png");
         this.setIconImage(im.getImage());
+
+        DrawGraph drawer = new DrawGraph(this.currAlgo);
+        drawer.paint(this.getGraphics());
 
         this.setJMenuBar(menu);
 

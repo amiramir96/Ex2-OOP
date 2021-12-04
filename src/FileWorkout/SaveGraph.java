@@ -21,8 +21,6 @@ public class SaveGraph {
     DirectedWeightedGraph currGraph;
     String directory;
 
-    //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
     public SaveGraph(String file, DirectedWeightedGraph g){
         this.directory = file;
         this.currGraph = g;
