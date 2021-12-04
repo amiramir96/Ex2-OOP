@@ -9,6 +9,7 @@ import graphics.Window;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -136,9 +137,13 @@ public class Ex2 {
     }
 
     //bdika bdika
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         System.out.println("lets start");
-        DwgMagic d = (DwgMagic) getGrapgAlgo("C:\\Users\\Amir\\IdeaProjects\\Ex2-OOP\\data\\G1.json");
+        DwgMagic d = (DwgMagic) getGrapgAlgo("data\\G1.json");
+        // saving graph
+        SaveGraph.save("saved_graph.json", d.getGraph());
+        Dwg g = (Dwg) getGrapg("saved_graph.json");
+        System.out.println(g.getNode(2).getLocation().x());
 //        System.out.println("ended const");
 //        System.out.println(d.getGraph().nodeSize()+"  "+d.getGraph().edgeSize());
 //        System.out.println("start dijkstra");

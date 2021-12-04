@@ -3,9 +3,7 @@ package FileWorkout;
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +54,8 @@ public class SaveGraph {
         graph_json.add("Edges", edges);
         graph_json.add("Nodes", nodes);
         // write to file
-        Files.writeString(Paths.get(target_file), graph_json.getAsString());
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Files.writeString(Paths.get(target_file), gson.toJson(graph_json));
 
     }
 

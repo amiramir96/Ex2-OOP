@@ -1,13 +1,10 @@
-package tests;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class testNodeData {
+class DFSTest {
 
     @Test
-    public void getKey(){
-        assertEquals(1,1);
+    void mainProcessIsConnected() {
     }
 }

@@ -4,14 +4,37 @@ import api.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.HashMap;
 
 public class LoadGraph {
 
     JsonObject currGraphObject;
+
     public LoadGraph(JsonObject graphObject){
         this.currGraphObject = graphObject;
+    }
+
+
+    /**
+     * return DEG from name
+     * @param graph_name
+     * @return DirectedWeightedGraph
+     * @throws FileNotFoundException
+     */
+    public static DirectedWeightedGraph loadGraph(String graph_name) throws FileNotFoundException {
+        File jsonGraphFile = new File(graph_name); // get file
+        DirectedWeightedGraph dwg = null;
+        JsonElement graphElement = JsonParser.parseReader(new FileReader(jsonGraphFile)); // shall read, so have to handle exception
+        JsonObject graphObject = graphElement.getAsJsonObject(); // convert to json object, then we can work on fields inside
+        // jsonToNode return list of nodes, jsonToEdge return list of edges, both is the req to cons Dwg(directed weighted graph)
+        LoadGraph g = new LoadGraph(graphObject);
+        dwg = new Dwg(g.jsonToNode(), g.jsonToEdge());
+        return dwg;
     }
 
     /**
