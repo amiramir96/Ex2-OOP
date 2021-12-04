@@ -74,6 +74,8 @@ public class Menu extends JMenuBar implements ActionListener {
                System.out.println(this.fileChooser.getSelectedFile().getPath());
                System.out.println(this.currGraph.getGraph());
                System.out.println("loaded from: "+this.fileChooser.getSelectedFile().getPath());
+//               repaint();
+
            }
         }
         else if (e.getSource() == this.saveGraph){
