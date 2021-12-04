@@ -8,15 +8,14 @@ import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 import java.awt.event.*;
 public class Window extends JFrame {
-    // implements ActionListener, MouseListener, MouseMotionListener
 
     DirectedWeightedGraphAlgorithms currAlgo;
     Menu menu;
+    double zoomInOut;
 
     public Window(DirectedWeightedGraphAlgorithms algos){
 
         this.currAlgo = algos;
-        menu = new Menu(this.currAlgo);
 
 //        initializePoints(ourMaze);
         this.setTitle("Amir & Ori DWG GUI!");
@@ -25,20 +24,19 @@ public class Window extends JFrame {
 //        this.setLayout(null);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        this.zoomInOut = 1.0;
 
         // init icon
         ImageIcon im = new ImageIcon("dwg.png");
         this.setIconImage(im.getImage());
 
         DrawGraph drawer = new DrawGraph(this.currAlgo);
-        drawer.paint(this.getGraphics());
-
+//        drawer.paint(this.getGraphics());
+        this.add(drawer);
+//        menu.add(drawer);
+        menu = new Menu(this.currAlgo, drawer);
         this.setJMenuBar(menu);
-
-
-//        this.addMouseListener(this);
-//        this.addMouseMotionListener(this);
+        this.pack();
 
     }
 //
@@ -86,45 +84,5 @@ public class Window extends JFrame {
 //    }
 //
 //
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void mouseClicked(MouseEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void mousePressed(MouseEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void mouseReleased(MouseEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void mouseEntered(MouseEvent e) {
-//    }
-//
-//    @Override
-//    public void mouseExited(MouseEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void mouseDragged(MouseEvent e) {
-//
-//    }
-//
-//    @Override
-//    public void mouseMoved(MouseEvent e) {
-////        int x = e.getX();
-////        int y = e.getY();
-////        System.out.println(x +" "+ y);
-//
-//    }
+
 }

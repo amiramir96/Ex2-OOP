@@ -1,25 +1,25 @@
 package graphics;
 
-import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import java.util.LinkedList;
 
 public class Menu extends JMenuBar implements ActionListener {
 
-    DirectedWeightedGraphAlgorithms currGraph;
+    DirectedWeightedGraphAlgorithms algoGraph;
     JMenu menu, runAlgo;
     JMenuItem loadGraph, saveGraph, isConnected, center, shortestPathDist, shortestPath, tsp;
     JFileChooser fileChooser;
+    DrawGraph drawer;
 
-    public Menu(DirectedWeightedGraphAlgorithms g){
+    public Menu(DirectedWeightedGraphAlgorithms g, DrawGraph d) {
 //        super();
         // init main objects
-        this.currGraph = g;
+        this.drawer = d;
+        this.algoGraph = g;
         this.menu = new JMenu("File");
         this.fileChooser = new JFileChooser();
         // init menu items ("buttons")
@@ -50,12 +50,13 @@ public class Menu extends JMenuBar implements ActionListener {
         this.shortestPathDist.addActionListener(this);
         this.tsp.addActionListener(this);
 
+        // add options to "RunAlgorithm" menu
         this.runAlgo.add(this.isConnected);
         this.runAlgo.add(this.center);
         this.runAlgo.add(this.shortestPath);
         this.runAlgo.add(this.shortestPathDist);
-
         this.runAlgo.add(this.tsp);
+
         this.add(this.menu);
         this.add(this.runAlgo);
     }
@@ -63,44 +64,57 @@ public class Menu extends JMenuBar implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == this.loadGraph){
-           System.out.println(this.currGraph.getGraph());
-           this.fileChooser.showOpenDialog(null);
-           if (this.fileChooser.getSelectedFile() == null){
-               return;
-           }
-           else {
-               this.currGraph.load(this.fileChooser.getSelectedFile().getPath());
-               System.out.println(this.fileChooser.getSelectedFile().getPath());
-               System.out.println(this.currGraph.getGraph());
-               System.out.println("loaded from: "+this.fileChooser.getSelectedFile().getPath());
-//               repaint();
-
-           }
-        }
-        else if (e.getSource() == this.saveGraph){
-            this.fileChooser.showSaveDialog(null);
-            if (this.fileChooser.getSelectedFile() == null){
+        if (e.getSource() == this.loadGraph) { // load graph
+            System.out.println(this.algoGraph.getGraph());
+            this.fileChooser.showOpenDialog(null);
+            if (this.fileChooser.getSelectedFile() == null) {
                 return;
-            }
-            else {
-                this.currGraph.save(this.fileChooser.getSelectedFile().getPath());
-                System.out.println("saved at: "+this.fileChooser.getSelectedFile().getPath());
+            } else {
+                this.algoGraph.load(this.fileChooser.getSelectedFile().getPath());
+                this.drawer.updateDrawer(this.algoGraph);
+                System.out.println(this.fileChooser.getSelectedFile().getPath());
+                System.out.println(this.algoGraph.getGraph());
+                System.out.println("loaded from: " + this.fileChooser.getSelectedFile().getPath());
+//               this.drawer.repaint();
+                getTopLevelAncestor().repaint();
+
             }
         }
-        else if (e.getSource() == this.isConnected){
-           System.out.println("connected");
+        else if (e.getSource() == this.saveGraph) { // save graph
+            this.fileChooser.showSaveDialog(null);
+            if (this.fileChooser.getSelectedFile() == null) {
+                return;
+            } else {
+                this.algoGraph.save(this.fileChooser.getSelectedFile().getPath());
+                System.out.println("saved at: " + this.fileChooser.getSelectedFile().getPath());
+            }
         }
-        else if (e.getSource() == this.shortestPath){
+        else if (e.getSource() == this.isConnected) { // is connected
+            System.out.println("connected");
+            if (this.algoGraph.isConnected()) {
+                this.drawer.setColors(Color.RED, Color.CYAN);
+                this.drawer.setFlagAllSameColor(true);
+//                this.drawer.repaint();
+                getTopLevelAncestor().repaint();
+            }
+        }
+        else if (e.getSource() == this.shortestPath) { // shortest path
             System.out.println("shortestPath");
+
         }
-        else if (e.getSource() == this.shortestPathDist){
+        else if (e.getSource() == this.shortestPathDist) {// shortest Path Dist
             System.out.println("shortestPathDist");
         }
-        else if (e.getSource() == this.center){
+        else if (e.getSource() == this.center) { // center
             System.out.println("center");
+            this.drawer.specialNodes = new LinkedList<>();
+            this.drawer.specialNodes.add(this.algoGraph.center());
+            this.drawer.setColors(Color.GREEN, Color.RED);
+            this.drawer.setFlagAllSameColor(false);
+//            this.drawer.repaint();
+            getTopLevelAncestor().repaint();
         }
-        else if (e.getSource() == this.tsp){
+        else if (e.getSource() == this.tsp) { // tsp
             System.out.println("tsp");
         }
     }

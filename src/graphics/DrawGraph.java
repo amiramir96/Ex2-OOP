@@ -2,17 +2,42 @@ package graphics;
 
 import api.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-public class DrawGraph implements ActionListener, MouseListener, MouseMotionListener, MouseWheelListener {
-    private final double widthArrow, heightArrow, widthPoint, heightPoint;
+public class DrawGraph extends JPanel  implements MouseListener, MouseMotionListener, MouseWheelListener{
+    // init params
+    private double widthArrow;
+    private double heightArrow;
+    private double widthPoint;
+    private double heightPoint;
     DirectedWeightedGraphAlgorithms algoGraph;
     DirectedWeightedGraph currGraph;
     double[] min_max_cord; // idx: 0-minX, 1-minY, 2-maxX, 3-maxY
     double zoomInOut;
+
+    // stroke and fonts
+    final Stroke edgeStroke = new BasicStroke((float)1.5);
+    final Stroke nodeStroke = new BasicStroke((float)5);
+    final Font amirFont = new Font("a", Font.BOLD, 12);
+
+    // for representing functions output (via colors)
+    boolean flagAllSameColor;
+    final Color defEdge, defNode; // default colors
+    Color colorE, colorN; // special colors for events
+    List<EdgeData> specialEdges;
+    List<NodeData> specialNodes;
+
+    //save mouse points, help to make picture accurate to client presses
+    private Point2D mousePoint;
+    private Point2D mousePrevPos;
+    private Point2D mouseNextPos;
 
     public DrawGraph(DirectedWeightedGraphAlgorithms al){
         // initialize the drawer parameters and vars
@@ -24,54 +49,127 @@ public class DrawGraph implements ActionListener, MouseListener, MouseMotionList
         this.heightArrow = 4.0;
         this.widthPoint = 5.0;
         this.heightPoint = 5.0;
+        mousePoint = new Point(0,0);
+        mousePrevPos = (Point2D)mousePoint.clone();
+        mouseNextPos = (Point2D)mousePoint.clone();
+        updateMinMax();
+
+        // init colors block
+        this.defNode = Color.BLACK; // black
+        this.defEdge = new Color(0,100,200); // regular blue
+        this.flagAllSameColor = false;
+        this.specialNodes = new LinkedList<>();
+        this.specialEdges = new LinkedList<>();
+
+        // as needed..
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
+        this.addMouseWheelListener(this);
+    }
+
+    void updateDrawer(DirectedWeightedGraphAlgorithms newAlgo){
+        // init params
+        this.algoGraph = newAlgo;
+        this.currGraph = newAlgo.getGraph();
+        this.zoomInOut = 1;
+        this.widthArrow = 4.0;
+        this.heightArrow = 4.0;
+        this.widthPoint = 5.0;
+        this.heightPoint = 5.0;
+        mousePoint = new Point(0,0);
+        mousePrevPos = (Point2D)mousePoint.clone();
+        mouseNextPos = (Point2D)mousePoint.clone();
+        // init flag for coloring (zeroing)
+        this.flagAllSameColor = false;
+        // back to default
         updateMinMax();
     }
 
-    public void paint(Graphics g){
-        Graphics2D graphic = (Graphics2D) g;
-//        NodeData n = this.currGraph.getNode(0);
-//        Ellipse2D EN = new Ellipse2D.Double(50, 50, 10, 10);
-//        Ellipse2D ne = new Ellipse2D.Float((float)200.2, (float)200.8, 20, 20);
-//        graphic.draw(ne);
-//        graphic.draw(EN);
+    void setColors(Color nodeNewColor, Color edgeNewColor){
+        this.colorN = nodeNewColor;
+        this.colorE = edgeNewColor;
+    }
 
-        graphic.setColor(new Color(0,150,0));
-//        graphic.setBackground(new Color(0, 150, 0));
-        graphic.setStroke(new BasicStroke((float) 1.5));
-        double[] cordSrc, cordDest, cordArrowHead;
+    void setFlagAllSameColor(boolean b){
+        this.flagAllSameColor = b;
+    }
+
+    public void setZoom(double zoom){
+        this.zoomInOut = zoom;
+        this.widthArrow *= this.zoomInOut;
+        this.heightArrow *= this.zoomInOut;
+        this.widthPoint *= this.zoomInOut;
+        this.heightPoint *= this.zoomInOut;
+    }
+
+    /**
+     * credit to Shai Aharon teacher
+     * this function ensure that the program will draw everything on a back image
+     * after the prog is done to draw the curr image, its replace between cur and new images
+     * @param g - graphics
+     */
+    public void paint(Graphics g) {
+        // create new image
+        Image bufferImage = createImage(750, 750);
+        Graphics bufferGraphics = bufferImage.getGraphics();
+
+        // draw at new image
+        paintComponents(bufferGraphics);
+
+        // "Switch" the old "canvas" for the new one
+        g.drawImage(bufferImage, 0, 0, this);
+    }
+
+    /**
+     * executing the draw process via neccessary params (colors etc..)
+     * draw edges then nodes (image look better this way)
+     * @param g - graphics of the curr drawer
+     */
+    public void paintComponents(Graphics g){
+        Graphics2D graphic = (Graphics2D) g;
+
+        // paint edges
+        // init params
+        graphic.setStroke(this.edgeStroke);
+        double[] cordSrc, cordDest;
         EdgeData tempE;
         Iterator<EdgeData> itEdge = this.currGraph.edgeIter();
-        Polygon tempPoly;
-        while (itEdge.hasNext()){
+        while (itEdge.hasNext()){ // draw all edges
+            // init edge
             tempE = itEdge.next();
             cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
             cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
-            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]);
-//            cordArrowHead = arrowHead(cordSrc, cordDest);
-//            graphic.drawLine((int)(cordSrc[0]*zoomInOut), (int)(cordSrc[1]*zoomInOut), (int)(cordDest[0]*zoomInOut), (int)(cordDest[1]*zoomInOut));
-//            graphic.drawPolygon(new int[]{(int)(cordDest[0]*zoomInOut), (int)(cordArrowHead[0]*zoomInOut), (int)(cordArrowHead[2]*zoomInOut)},
-//                    new int[]{(int)(cordDest[1]*zoomInOut), (int)(cordArrowHead[1]*zoomInOut), (int)(cordArrowHead[3]*zoomInOut)}, 3);
+            // init color
+            if (this.flagAllSameColor || this.specialEdges.contains(tempE)){
+                graphic.setColor(this.colorE);
+            }
+            else{ // default color
+                graphic.setColor(this.defEdge);
+            }
+            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
         }
 
-        graphic.setColor(Color.BLACK);
-        graphic.setStroke(new BasicStroke((float) 5));
+        // paint nodes
+        graphic.setStroke(this.nodeStroke);
         Iterator<NodeData> itNode = this.currGraph.nodeIter();
         double[] cord;
         NodeData tempN;
-        Font amirFont = new Font("a", Font.BOLD, 12);
         graphic.setFont(amirFont);
-        while (itNode.hasNext()) {
+        while (itNode.hasNext()) { // draw all nodes
+            // init node
             tempN = itNode.next();
-            cord = linearTransform(tempN.getLocation());
+            cord = linearTransform(tempN.getLocation()); // linear transfer regular cord to width/height cord
+            // init color
+            if (this.flagAllSameColor || this.specialNodes.contains(tempN)){
+                graphic.setColor(this.colorN);
+            }
+            else {
+                graphic.setColor(this.defNode);
+            }
+            // draw curr node
             graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
-//            System.out.println(cord[0]+", "+cord[1]);
             graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
         }
-
-////        graphic.setBackground(new Color(0, 0, 0));
-//        graphic.setStroke(new BasicStroke((float) 10));
-//
-
     }
 
     /**
@@ -100,8 +198,8 @@ public class DrawGraph implements ActionListener, MouseListener, MouseMotionList
         xHeadArrow2 = (distBetNodes - this.widthArrow)*cosVal - -1*(this.heightArrow)*sinVal + xSrc; // via formula
 
         // arrays for x,y cordinates to draw the polygon
-        int[] xpoints = {(int)xDest, (int) xHeadArrow1, (int) xHeadArrow2};
-        int[] ypoints = {(int)yDest, (int) yHeadArrow1, (int) yHeadArrow2};
+        int[] xpoints = {(int)(xDest), (int) (xHeadArrow1), (int) (xHeadArrow2)};
+        int[] ypoints = {(int)(yDest), (int) (yHeadArrow1), (int) (yHeadArrow2)};
         // draw arrow line
         g.drawLine((int)(xSrc), (int)(ySrc), (int)(xDest), (int)(yDest));
         // draw arrow head
@@ -116,25 +214,25 @@ public class DrawGraph implements ActionListener, MouseListener, MouseMotionList
         Iterator<NodeData> it = this.currGraph.nodeIter();
         NodeData tempN;
         double minX = 0, minY = 0, maxX = 0, maxY = 0;
-        if (it.hasNext()) {
+        if (it.hasNext()) { // save first node for indicate
             tempN = it.next();
             minX = tempN.getLocation().x();
             maxX = tempN.getLocation().x();
             minY = tempN.getLocation().y();
             maxY = tempN.getLocation().y();
         }
-        while (it.hasNext()) {
+        while (it.hasNext()) { // for every node from now on, check min/max params
             tempN = it.next();
             if (tempN.getLocation().x() < minX) {
                 minX = tempN.getLocation().x();
             }
+            else if (tempN.getLocation().x() > maxX) {
+                maxX = tempN.getLocation().x();
+            }
             if (tempN.getLocation().y() < minY) {
                 minY = tempN.getLocation().y();
             }
-            if (tempN.getLocation().x() > maxX) {
-                maxX = tempN.getLocation().x();
-            }
-            if (tempN.getLocation().y() > maxY) {
+            else if (tempN.getLocation().y() > maxY) {
                 maxY = tempN.getLocation().y();
             }
         }
@@ -150,41 +248,51 @@ public class DrawGraph implements ActionListener, MouseListener, MouseMotionList
      * @return - x,y cordinates that match the picture
      */
     double[] linearTransform(GeoLocation point){ // credit to daniel rosenberg, student of our class which showed us the formula in the internet
-        double x = (((this.min_max_cord[2] - point.x()) / (this.min_max_cord[2] - this.min_max_cord[0]))*700*0.85+700*0.15)*zoomInOut;
-        double y = (((this.min_max_cord[3] - point.y()) / (this.min_max_cord[3] - this.min_max_cord[1]))*700*0.85+700*0.15)*zoomInOut;
+        double x = (((this.min_max_cord[2] - point.x()) / (this.min_max_cord[2] - this.min_max_cord[0]))*750*0.85+750*0.15 + mousePoint.getX())*zoomInOut;
+        double y = (((this.min_max_cord[3] - point.y()) / (this.min_max_cord[3] - this.min_max_cord[1]))*750*0.85+750*0.15 + mousePoint.getY())*zoomInOut;
         return new double[]{x,y};
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-    }
-
-    @Override
     public void mouseClicked(MouseEvent e) {
+        System.out.println("clicked");
+//        for (Map.Entry<Shape, Integer> entry :
+//                circles.entrySet()) {
+//            if (entry.getKey().contains(e.getPoint())) {
+//                listener.selectNode(entry.getValue());
+//                return;
+//            }
+//        }
+//        listener.selectNode(-1);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        mouseNextPos = e.getPoint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        mousePrevPos = (Point2D)mousePoint.clone();
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        System.out.println("entered");
 
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        System.out.println("exited");
 
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        mousePoint.setLocation(mousePrevPos.getX() + (e.getX() - mouseNextPos.getX())/this.zoomInOut , mousePrevPos.getY() + (e.getY() - mouseNextPos.getY())/this.zoomInOut);
+        repaint();
+
     }
 
     @Override
@@ -193,5 +301,7 @@ public class DrawGraph implements ActionListener, MouseListener, MouseMotionList
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
+        this.zoomInOut = this.zoomInOut + (double)(-e.getWheelRotation()) / 7;
+        repaint();
     }
 }
