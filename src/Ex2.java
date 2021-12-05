@@ -139,7 +139,7 @@ public class Ex2 {
     //bdika bdika
     public static void main(String[] args) throws IOException {
         System.out.println("lets start");
-        DwgMagic d = (DwgMagic) getGrapgAlgo("data\\G1.json");
+        DwgMagic d = (DwgMagic) getGrapgAlgo("data\\10000Nodes.json");
 //        System.out.println("ended const");
 //        System.out.println(d.getGraph().nodeSize()+"  "+d.getGraph().edgeSize());
 //        System.out.println("start dijkstra");

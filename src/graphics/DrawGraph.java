@@ -142,14 +142,14 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
             // init color
             if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest()) || this.specialEdges.containsKey(""+tempE.getDest()+","+tempE.getSrc())){
-                System.out.println(tempE);
+//                System.out.println(tempE);
                 if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest())){
                     graphic.setColor(this.colorE);
                     drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
                 }
             }
             else{ // default color
-                System.out.println(tempE);
+//                System.out.println(tempE);
                 graphic.setColor(this.defEdge);
                 drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
             }
@@ -290,7 +290,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     public void mouseDragged(MouseEvent e) {
         mousePoint.setLocation(mousePrevPos.getX() + (e.getX() - mouseNextPos.getX())/this.zoomInOut , mousePrevPos.getY() + (e.getY() - mouseNextPos.getY())/this.zoomInOut);
         repaint();
-
     }
 
     @Override
@@ -299,7 +298,9 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        this.zoomInOut = this.zoomInOut + (double)(-e.getWheelRotation()) / 7;
-        repaint();
+        if (this.zoomInOut > 0.1){
+            this.zoomInOut = this.zoomInOut + (double)(-e.getWheelRotation()) / 7;
+            repaint();
+        }
     }
 }
