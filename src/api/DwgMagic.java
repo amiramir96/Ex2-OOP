@@ -11,6 +11,7 @@ import graphAlgo.Dijkstra;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -150,8 +151,14 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
      */
     @Override
     public boolean save(String file) {
-        SaveGraph saveObj = new SaveGraph(file, this.currGraph);
-        return saveObj.runSave();
+        try{
+            SaveGraph.save(file, this.currGraph);
+            return true;
+        }
+        catch (IOException err){
+            err.printStackTrace();
+            return false;
+        }
     }
 
     /**

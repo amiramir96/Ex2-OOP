@@ -18,14 +18,6 @@ import java.io.IOException;
 
 public class SaveGraph {
 
-    DirectedWeightedGraph currGraph;
-    String directory;
-
-    public SaveGraph(String file, DirectedWeightedGraph g){
-        this.directory = file;
-        this.currGraph = g;
-    }
-
     /**
      * save graph as json string in given target file
      * @param target_file
@@ -78,9 +70,5 @@ public class SaveGraph {
         obj.addProperty("pos", node_x+","+node_y+","+node_z);
         obj.addProperty("id", node.getKey());
         return obj;
-    }
-
-    public boolean runSave(){
-        return false;
     }
 }

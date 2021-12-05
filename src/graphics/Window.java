@@ -7,11 +7,12 @@ import javax.swing.*;
 import javax.swing.text.StyledEditorKit;
 import java.awt.*;
 import java.awt.event.*;
-public class Window extends JFrame {
+public class Window extends JFrame{
 
     DirectedWeightedGraphAlgorithms currAlgo;
     Menu menu;
     double zoomInOut;
+    JButton submitBut;
 
     public Window(DirectedWeightedGraphAlgorithms algos){
 
@@ -34,11 +35,39 @@ public class Window extends JFrame {
 //        drawer.paint(this.getGraphics());
         this.add(drawer);
 //        menu.add(drawer);
-        menu = new Menu(this.currAlgo, drawer);
+        menu = new Menu(this.currAlgo, drawer, this);
         this.setJMenuBar(menu);
-        this.pack();
 
     }
+
+//    void shortestPathField(){
+//        JFrame n = new JFrame();
+//        submitBut = new JButton("submit");
+//        submitBut.addActionListener(this);
+////            this.submitBut.setFocusPainted(true);
+//        JTextField userTextIn = new JTextField();
+//        userTextIn.setPreferredSize(new Dimension(250, 50));
+//        n.add(submitBut);
+//        n.add(userTextIn);
+////        submitBut.setVisible(true);
+////        userTextIn.setVisible(true);
+////        this.pack();
+////        this.setVisible(true);
+//        n.pack();
+//        n.setVisible(true);
+//        this.add(n);
+//        this.repaint();
+//        System.out.println("???");
+//    }
+
+
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//        if (e.getSource() == this.submitBut){
+//            System.out.println("hi thats worked");
+//        }
+//    }
+
 //
 //        // init Labels
 //        JLabel isConnected = new JLabel("isConnected");

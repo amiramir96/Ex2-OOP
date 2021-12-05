@@ -1,22 +1,31 @@
 package graphics;
 
 import api.DirectedWeightedGraphAlgorithms;
+import api.EdgeData;
+import api.NodeData;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Menu extends JMenuBar implements ActionListener {
 
+    Window w;
     DirectedWeightedGraphAlgorithms algoGraph;
     JMenu menu, runAlgo;
     JMenuItem loadGraph, saveGraph, isConnected, center, shortestPathDist, shortestPath, tsp;
     JFileChooser fileChooser;
     DrawGraph drawer;
+    JTextField userTextIn;
+    JButton submitBut;
 
-    public Menu(DirectedWeightedGraphAlgorithms g, DrawGraph d) {
+    public Menu(DirectedWeightedGraphAlgorithms g, DrawGraph d, Window w) {
 //        super();
+        this.w = w;
         // init main objects
         this.drawer = d;
         this.algoGraph = g;
@@ -36,7 +45,7 @@ public class Menu extends JMenuBar implements ActionListener {
 //        this.loadGraph.setMnemonic(KeyEvent.VK_L);
 
         // init one more tool options for the menu
-        this.runAlgo = new JMenu("Run_Algorithm");
+        this.runAlgo = new JMenu("Algo_Command");
 
         this.isConnected = new JMenuItem("isConnected");
         this.center = new JMenuItem("center");
@@ -98,9 +107,42 @@ public class Menu extends JMenuBar implements ActionListener {
                 getTopLevelAncestor().repaint();
             }
         }
-        else if (e.getSource() == this.shortestPath) { // shortest path
+        else if (e.getSource() == this.shortestPath || e.getSource() == this.tsp) { // shortest path
             System.out.println("shortestPath");
-
+            JFrame n = new JFrame();
+            n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            n.setLayout(new FlowLayout());
+            this.submitBut = new JButton("Submit");
+            this.submitBut.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (e.getSource() == submitBut){
+                        System.out.println("hi thats worked");
+                        String s = userTextIn.getText();
+                        String[] str = s.split(",");
+                        ArrayList<Integer> nodes = new ArrayList<>();
+                        for (String n : str){
+                            nodes.add(Integer.parseInt(n));
+                        }
+                        drawer.specialNodes = algoGraph.shortestPath(nodes.get(0), nodes.get(1));
+                        drawer.specialEdges = currPathEdges(drawer.specialNodes);
+                        drawer.setFlagAllSameColor(false);
+                        drawer.setColors(Color.GREEN, Color.GREEN);
+                        getTopLevelAncestor().repaint();
+                        n.setVisible(false);
+                        n.dispose();
+                    }
+                }
+            });
+//            this.submitBut.setFocusPainted(true);
+            this.userTextIn = new JTextField(16);
+            this.userTextIn.setPreferredSize(new Dimension(250, 50));
+            n.add(this.submitBut);
+            n.add(this.userTextIn);
+            n.pack();
+            n.setVisible(true);
+//            this.getTopLevelAncestor().add(n);
+//            w.shortestPathField();
         }
         else if (e.getSource() == this.shortestPathDist) {// shortest Path Dist
             System.out.println("shortestPathDist");
@@ -114,8 +156,16 @@ public class Menu extends JMenuBar implements ActionListener {
 //            this.drawer.repaint();
             getTopLevelAncestor().repaint();
         }
-        else if (e.getSource() == this.tsp) { // tsp
-            System.out.println("tsp");
+    }
+
+    private HashMap<String, Integer> currPathEdges(List<NodeData> nodes) {
+        int i=0;
+        HashMap<String, Integer> edges = new HashMap<>();
+        while (i+1 < nodes.size()){
+            edges.put(""+nodes.get(i).getKey()+","+nodes.get(i+1).getKey(), 0);
+            System.out.println(edges.size());
+            i++;
         }
+        return edges;
     }
 }

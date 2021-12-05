@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     boolean flagAllSameColor;
     final Color defEdge, defNode; // default colors
     Color colorE, colorN; // special colors for events
-    List<EdgeData> specialEdges;
+    HashMap<String, Integer> specialEdges;
     List<NodeData> specialNodes;
 
     //save mouse points, help to make picture accurate to client presses
@@ -59,7 +60,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         this.defEdge = new Color(0,100,200); // regular blue
         this.flagAllSameColor = false;
         this.specialNodes = new LinkedList<>();
-        this.specialEdges = new LinkedList<>();
+        this.specialEdges = new HashMap<>();
 
         // as needed..
         this.addMouseListener(this);
@@ -116,7 +117,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         // draw at new image
         paintComponents(bufferGraphics);
 
-        // "Switch" the old "canvas" for the new one
+        // "Switch" the old image for the new one
         g.drawImage(bufferImage, 0, 0, this);
     }
 
@@ -140,13 +141,18 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
             cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
             // init color
-            if (this.flagAllSameColor || this.specialEdges.contains(tempE)){
-                graphic.setColor(this.colorE);
+            if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest()) || this.specialEdges.containsKey(""+tempE.getDest()+","+tempE.getSrc())){
+                System.out.println(tempE);
+                if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest())){
+                    graphic.setColor(this.colorE);
+                    drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
+                }
             }
             else{ // default color
+                System.out.println(tempE);
                 graphic.setColor(this.defEdge);
+                drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
             }
-            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
         }
 
         // paint nodes
@@ -248,22 +254,14 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
      * @return - x,y cordinates that match the picture
      */
     double[] linearTransform(GeoLocation point){ // credit to daniel rosenberg, student of our class which showed us the formula in the internet
-        double x = (((this.min_max_cord[2] - point.x()) / (this.min_max_cord[2] - this.min_max_cord[0]))*750*0.85+750*0.15 + mousePoint.getX())*zoomInOut;
-        double y = (((this.min_max_cord[3] - point.y()) / (this.min_max_cord[3] - this.min_max_cord[1]))*750*0.85+750*0.15 + mousePoint.getY())*zoomInOut;
+        double x = (((this.min_max_cord[2] - point.x()) / (this.min_max_cord[2] - this.min_max_cord[0]))*700*0.8+700*0.1 + mousePoint.getX())*zoomInOut;
+        double y = (((this.min_max_cord[3] - point.y()) / (this.min_max_cord[3] - this.min_max_cord[1]))*700*0.8+700*0.1 + mousePoint.getY())*zoomInOut;
         return new double[]{x,y};
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         System.out.println("clicked");
-//        for (Map.Entry<Shape, Integer> entry :
-//                circles.entrySet()) {
-//            if (entry.getKey().contains(e.getPoint())) {
-//                listener.selectNode(entry.getValue());
-//                return;
-//            }
-//        }
-//        listener.selectNode(-1);
     }
 
     @Override
