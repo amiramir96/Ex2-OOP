@@ -17,13 +17,11 @@ public class Window extends JFrame{
     public Window(DirectedWeightedGraphAlgorithms algos){
 
         this.currAlgo = algos;
-
-//        initializePoints(ourMaze);
         this.setTitle("Amir & Ori DWG GUI!");
         this.setSize(750,750);
-//        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);
 //        this.setLayout(null);
-        this.setVisible(true);
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.zoomInOut = 1.0;
 
@@ -32,12 +30,11 @@ public class Window extends JFrame{
         this.setIconImage(im.getImage());
 
         DrawGraph drawer = new DrawGraph(this.currAlgo);
-//        drawer.paint(this.getGraphics());
-        this.add(drawer);
-//        menu.add(drawer);
         menu = new Menu(this.currAlgo, drawer, this);
-        this.setJMenuBar(menu);
 
+        this.add(drawer);
+        this.setJMenuBar(menu);
+        this.setVisible(true);
     }
 
 //    void shortestPathField(){

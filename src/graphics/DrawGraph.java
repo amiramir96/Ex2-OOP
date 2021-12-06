@@ -7,9 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class DrawGraph extends JPanel  implements MouseListener, MouseMotionListener, MouseWheelListener{
@@ -46,8 +44,8 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         this.currGraph = al.getGraph();
         this.min_max_cord = new double[4]; // idx: 0-minX, 1-minY, 2-maxX, 3-maxY
         this.zoomInOut = 1; // can be chaned later
-        this.widthArrow = 4.0;
-        this.heightArrow = 4.0;
+        this.widthArrow = 10.0;
+        this.heightArrow = 5.0;
         this.widthPoint = 5.0;
         this.heightPoint = 5.0;
         mousePoint = new Point(0,0);
@@ -134,6 +132,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         graphic.setStroke(this.edgeStroke);
         double[] cordSrc, cordDest;
         EdgeData tempE;
+        List<EdgeData> edgeDataList = new ArrayList<>();
         Iterator<EdgeData> itEdge = this.currGraph.edgeIter();
         while (itEdge.hasNext()){ // draw all edges
             // init edge
@@ -142,14 +141,20 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
             // init color
             if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest()) || this.specialEdges.containsKey(""+tempE.getDest()+","+tempE.getSrc())){
-                System.out.println(tempE);
+//                System.out.println(tempE);
+<<<<<<< HEAD
+                if (this.flagAllSameColor){
+=======
                 if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest())){
+>>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
                     graphic.setColor(this.colorE);
                     drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
                 }
+                edgeDataList.add(tempE);
+
             }
             else{ // default color
-                System.out.println(tempE);
+//                System.out.println(tempE);
                 graphic.setColor(this.defEdge);
                 drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
             }
@@ -161,17 +166,46 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         double[] cord;
         NodeData tempN;
         graphic.setFont(amirFont);
+        List<NodeData> nodeDataList = new ArrayList<>();
         while (itNode.hasNext()) { // draw all nodes
             // init node
             tempN = itNode.next();
             cord = linearTransform(tempN.getLocation()); // linear transfer regular cord to width/height cord
             // init color
             if (this.flagAllSameColor || this.specialNodes.contains(tempN)){
-                graphic.setColor(this.colorN);
+                if (this.flagAllSameColor){
+                    graphic.setColor(this.colorN);
+                    // draw curr node
+                    graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
+                    graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
+                }
+                nodeDataList.add(tempN);
             }
             else {
                 graphic.setColor(this.defNode);
+                // draw curr node
+                graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
+                graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
             }
+
+        }
+
+        graphic.setStroke(this.edgeStroke);
+        itEdge = edgeDataList.iterator();
+        while(itEdge.hasNext()){
+            tempE = itEdge.next();
+            cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
+            cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
+            graphic.setColor(this.colorE);
+            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
+        }
+
+        graphic.setStroke(this.nodeStroke);
+        itNode = nodeDataList.iterator();
+        while(itNode.hasNext()){
+            tempN = itNode.next();
+            cord = linearTransform(tempN.getLocation()); // linear transfer regular cord to width/height cord
+            graphic.setColor(this.colorN);
             // draw curr node
             graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
             graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
@@ -254,8 +288,8 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
      * @return - x,y cordinates that match the picture
      */
     double[] linearTransform(GeoLocation point){ // credit to daniel rosenberg, student of our class which showed us the formula in the internet
-        double x = (((this.min_max_cord[2] - point.x()) / (this.min_max_cord[2] - this.min_max_cord[0]))*700*0.8+700*0.1 + mousePoint.getX())*zoomInOut;
-        double y = (((this.min_max_cord[3] - point.y()) / (this.min_max_cord[3] - this.min_max_cord[1]))*700*0.8+700*0.1 + mousePoint.getY())*zoomInOut;
+        double x = (((this.min_max_cord[2] - point.x()) / (this.min_max_cord[2] - this.min_max_cord[0]))*750*0.75+750*0.1 + mousePoint.getX())*zoomInOut;
+        double y = (((this.min_max_cord[3] - point.y()) / (this.min_max_cord[3] - this.min_max_cord[1]))*750*0.75+750*0.1 + mousePoint.getY())*zoomInOut;
         return new double[]{x,y};
     }
 
@@ -290,7 +324,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     public void mouseDragged(MouseEvent e) {
         mousePoint.setLocation(mousePrevPos.getX() + (e.getX() - mouseNextPos.getX())/this.zoomInOut , mousePrevPos.getY() + (e.getY() - mouseNextPos.getY())/this.zoomInOut);
         repaint();
-
     }
 
     @Override
@@ -299,7 +332,9 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        this.zoomInOut = this.zoomInOut + (double)(-e.getWheelRotation()) / 7;
-        repaint();
+        if (this.zoomInOut > 0.1){
+            this.zoomInOut = this.zoomInOut + (double)(-e.getWheelRotation()) / 7;
+            repaint();
+        }
     }
 }
