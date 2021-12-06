@@ -192,8 +192,9 @@ public class Dwg implements DirectedWeightedGraph{
         // create our own iterator
         return new Iterator<>() {
 
-            final int originModeCounter = getMC(); //
+            int originModeCounter = mc; //
             final Iterator<NodeData> currIterator = nodeMap.values().iterator(); // regular iterator DO NOT REMOVE ANY ITEM FROM!
+            NodeData tempN;
 
             @Override
             public boolean hasNext() { // added the throw RunTimeException
@@ -206,7 +207,27 @@ public class Dwg implements DirectedWeightedGraph{
             public NodeData next() { // added the throw RunTimeException
                 if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
                 };
-                return currIterator.next();
+                tempN = currIterator.next();
+                return tempN;
+            }
+
+            @Override
+            public void remove() {
+                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+                };
+                else {
+                    removeNode(tempN.getKey());
+                    originModeCounter = mc;
+                }
+            }
+
+            // https://stackoverflow.com/questions/42465871/whats-the-point-of-having-both-iterator-foreachremaining-and-iterable-foreach/42466144
+            // comment #1, helped to understand how its worked
+            @Override
+            public void forEachRemaining(Consumer<? super NodeData> action) {
+                while(currIterator.hasNext()){
+                    action.accept(next());
+                }
             }
         };
     }
@@ -221,8 +242,9 @@ public class Dwg implements DirectedWeightedGraph{
     @Override
     public Iterator<EdgeData> edgeIter() {
         return new Iterator<>() {
-            final int originModeCounter = getMC(); //
+            int originModeCounter = mc; //
             final Iterator<EdgeData> edgeIterator = edgeMap.values().iterator(); // regular iterator DO NOT REMOVE ANY ITEM FROM!
+            EdgeData tempE;
 
             @Override
             public boolean hasNext() {
@@ -235,7 +257,27 @@ public class Dwg implements DirectedWeightedGraph{
             public EdgeData next() {
                 if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
                 }; // added the throw RunTimeException
-                return edgeIterator.next();
+                tempE = edgeIterator.next();
+                return tempE;
+            }
+
+            @Override
+            public void remove() {
+                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+                }; // added the throw RunTimeException
+                else {
+                    removeEdge(tempE.getSrc(), tempE.getDest());
+                    originModeCounter = mc;
+                }
+            }
+
+            // https://stackoverflow.com/questions/42465871/whats-the-point-of-having-both-iterator-foreachremaining-and-iterable-foreach/42466144
+            // comment #1, helped to understand how its worked
+            @Override
+            public void forEachRemaining(Consumer<? super EdgeData> action) {
+                while(edgeIterator.hasNext()){
+                    action.accept(next());
+                }
             }
         };
     }
@@ -250,8 +292,9 @@ public class Dwg implements DirectedWeightedGraph{
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         return new Iterator<>() {
-            final int originModeCounter = getMC();
+            int originModeCounter = mc;
             final Iterator<EdgeData> edgeIterator = edgeOutMap.get(node_id).values().iterator(); // regular iterator DO NOT REMOVE ANY ITEM FROM!
+            EdgeData tempE;
 
             @Override
             public boolean hasNext() {
@@ -264,8 +307,29 @@ public class Dwg implements DirectedWeightedGraph{
             public EdgeData next() {
                 if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
                 }; // added the throw RunTimeException
-                return edgeIterator.next();
+                tempE = edgeIterator.next();
+                return tempE;
             }
+
+            @Override
+            public void remove() {
+                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+                }; // added the throw RunTimeException
+                else {
+                    removeEdge(tempE.getSrc(), tempE.getDest());
+                    originModeCounter = mc;
+                }
+            }
+
+            // https://stackoverflow.com/questions/42465871/whats-the-point-of-having-both-iterator-foreachremaining-and-iterable-foreach/42466144
+            // comment #1, helped to understand how its worked
+            @Override
+            public void forEachRemaining(Consumer<? super EdgeData> action) {
+                while(edgeIterator.hasNext()){
+                    action.accept(next());
+                }
+            }
+
         };
     }
 
