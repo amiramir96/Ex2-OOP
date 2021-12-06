@@ -142,7 +142,11 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             // init color
             if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest()) || this.specialEdges.containsKey(""+tempE.getDest()+","+tempE.getSrc())){
 //                System.out.println(tempE);
+<<<<<<< HEAD
                 if (this.flagAllSameColor){
+=======
+                if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest())){
+>>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
                     graphic.setColor(this.colorE);
                     drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
                 }

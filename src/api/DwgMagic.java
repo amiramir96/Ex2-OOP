@@ -97,9 +97,13 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
     @Override
     public double shortestPathDist(int src, int dest) {
         Dijkstra dijObj = new Dijkstra(this.currGraph, this.currGraph.getNode(src));
+<<<<<<< HEAD
         double output = dijObj.shortestToSpecificNode(this.currGraph.getNode(src), this.currGraph.getNode(dest));
         System.out.println(output);
         return output;
+=======
+        return dijObj.shortestToSpecificNode(this.currGraph.getNode(src), this.currGraph.getNode(dest));
+>>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
     }
 
     /**
@@ -145,11 +149,17 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
                 tempN = it.next();
                 Dijkstra dijObj = new Dijkstra(this.currGraph, tempN);
                 dijkstraList.add(dijObj);
+<<<<<<< HEAD
                 dijObj.mapPathDijkstra(tempN);
                 dijObj.longestPath();
 //                Thread myFirstThread = new Thread(dijObj);
 //                myFirstThreadList.add(myFirstThread);
 //                myFirstThread.start();
+=======
+                Thread myFirstThread = new Thread(dijObj);
+                myFirstThreadList.add(myFirstThread);
+                myFirstThread.start();
+>>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
 //                tempLongest = dijObj.longestPath(tempN); // sum of all paths from the algo table
 //                System.out.println("node "+tempN.getKey()+" longest road is: "+tempLongest);
 //                if (shortestFromLognests > tempLongest){
@@ -157,6 +167,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
 //                    ansNode = tempN;
 //                }
             }
+<<<<<<< HEAD
 //            for (Thread t : myFirstThreadList){
 //                try{
 //                    t.join();
@@ -165,6 +176,16 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
 //                    e.printStackTrace();
 //                }
 //            }
+=======
+            for (Thread t : myFirstThreadList){
+                try{
+                    t.join();
+                }
+                catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+>>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
             for (Dijkstra dijObj : dijkstraList){
                 System.out.println("node "+dijObj.src+ "longest path is: "+dijObj.longestPath);
                 if (dijObj.longestPath < shortestFromLognests){
@@ -173,7 +194,11 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
                 }
             }
         }
+<<<<<<< HEAD
 //        System.out.println("the center node is: "+ansNode.getKey());
+=======
+        System.out.println("the center node is: "+ansNode.getKey());
+>>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
         return ansNode;
     }
 
