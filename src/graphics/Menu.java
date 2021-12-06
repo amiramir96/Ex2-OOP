@@ -129,6 +129,19 @@ public class Menu extends JMenuBar implements ActionListener {
         }
         else if (e.getSource() == this.shortestPath || e.getSource() == this.tsp || e.getSource() == this.shortestPathDist) { // shortest path/dist and tsp
             JFrame n = new JFrame();
+            JLabel nLabel = new JLabel();
+            if (e.getSource() == this.shortestPath){
+                n.setTitle("input for shortestPath");
+                nLabel.setText("<html> please set pair integers <br>via pattern 'int,int'</html>");
+            }
+            else if(e.getSource() == this.shortestPathDist){
+                n.setTitle("input for shortestPathDist");
+                nLabel.setText("<html> please set pair integers <br>via pattern 'int,int'</html>");
+            }
+            else if(e.getSource() == this.tsp){
+                n.setTitle("input for tsp");
+                nLabel.setText("<html> please set integers sequence <br>via pattern 'int,int,...,int'</html>");
+            }
             n.setDefaultCloseOperation(n.DISPOSE_ON_CLOSE);
             n.setLayout(new FlowLayout());
             n.setLocationRelativeTo(null);
@@ -250,6 +263,7 @@ public class Menu extends JMenuBar implements ActionListener {
                 });
             this.userTextIn = new JTextField(16);
             this.userTextIn.setPreferredSize(new Dimension(250, 50));
+            n.add(nLabel);
             n.add(this.submitBut);
             n.add(this.userTextIn);
             n.pack();
@@ -300,6 +314,175 @@ public class Menu extends JMenuBar implements ActionListener {
             this.algoGraph.init(a);
             this.drawer.updateDrawer(new DwgMagic(a));
             getTopLevelAncestor().repaint();
+        }
+        else if (e.getSource() == this.addNode || e.getSource() == this.addEdge){
+            JFrame addCom = new JFrame();
+            JLabel addText = new JLabel();
+            if (e.getSource() == this.addNode){
+                addCom.setTitle("add node");
+                addText.setText("<html> please set node_id,x_cord,y,cord <br>via pattern 'int,float,float'");
+            }
+            else {
+                addCom.setTitle("add edge");
+                addText.setText("<html> please set node_id_src,node_id_dest,edge_weight <br>via pattern 'int,int,float'");
+            }
+            this.submitBut = new JButton("Submit");
+            addCom.setDefaultCloseOperation(addCom.DISPOSE_ON_CLOSE);
+            addCom.setLayout(new FlowLayout());
+            addCom.setLocationRelativeTo(null);
+            this.submitBut.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ac) {
+                    try {
+                        if (ac.getSource() == submitBut){
+                            String s = userTextIn.getText();
+                            String[] str = s.split(",");
+                            drawer.setColors(drawer.defNode, drawer.defEdge);
+                            if (e.getSource() == addNode){
+                                if (str.length > 3){
+                                    invalidInput();
+                                }
+                                algoGraph.getGraph().addNode(new Node(new Point3D(Double.parseDouble(str[1]), Double.parseDouble(str[2]), 0.0), Integer.parseInt(str[0])));
+                                algoGraph.init(algoGraph.getGraph());
+                                drawer.updateDrawer(algoGraph);
+                            }
+                            else if (e.getSource() == addEdge){
+                                if (str.length > 3){
+                                    invalidInput();
+                                }
+                                algoGraph.getGraph().connect(Integer.parseInt(str[0]), Integer.parseInt(str[1]), Double.parseDouble(str[2]));
+                            }
+                            getTopLevelAncestor().repaint();
+                            addCom.setVisible(false);
+                            addCom.dispose();
+                        }
+                    }
+                    catch (Exception ex){
+                        addCom.setVisible(false);
+                        addCom.dispose();
+                        addText.setText("<html> for addNode: please enter node_id and pair of x,y cord via 'int,float,float' pattern <br>" +
+                                "for addEdge: please enter pair of node_id and weight of edge via 'int,int,float' pattern<br> "+
+                                "please ENSURE to enter input without space </html>");
+                        JFrame j = new JFrame();
+                        j.setBounds(200,200, 550, 150);
+                        j.setTitle("ERROR");
+                        j.setLocationRelativeTo(null);
+                        JButton okBut = new JButton();
+                        okBut.setPreferredSize(new Dimension(60,40));
+                        okBut.setText("OK");
+                        okBut.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent eq) {
+                                if (eq.getSource() == okBut){
+                                    j.setVisible(false);
+                                    j.dispose();
+                                }
+                            }
+                        });
+                        JPanel tq = new JPanel();
+                        tq.add(addText);
+                        tq.add(okBut);
+                        tq.setLocation(300,50);
+                        j.add(tq);
+                        j.setVisible(true);
+                        j.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        return;
+                    }
+                }
+            });
+            this.userTextIn = new JTextField(16);
+            this.userTextIn.setPreferredSize(new Dimension(250, 50));
+            addCom.add(addText);
+            addCom.add(this.submitBut);
+            addCom.add(this.userTextIn);
+            addCom.pack();
+            addCom.setVisible(true);
+        }
+        else if (e.getSource() == this.delEdge || e.getSource() == this.delNode){
+            JFrame delCom = new JFrame();
+            JLabel delText = new JLabel();
+            if (e.getSource() == this.delNode){
+                delCom.setTitle("delete node");
+                delText.setText("<html> please input integer node_id <br>");
+            }
+            else { // e.getsource equal to this.delEdge
+                delCom.setTitle("delete edge");
+                delText.setText("<html>input pair of integer node_id for source-dest of edge<br> via pattern 'int,int'");
+            }
+            this.submitBut = new JButton("Submit");
+            delCom.setDefaultCloseOperation(delCom.DISPOSE_ON_CLOSE);
+            delCom.setLayout(new FlowLayout());
+            delCom.setLocationRelativeTo(null);
+            this.submitBut.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent delAc) {
+                    try {
+                        if (delAc.getSource() == submitBut){
+                            String s = userTextIn.getText();
+                            String[] str = s.split(",");
+                            drawer.setColors(drawer.defNode, drawer.defEdge);
+                            if (e.getSource() == delNode){
+                                if (str.length > 1){
+                                    invalidInput();
+                                }
+                                algoGraph.getGraph().removeNode(Integer.parseInt(str[0]));
+                                algoGraph.init(algoGraph.getGraph());
+                                drawer.updateDrawer(algoGraph);
+                            }
+                            else if (e.getSource() == delEdge){
+                                if (str.length > 2){
+                                    invalidInput();
+                                }
+                                algoGraph.getGraph().removeEdge(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
+                            }
+                            getTopLevelAncestor().repaint();
+                            delCom.setVisible(false);
+                            delCom.dispose();
+                        }
+                    }
+                    catch (Exception ex){
+                        delCom.setVisible(false);
+                        delCom.dispose();
+                        delText.setText("<html> for delNode: please enter integer node_id via 'int' pattern <br>" +
+                                "for delEdge: please enter pair of node_id as src->dest edge via 'int,int' pattern<br> "+
+                                "please ENSURE to enter input without space </html>");
+                        JFrame j = new JFrame();
+                        j.setBounds(200,200, 550, 150);
+                        j.setTitle("ERROR");
+                        j.setLocationRelativeTo(null);
+                        JButton okBut = new JButton();
+                        okBut.setPreferredSize(new Dimension(60,40));
+                        okBut.setText("OK");
+                        okBut.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent eq) {
+                                if (eq.getSource() == okBut){
+                                    j.setVisible(false);
+                                    j.dispose();
+                                }
+                            }
+                        });
+                        JPanel tq = new JPanel();
+                        tq.add(delText);
+                        tq.add(okBut);
+                        tq.setLocation(300,50);
+                        j.add(tq);
+                        j.setVisible(true);
+                        j.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        return;
+                    }
+
+
+                }
+            });
+            this.userTextIn = new JTextField(16);
+            this.userTextIn.setPreferredSize(new Dimension(250, 50));
+            delCom.add(delText);
+            delCom.add(this.submitBut);
+            delCom.add(this.userTextIn);
+            delCom.pack();
+            delCom.setVisible(true);
+
         }
     }
 

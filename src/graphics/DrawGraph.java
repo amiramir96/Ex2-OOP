@@ -12,6 +12,8 @@ import java.util.List;
 
 public class DrawGraph extends JPanel  implements MouseListener, MouseMotionListener, MouseWheelListener{
     // init params
+    final double constWidth = 750*0.8;
+    final double constHeight = 750*0.1;
     private double widthArrow;
     private double heightArrow;
     private double widthPoint;
@@ -97,14 +99,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         this.flagAllSameColor = b;
     }
 
-    public void setZoom(double zoom){
-        this.zoomInOut = zoom;
-        this.widthArrow *= this.zoomInOut;
-        this.heightArrow *= this.zoomInOut;
-        this.widthPoint *= this.zoomInOut;
-        this.heightPoint *= this.zoomInOut;
-    }
-
     /**
      * credit to Shai Aharon teacher
      * this function ensure that the program will draw everything on a back image
@@ -175,7 +169,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         double[] cord;
         NodeData tempN;
         graphic.setFont(amirFont);
-        List<NodeData> nodeDataList = new ArrayList<>();
         while (itNode.hasNext()) { // draw all nodes
             // init node
             tempN = itNode.next();
@@ -188,7 +181,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
                     graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
                     graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
                 }
-                nodeDataList.add(tempN);
             }
             else {
                 graphic.setColor(this.defNode);
@@ -317,9 +309,11 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
      * @param point - var obj of point
      * @return - x,y cordinates that match the picture
      */
-    double[] linearTransform(GeoLocation point){ // credit to daniel rosenberg, student of our class which showed us the formula in the internet
-        double x = (((this.min_max_cord[2] - point.x()) / (this.min_max_cord[2] - this.min_max_cord[0]))*750*0.75+750*0.1 + mousePoint.getX())*zoomInOut;
-        double y = (((this.min_max_cord[3] - point.y()) / (this.min_max_cord[3] - this.min_max_cord[1]))*750*0.75+750*0.1 + mousePoint.getY())*zoomInOut;
+    double[] linearTransform(GeoLocation point){ // credit to Daniel Rosenberg, student of our class, for the formula
+        double delCurrX = this.min_max_cord[2] - point.x(), delPicX = this.min_max_cord[2] - this.min_max_cord[0];
+        double delCurrY = this.min_max_cord[3] - point.y(), delPicY = this.min_max_cord[3] - this.min_max_cord[1];
+        double x = (delCurrX / delPicX * this.constWidth + this.constHeight + mousePoint.getX()) * zoomInOut;
+        double y = (delCurrY / delPicY * this.constWidth + this.constHeight + mousePoint.getY()) * zoomInOut;
         return new double[]{x,y};
     }
 
@@ -346,8 +340,11 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
-        mousePoint.setLocation(mousePrevPos.getX() + (e.getX() - mouseNextPos.getX())/this.zoomInOut , mousePrevPos.getY() + (e.getY() - mouseNextPos.getY())/this.zoomInOut);
+    public void mouseDragged(MouseEvent e) { // credit to Daniel Rosenberg, class student, for formula
+        double xMPrev = mousePrevPos.getX(), yMPrev = mousePrevPos.getY();
+        double xMNext = mouseNextPos.getX(), yMNext = mouseNextPos.getY();
+        double zoomedX = xMPrev + (e.getX() - xMNext)/this.zoomInOut, zoomedY = yMPrev + (e.getY() - yMNext)/this.zoomInOut;
+        mousePoint.setLocation(zoomedX , zoomedY);
         repaint();
     }
 
@@ -355,10 +352,12 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     public void mouseMoved(MouseEvent e) {
     }
 
+
     @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        if (this.zoomInOut > 0.1){
-            this.zoomInOut = this.zoomInOut + (double)(-e.getWheelRotation()) / 7;
+    public void mouseWheelMoved(MouseWheelEvent e) { // https://www.javacodex.com/Swing/MouseWheelListener for more data
+        double temp = ((double)-e.getWheelRotation()) / 7;
+        if (this.zoomInOut + temp > 0.05){
+            this.zoomInOut = this.zoomInOut + temp;
             repaint();
         }
     }

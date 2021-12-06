@@ -140,6 +140,8 @@ public class Ex2 {
     public static void main(String[] args) throws IOException {
         System.out.println("lets start");
         DwgMagic d = (DwgMagic) getGrapgAlgo("data\\G3.json");
+        d.getGraph().removeNode(3);
+        d.init(d.getGraph());
 //        System.out.println("ended const");
 //        System.out.println(d.getGraph().nodeSize()+"  "+d.getGraph().edgeSize());
 //        System.out.println("start dijkstra");
