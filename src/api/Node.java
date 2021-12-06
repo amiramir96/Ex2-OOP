@@ -13,7 +13,7 @@ public class Node implements NodeData{
     private double weight; // for dijkstra
 
     public Node(Point3D cord, int id) {
-        this.cord = new Point3D(cord);
+        this.cord = cord;
         this._id = id;
         this.tag = 0;
         this.metaData = "";

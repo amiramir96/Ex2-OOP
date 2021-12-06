@@ -86,8 +86,9 @@ public class Dijkstra implements Runnable{
     }
 
 
+
     public double shortestToSpecificNode(NodeData src, NodeData dest){
-        mapPathDijkstra(src);
+//        mapPathDijkstra(src);
         return this.distMap.get(dest.getKey());
     }
 //
@@ -128,7 +129,7 @@ public class Dijkstra implements Runnable{
     }
 
     public List<NodeData> shortestPathList(NodeData src, NodeData dest){
-        mapPathDijkstra(src); // get the prevMap from the pathDijkstra algo
+//        mapPathDijkstra(src); // get the prevMap from the pathDijkstra algo
         HashMap<Integer, Integer> parentsMap = this.prevMap;
         LinkedList<NodeData> outputPath = new LinkedList<>(); // output list
         if (parentsMap.get(dest.getKey()) == -1) { return outputPath; } // -1 == not exist, both nodes is not connected

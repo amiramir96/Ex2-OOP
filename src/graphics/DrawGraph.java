@@ -28,10 +28,12 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     // for representing functions output (via colors)
     boolean flagAllSameColor;
+    boolean flagTsp;
     final Color defEdge, defNode; // default colors
     Color colorE, colorN; // special colors for events
     HashMap<String, Integer> specialEdges;
     List<NodeData> specialNodes;
+    HashMap<Integer, String> tspString;
 
     //save mouse points, help to make picture accurate to client presses
     private Point2D mousePoint;
@@ -59,6 +61,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         this.flagAllSameColor = false;
         this.specialNodes = new LinkedList<>();
         this.specialEdges = new HashMap<>();
+        this.flagTsp = false;
 
         // as needed..
         this.addMouseListener(this);
@@ -80,6 +83,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         mouseNextPos = (Point2D)mousePoint.clone();
         // init flag for coloring (zeroing)
         this.flagAllSameColor = false;
+        this.flagTsp = false;
         // back to default
         updateMinMax();
     }
@@ -141,7 +145,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
             // init color
             if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest()) || this.specialEdges.containsKey(""+tempE.getDest()+","+tempE.getSrc())){
-//                System.out.println(tempE);
                 if (this.flagAllSameColor){
                     graphic.setColor(this.colorE);
                     drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
@@ -150,7 +153,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
             }
             else{ // default color
-//                System.out.println(tempE);
                 graphic.setColor(this.defEdge);
                 drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
             }
@@ -197,14 +199,45 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         }
 
         graphic.setStroke(this.nodeStroke);
-        itNode = nodeDataList.iterator();
+        itNode = this.specialNodes.iterator();
         while(itNode.hasNext()){
             tempN = itNode.next();
             cord = linearTransform(tempN.getLocation()); // linear transfer regular cord to width/height cord
             graphic.setColor(this.colorN);
             // draw curr node
             graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
-            graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
+            if (this.flagTsp){
+                graphic.drawString(""+tempN.getKey()+" station: "+this.tspString.get(tempN.getKey()), (int)cord[0], (int)cord[1]);
+            }
+            else{
+                graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
+            }
+        }
+    }
+
+    void removeDuplicate() {
+        int size = this.specialNodes.size();
+        NodeData n;
+        for (int i=0; i < size; i++){
+            n = this.specialNodes.get(0);
+            while (this.specialNodes.contains(n)){
+                this.specialNodes.remove(n);
+            }
+            this.specialNodes.add(n);
+        }
+    }
+    //HashMap<Integer, String>
+    void makeTspString() {
+        this.tspString = new HashMap<>();
+        int stationCounter=1;
+        for (NodeData element : this.specialNodes){
+            if (!this.tspString.containsKey(element.getKey())){
+                this.tspString.put(element.getKey(), ""+stationCounter);
+            }
+            else {
+                this.tspString.replace(element.getKey(), this.tspString.get(element.getKey()) +","+stationCounter);
+            }
+            stationCounter++;
         }
     }
 
@@ -291,7 +324,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("clicked");
     }
 
     @Override
@@ -306,14 +338,10 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("entered");
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        System.out.println("exited");
-
     }
 
     @Override
@@ -332,5 +360,9 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             this.zoomInOut = this.zoomInOut + (double)(-e.getWheelRotation()) / 7;
             repaint();
         }
+    }
+
+    public void setFlagTsp(boolean b) {
+        this.flagTsp = b;
     }
 }

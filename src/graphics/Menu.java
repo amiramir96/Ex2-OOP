@@ -5,9 +5,7 @@ import api.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class Menu extends JMenuBar implements ActionListener {
@@ -98,17 +96,12 @@ public class Menu extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         this.funcEvent = e;
         if (e.getSource() == this.loadGraph) { // load graph
-            System.out.println(this.algoGraph.getGraph());
             this.fileChooser.showOpenDialog(null);
             if (this.fileChooser.getSelectedFile() == null) {
                 return;
             } else {
                 this.algoGraph.load(this.fileChooser.getSelectedFile().getPath());
                 this.drawer.updateDrawer(this.algoGraph);
-                System.out.println(this.fileChooser.getSelectedFile().getPath());
-                System.out.println(this.algoGraph.getGraph());
-                System.out.println("loaded from: " + this.fileChooser.getSelectedFile().getPath());
-//               this.drawer.repaint();
                 getTopLevelAncestor().repaint();
 
             }
@@ -123,22 +116,20 @@ public class Menu extends JMenuBar implements ActionListener {
             }
         }
         else if (e.getSource() == this.isConnected) { // is connected
-            System.out.println("connected");
+            drawer.setFlagTsp(false);
+            this.drawer.setFlagAllSameColor(true);
             if (this.algoGraph.isConnected()) {
                 this.drawer.setColors(Color.GREEN, drawer.defEdge);
-                this.drawer.setFlagAllSameColor(true);
                 getTopLevelAncestor().repaint();
             }
             else {
                 this.drawer.setColors(Color.RED, drawer.defEdge);
-                this.drawer.setFlagAllSameColor(true);
                 getTopLevelAncestor().repaint();
             }
         }
         else if (e.getSource() == this.shortestPath || e.getSource() == this.tsp || e.getSource() == this.shortestPathDist) { // shortest path/dist and tsp
-            System.out.println("shortestPath");
             JFrame n = new JFrame();
-            n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            n.setDefaultCloseOperation(n.DISPOSE_ON_CLOSE);
             n.setLayout(new FlowLayout());
             n.setLocationRelativeTo(null);
             this.submitBut = new JButton("Submit");
@@ -148,23 +139,24 @@ public class Menu extends JMenuBar implements ActionListener {
                     JLabel tempLabel = new JLabel();
                     try {
                         if (event.getSource() == submitBut){
-                            System.out.println("hi thats worked");
                             String s = userTextIn.getText();
                             String[] str = s.split(",");
                             ArrayList<Integer> nodes = new ArrayList<>();
                             for (String n : str){
                                 nodes.add(Integer.parseInt(n));
                             }
-                            if (funcEvent.getSource() == shortestPath){
+                            if (funcEvent.getSource() == shortestPath){ // funcEvent is shortestPath
                                 drawer.specialNodes = algoGraph.shortestPath(nodes.get(0), nodes.get(1));
                                 drawer.specialEdges = currPathEdges(drawer.specialNodes);
+                                drawer.setFlagTsp(false);
                                 drawer.setFlagAllSameColor(false);
                                 drawer.setColors(Color.PINK, Color.RED);
                             }
-                            else if (funcEvent.getSource() == shortestPathDist){
+                            else if (funcEvent.getSource() == shortestPathDist){ // funcEvent is shortestPathDist
                                 drawer.specialNodes = algoGraph.shortestPath(nodes.get(0), nodes.get(1));
                                 drawer.specialEdges = currPathEdges(drawer.specialNodes);
                                 double distToPrint = algoGraph.shortestPathDist(nodes.get(0), nodes.get(1));
+                                drawer.setFlagTsp(false);
                                 drawer.setFlagAllSameColor(false);
                                 drawer.setColors(Color.PINK, Color.GREEN);
                                 tempLabel.setText("<html> shortestPathDist between: "+nodes.get(0)+" to "+nodes.get(1)+"<br>"+distToPrint +"</html>");
@@ -199,8 +191,17 @@ public class Menu extends JMenuBar implements ActionListener {
                                 }
                                 drawer.specialNodes = algoGraph.tsp(tspInput);
                                 drawer.specialEdges = currPathEdges(drawer.specialNodes);
-                                drawer.setFlagAllSameColor(false);
-                                drawer.setColors(Color.CYAN, Color.RED);
+                                if (drawer.specialNodes == null || drawer.specialNodes.size() == 0){
+                                    drawer.setColors(Color.RED, drawer.defNode);
+                                    drawer.setFlagAllSameColor(false);
+                                }
+                                else {
+                                    drawer.makeTspString();
+                                    drawer.removeDuplicate();
+                                    drawer.setFlagTsp(true);
+                                    drawer.setFlagAllSameColor(false);
+                                    drawer.setColors(Color.GREEN, Color.PINK);
+                                }
                             }
                             getTopLevelAncestor().repaint();
                             n.setVisible(false);
@@ -241,18 +242,15 @@ public class Menu extends JMenuBar implements ActionListener {
                         }
                     }
                 });
-//            this.submitBut.setFocusPainted(true);
             this.userTextIn = new JTextField(16);
             this.userTextIn.setPreferredSize(new Dimension(250, 50));
             n.add(this.submitBut);
             n.add(this.userTextIn);
             n.pack();
             n.setVisible(true);
-//            this.getTopLevelAncestor().add(n);
-//            w.shortestPathField();
         }
         else if (e.getSource() == this.center) { // center
-            System.out.println("center");
+            drawer.setFlagTsp(false);
             this.drawer.specialNodes = new LinkedList<>();
             NodeData center = this.algoGraph.center();
             if (center != null){
@@ -309,3 +307,4 @@ public class Menu extends JMenuBar implements ActionListener {
         return edges;
     }
 }
+

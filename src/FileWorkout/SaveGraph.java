@@ -54,7 +54,7 @@ public class SaveGraph {
      * @param edge
      * @return json object
      */
-    public static JsonObject EdgeToObject(EdgeData edge){
+    public static JsonObject EdgeToObject(EdgeData edge){//TODO implement
         JsonObject obj = new JsonObject();
         obj.addProperty("src",edge.getSrc());
         obj.addProperty("w",edge.getWeight());

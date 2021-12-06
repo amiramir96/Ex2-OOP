@@ -12,9 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class DwgMagic implements DirectedWeightedGraphAlgorithms{
     private DirectedWeightedGraph currGraph;
@@ -97,9 +95,8 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
     @Override
     public double shortestPathDist(int src, int dest) {
         Dijkstra dijObj = new Dijkstra(this.currGraph, this.currGraph.getNode(src));
-        double output = dijObj.shortestToSpecificNode(this.currGraph.getNode(src), this.currGraph.getNode(dest));
-        System.out.println(output);
-        return output;
+        dijObj.mapPathDijkstra(this.currGraph.getNode(src));
+        return dijObj.shortestToSpecificNode(this.currGraph.getNode(src), this.currGraph.getNode(dest));
     }
 
     /**
@@ -114,6 +111,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         Dijkstra dijObj = new Dijkstra(this.currGraph, this.currGraph.getNode(src));
+        dijObj.mapPathDijkstra(this.currGraph.getNode(src));
         return dijObj.shortestPathList(this.currGraph.getNode(src), this.currGraph.getNode(dest));
     }
 
@@ -179,8 +177,89 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        return null;
+        if (cities == null || cities.size() == 0){
+            return null;
+        }
+        List<NodeData> orederedCitiesTravel = new ArrayList<>(); // output list
+        List<NodeData> remainingCities = new LinkedList<>();
+        // init map with all nodes keys as key and boolean false for visited
+        NodeData tempCity;
+        HashMap<Integer, Boolean> visitedMap = new HashMap<>();
+        for (NodeData city : cities) {
+            visitedMap.put(city.getKey(), false);
+            remainingCities.add(city);
+        }
+        int tempDest;
+        double weightOfTsp = 0;
+        orederedCitiesTravel.add(remainingCities.get(0));
+        while (!remainingCities.isEmpty() && weightOfTsp < Double.MAX_VALUE) {
+            tempCity = orederedCitiesTravel.get(orederedCitiesTravel.size()-1);
+            remainingCities.remove(tempCity);
+            // for ea city
+            // check if there is direct edges to the other nodes
+            // if there is - take the minimal weigthed edge between the edges of the unvisited nodes
+            // if there is not - use dijkstra on the curr node and take the shortest path to unvisited node
+//            if (!visitedMap.get(tempCity.getKey())){ // not visited yet
+                visitedMap.replace(tempCity.getKey(), true);
+                tempDest = minimalDirectRoad(tempCity.getKey(), visitedMap, remainingCities);
+                if (tempDest == -1){
+                    Dijkstra dijObj = new Dijkstra(this.currGraph, tempCity);
+                    dijObj.mapPathDijkstra(tempCity); // dijkstra algo
+                    List<NodeData> unDirectedPath = minimalUndirectRoad(dijObj, tempCity, visitedMap, remainingCities);
+                    weightOfTsp += dijObj.shortestToSpecificNode(tempCity, unDirectedPath.get(unDirectedPath.size()-1));
+                    unDirectedPath.remove(0);
+                    orederedCitiesTravel.addAll(unDirectedPath);
+                    remainingCities.removeAll(unDirectedPath);
+                }
+                else {
+//                    orederedCitiesTravel.add(tempCity);
+                    orederedCitiesTravel.add(this.currGraph.getNode(tempDest));
+                    remainingCities.remove(this.currGraph.getNode(tempDest));
+                    weightOfTsp += this.currGraph.getEdge(tempCity.getKey(), tempDest).getWeight();
+                }
+            }
+//        }
+        int station = 0;
+        for (NodeData element: orederedCitiesTravel){
+            station++;
+        }
+        return orederedCitiesTravel;
     }
+
+    private List<NodeData> minimalUndirectRoad(Dijkstra dijObj, NodeData src, HashMap<Integer, Boolean> visitedMap, List<NodeData> remainingCities) {
+        double tempDist = Double.MAX_VALUE;
+        int tempKey = -1;
+        for (NodeData city : remainingCities){
+            if (dijObj.shortestToSpecificNode(src, city) < tempDist && !visitedMap.get(city.getKey())){ // O(1) proccess - get val from map
+                tempDist = dijObj.shortestToSpecificNode(src, city);
+                tempKey = city.getKey();
+            }
+        }
+        if (tempKey == -1){
+            return null;
+        }
+        else {
+            List<NodeData> output = dijObj.shortestPathList(src, this.currGraph.getNode(tempKey));
+            return output;
+        }
+    }
+
+    private int minimalDirectRoad(int src, HashMap<Integer, Boolean> visitedMap, List<NodeData> remainingCities) {
+        double minRoad = Double.MAX_VALUE;
+        int minDest = -1;
+        for (NodeData city : remainingCities){
+            if (!visitedMap.get(city.getKey())){
+                if (this.currGraph.getEdge(src, city.getKey()) != null){
+                    if (this.currGraph.getEdge(src, city.getKey()).getWeight() < minRoad){
+                        minRoad = this.currGraph.getEdge(src, city.getKey()).getWeight();
+                        minDest = city.getKey();
+                    }
+                }
+            }
+        }
+        return minDest;
+    }
+
 
     /**
      * if failed to save, the program will "explode"
