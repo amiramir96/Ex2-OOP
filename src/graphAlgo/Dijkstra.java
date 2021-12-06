@@ -27,12 +27,7 @@ public class Dijkstra implements Runnable{
      * @param src - the given node which we want to know all shortest path to every other node
      * @return array of all shortest path from the given node "src"
      */
-<<<<<<< HEAD
     public void mapPathDijkstra(NodeData src){
-=======
-
-    void mapPathDijkstra(NodeData src){
->>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
         // initialize priority queue, visit - boolean, distance - double arrays
         this.visitMap = new HashMap<>();
         this.prevMap = new HashMap<>();
@@ -90,10 +85,6 @@ public class Dijkstra implements Runnable{
         }
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
 
     public double shortestToSpecificNode(NodeData src, NodeData dest){
         mapPathDijkstra(src);

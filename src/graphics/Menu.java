@@ -146,7 +146,6 @@ public class Menu extends JMenuBar implements ActionListener {
                 @Override
                 public void actionPerformed(ActionEvent event) {
                     JLabel tempLabel = new JLabel();
-<<<<<<< HEAD
                     try {
                         if (event.getSource() == submitBut){
                             System.out.println("hi thats worked");
@@ -240,69 +239,6 @@ public class Menu extends JMenuBar implements ActionListener {
                             j.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                             return;
                         }
-=======
-                    if (event.getSource() == submitBut){
-                        System.out.println("hi thats worked");
-                        String s = userTextIn.getText();
-                        String[] str = s.split(",");
-                        ArrayList<Integer> nodes = new ArrayList<>();
-                        for (String n : str){
-                            nodes.add(Integer.parseInt(n));
-                        }
-                        if (funcEvent.getSource() == shortestPath){
-                            drawer.specialNodes = algoGraph.shortestPath(nodes.get(0), nodes.get(1));
-                            drawer.specialEdges = currPathEdges(drawer.specialNodes);
-                            drawer.setFlagAllSameColor(false);
-                            drawer.setColors(Color.GREEN, Color.GREEN);
-                        }
-                        else if (funcEvent.getSource() == shortestPathDist){
-                            double distToPrint=0;
-                            drawer.specialNodes = algoGraph.shortestPath(nodes.get(0), nodes.get(1));
-                            drawer.specialEdges = currPathEdges(drawer.specialNodes);
-                            for (int i=0; i<drawer.specialEdges.size()-1; i++){
-                                distToPrint += algoGraph.getGraph().getEdge(drawer.specialNodes.get(i).getKey(), drawer.specialNodes.get(i+1).getKey()).getWeight();
-                            }
-                            tempLabel.setText("<html> shortestPathDist between: "+nodes.get(0)+" to "+nodes.get(1)+"<br>"+distToPrint +"</html>");
-                            drawer.setFlagAllSameColor(false);
-                            drawer.setColors(Color.GREEN, Color.GREEN);
-                            JFrame j = new JFrame();
-                            j.setBounds(200,200, 300, 100);
-                            j.setTitle("shortestPathDist");
-                            j.setLocationRelativeTo(null);
-                            JButton okBut = new JButton();
-                            okBut.setPreferredSize(new Dimension(60,40));
-                            okBut.setText("OK");
-                            okBut.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent eq) {
-                                    if (eq.getSource() == okBut){
-                                        j.setVisible(false);
-                                        j.dispose();
-                                    }
-                                }
-                            });
-                            JPanel tq = new JPanel();
-                            tq.add(tempLabel);
-                            tq.add(okBut);
-                            tq.setLocation(300,50);
-                            j.add(tq);
-                            j.setVisible(true);
-                            j.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        }
-                        else { //funcEvent is tsp!
-                            ArrayList<NodeData> tspInput = new ArrayList<>();
-                            for (Integer i : nodes){
-                                tspInput.add(algoGraph.getGraph().getNode(i));
-                            }
-                            drawer.specialNodes = algoGraph.tsp(tspInput);
-                            drawer.specialEdges = currPathEdges(drawer.specialNodes);
-                            drawer.setFlagAllSameColor(false);
-                            drawer.setColors(Color.CYAN, Color.RED);
-                        }
-                        getTopLevelAncestor().repaint();
-                        n.setVisible(false);
-                        n.dispose();
->>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
                     }
                 });
 //            this.submitBut.setFocusPainted(true);
@@ -318,7 +254,6 @@ public class Menu extends JMenuBar implements ActionListener {
         else if (e.getSource() == this.center) { // center
             System.out.println("center");
             this.drawer.specialNodes = new LinkedList<>();
-<<<<<<< HEAD
             NodeData center = this.algoGraph.center();
             if (center != null){
                 this.drawer.specialNodes.add(center);
@@ -353,11 +288,6 @@ public class Menu extends JMenuBar implements ActionListener {
                 j.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 return;
             }
-=======
-            this.drawer.specialNodes.add(this.algoGraph.center());
-            this.drawer.setColors(Color.GREEN, drawer.defEdge);
-            this.drawer.setFlagAllSameColor(false);
->>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
 //            this.drawer.repaint();
             getTopLevelAncestor().repaint();
         }
@@ -374,10 +304,6 @@ public class Menu extends JMenuBar implements ActionListener {
         HashMap<String, Integer> edges = new HashMap<>();
         while (i+1 < nodes.size()){
             edges.put(""+nodes.get(i).getKey()+","+nodes.get(i+1).getKey(), 0);
-<<<<<<< HEAD
-=======
-//            System.out.println(edges.size());
->>>>>>> bcb0e00fccf65ff0d0992d260619c75403c68ec2
             i++;
         }
         return edges;
