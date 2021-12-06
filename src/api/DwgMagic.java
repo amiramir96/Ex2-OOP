@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,15 +20,20 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
     private DirectedWeightedGraph currGraph;
     private int isConnected;
     private int mc;
+    private int center;
 
     public DwgMagic(DirectedWeightedGraph g) {
         this.currGraph = g;
         this.isConnected = -1;
         this.mc = g.getMC();
+        this.center = -1;
     }
 
     @Override
     public void init(DirectedWeightedGraph g) {
+        this.isConnected = -1;
+        this.center = -1;
+        this.mc = 0;
         this.currGraph = (Dwg) g;
     }
 
@@ -63,7 +69,13 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
             this.mc = this.currGraph.getMC(); // update mc
             DFS dfsObj = new DFS(this.currGraph); // use DFS algo
             Iterator <NodeData> it = this.currGraph.nodeIter();
-            NodeData n = it.next();
+            NodeData n = null;
+            if (it.hasNext()){
+                n = it.next();
+            }
+            else {
+                return false;
+            }
             ans = dfsObj.mainProcessIsConnected(n);
             // init obj isConnected var for future
             if (ans) {
@@ -84,8 +96,10 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
      */
     @Override
     public double shortestPathDist(int src, int dest) {
-        Dijkstra dijObj = new Dijkstra(this.currGraph);
-        return dijObj.shortestToSpecificNode(this.currGraph.getNode(src), this.currGraph.getNode(dest));
+        Dijkstra dijObj = new Dijkstra(this.currGraph, this.currGraph.getNode(src));
+        double output = dijObj.shortestToSpecificNode(this.currGraph.getNode(src), this.currGraph.getNode(dest));
+        System.out.println(output);
+        return output;
     }
 
     /**
@@ -99,7 +113,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        Dijkstra dijObj = new Dijkstra(this.currGraph);
+        Dijkstra dijObj = new Dijkstra(this.currGraph, this.currGraph.getNode(src));
         return dijObj.shortestPathList(this.currGraph.getNode(src), this.currGraph.getNode(dest));
     }
 
@@ -114,7 +128,6 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
     @Override
     public NodeData center() {
         NodeData ansNode = null; // init ans
-
         // isConnect=-1 -> we dont know yet this data
         // this.mc != graph.mc -> graph as been changed since last time we could check "isConnected"
         if (this.isConnected == -1 || this.mc != this.currGraph.getMC()){
@@ -123,19 +136,44 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
         if (this.isConnected == 1){ // if not connected - ans is null, go out
             this.mc = this.currGraph.getMC();
             // init vars
-            Dijkstra dijObj = new Dijkstra(this.currGraph);
-            double lowestSum = Double.MAX_VALUE, tempSum;
+            double shortestFromLognests = Double.MAX_VALUE, tempLongest;
             NodeData tempN;
+            List<Dijkstra> dijkstraList = new ArrayList<>();
+            List<Thread> myFirstThreadList = new ArrayList<>();
             Iterator<NodeData> it = this.currGraph.nodeIter(); // ez to iterate all over the nodes one by one
             while (it.hasNext()){ // dijkstra on ea node as src one time
                 tempN = it.next();
-                tempSum = dijObj.summerizeAllShortestPaths(tempN); // sum of all paths from the algo table
-                if (lowestSum > tempSum){
-                    lowestSum = tempSum;
-                    ansNode = tempN;
+                Dijkstra dijObj = new Dijkstra(this.currGraph, tempN);
+                dijkstraList.add(dijObj);
+                dijObj.mapPathDijkstra(tempN);
+                dijObj.longestPath();
+//                Thread myFirstThread = new Thread(dijObj);
+//                myFirstThreadList.add(myFirstThread);
+//                myFirstThread.start();
+//                tempLongest = dijObj.longestPath(tempN); // sum of all paths from the algo table
+//                System.out.println("node "+tempN.getKey()+" longest road is: "+tempLongest);
+//                if (shortestFromLognests > tempLongest){
+//                    shortestFromLognests = tempLongest;
+//                    ansNode = tempN;
+//                }
+            }
+//            for (Thread t : myFirstThreadList){
+//                try{
+//                    t.join();
+//                }
+//                catch (InterruptedException e){
+//                    e.printStackTrace();
+//                }
+//            }
+            for (Dijkstra dijObj : dijkstraList){
+                System.out.println("node "+dijObj.src+ "longest path is: "+dijObj.longestPath);
+                if (dijObj.longestPath < shortestFromLognests){
+                    shortestFromLognests = dijObj.longestPath;
+                    ansNode = dijObj.src;
                 }
             }
         }
+//        System.out.println("the center node is: "+ansNode.getKey());
         return ansNode;
     }
 
