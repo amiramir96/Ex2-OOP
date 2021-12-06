@@ -24,7 +24,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     // stroke and fonts
     final Stroke edgeStroke = new BasicStroke((float)1.5);
     final Stroke nodeStroke = new BasicStroke((float)5);
-    final Font amirFont = new Font("a", Font.BOLD, 12);
+    final Font amirFont = new Font("a", Font.BOLD, 16);
 
     // for representing functions output (via colors)
     boolean flagAllSameColor;
@@ -158,6 +158,17 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             }
         }
 
+        graphic.setStroke(this.edgeStroke);
+        itEdge = edgeDataList.iterator();
+        while(itEdge.hasNext()){
+            tempE = itEdge.next();
+            cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
+            cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
+            graphic.setColor(this.colorE);
+            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
+        }
+
+
         // paint nodes
         graphic.setStroke(this.nodeStroke);
         Iterator<NodeData> itNode = this.currGraph.nodeIter();
@@ -186,16 +197,6 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
                 graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
             }
 
-        }
-
-        graphic.setStroke(this.edgeStroke);
-        itEdge = edgeDataList.iterator();
-        while(itEdge.hasNext()){
-            tempE = itEdge.next();
-            cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
-            cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
-            graphic.setColor(this.colorE);
-            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
         }
 
         graphic.setStroke(this.nodeStroke);

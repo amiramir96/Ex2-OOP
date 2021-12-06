@@ -146,6 +146,9 @@ public class Menu extends JMenuBar implements ActionListener {
                                 nodes.add(Integer.parseInt(n));
                             }
                             if (funcEvent.getSource() == shortestPath){ // funcEvent is shortestPath
+                                if (nodes.size() > 2){
+                                    invalidInput();
+                                }
                                 drawer.specialNodes = algoGraph.shortestPath(nodes.get(0), nodes.get(1));
                                 drawer.specialEdges = currPathEdges(drawer.specialNodes);
                                 drawer.setFlagTsp(false);
@@ -153,6 +156,9 @@ public class Menu extends JMenuBar implements ActionListener {
                                 drawer.setColors(Color.PINK, Color.RED);
                             }
                             else if (funcEvent.getSource() == shortestPathDist){ // funcEvent is shortestPathDist
+                                if (nodes.size() > 2){
+                                    invalidInput();
+                                }
                                 drawer.specialNodes = algoGraph.shortestPath(nodes.get(0), nodes.get(1));
                                 drawer.specialEdges = currPathEdges(drawer.specialNodes);
                                 double distToPrint = algoGraph.shortestPathDist(nodes.get(0), nodes.get(1));
@@ -295,6 +301,10 @@ public class Menu extends JMenuBar implements ActionListener {
             this.drawer.updateDrawer(new DwgMagic(a));
             getTopLevelAncestor().repaint();
         }
+    }
+
+    private void invalidInput() {
+        drawer.specialNodes.get(-1); // create exception cuz invalid input
     }
 
     private HashMap<String, Integer> currPathEdges(List<NodeData> nodes) {

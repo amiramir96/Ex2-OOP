@@ -164,7 +164,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms{
 //                }
 //            }
             for (Dijkstra dijObj : dijkstraList){
-                System.out.println("node "+dijObj.src+ "longest path is: "+dijObj.longestPath);
+//                System.out.println("node "+dijObj.src+ "longest path is: "+dijObj.longestPath);
                 if (dijObj.longestPath < shortestFromLognests){
                     shortestFromLognests = dijObj.longestPath;
                     ansNode = dijObj.src;
