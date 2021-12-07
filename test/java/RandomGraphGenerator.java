@@ -21,6 +21,11 @@ import java.util.Random;
 public class RandomGraphGenerator {
 
 
+    /**
+     * create random graph with node_size node in the "resources" directory
+     * @param nodes_size size of graph
+     * @return random graph
+     */
     public static DirectedWeightedGraph createRndGraph(int nodes_size){
         DirectedWeightedGraph g = new Dwg();
         Random rnd = new Random();
@@ -53,7 +58,7 @@ public class RandomGraphGenerator {
             System.exit(0);
         }
         try {
-            g = LoadGraph.loadGraph("random_graph.json");
+            g = LoadGraph.loadGraph("test\\resources\\random_graph.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.out.println("Failed to load random graph");
@@ -87,13 +92,13 @@ public class RandomGraphGenerator {
         graph_json.add("Nodes", json_nodes);
         // write to file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Files.writeString(Paths.get("random_graph.json"), gson.toJson(graph_json));
-        //TODO redirect to test resources
+        Files.writeString(Paths.get("test\\resources\\random_graph.json"), gson.toJson(graph_json));
     }
 
     @Test
     void testGenerator(){
-        DirectedWeightedGraph g= createRndGraph(23);
+        Random rnd = new Random();
+        DirectedWeightedGraph g= createRndGraph(50 + rnd.nextInt(4500));
 
     }
 }

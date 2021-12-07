@@ -9,6 +9,7 @@ import impGraph.DwgMagic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Scanner;
 
 
 /**
@@ -58,5 +59,38 @@ public class Ex2 {
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         Window w = new Window(alg);
+    }
+
+    public static void main(String[] args) {
+        if(args.length > 0){
+            try{
+                runGUI(args[0]);
+            }
+            catch (Exception e){
+                try{
+                    runGUI("data\\" + args[0]);
+                }
+                catch (Exception e2){
+                    System.out.println("File doesn't exist");
+                }
+            }
+        }
+        else{
+            Scanner in = new Scanner(System.in);
+            System.out.println("enter graph path:");
+            String g = in.nextLine();
+            g = g.replace("\\", "\\\\");
+            try{
+                runGUI(g);
+            }
+            catch (Exception e){
+                try{
+                    runGUI("data\\" + g);
+                }
+                catch (Exception e2){
+                    System.out.println("File doesn't exist");
+                }
+            }
+        }
     }
 }
