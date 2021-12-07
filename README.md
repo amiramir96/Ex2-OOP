@@ -5,7 +5,7 @@ in this assigment we were required to implement Directed Weighted Garph and some
 the directed weigthed graph object shall implemented within the best time run as possible since its can hold alot of vertex and edges. <br>
 in addition, we shall create a GUI programme that support every algorithm that implemented on the graph (for ex, load graph, isConnected, tsp etc..) <br>
 
-# Program Overview
+## Program Overview
 ### structre of the project code
 |   package name: |                                                     **FileWorkout**                                                                                      |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -41,39 +41,60 @@ in addition, we shall create a GUI programme that support every algorithm that i
 |    Menu         |                                                                                                                                                          |
 
 
-## Directed Weigthed Graph
+### Directed Weigthed Graph
 
 ## Directed Weighted Graph Algorithms
 supporting some methods via interface https://github.com/amiramir96/Ex2-OOP/blob/main/src/api/DirectedWeightedGraphAlgorithms.java <br>
 the class obj will construct by getting existing Directed Weigthed Graph (even an empty one). <br>
 explanation on the algorithm methods:<br>
-### isConnected
+#### isConnected
 
 
-### ShortestPath
+#### ShortestPath
 
 
-### ShortestPathDist
-
-
-
-### center
-
-
-### tsp - traveler salesmen problem (crafted to be more realistic)
+#### ShortestPathDist
 
 
 
-## graphics - GUI 
-### logic system
+#### center
 
 
-### how to use / tutorial
+#### tsp - traveler salesmen problem (crafted to be more realistic)
+
+
+
+### graphics - GUI 
+#### logic system
+
+
+
+
+#### how to use / tutorial
 
 <br>
 
 
-## Running The Simulation
+### Running The Simulation
+
+<br>
+
+### Tests
+
+<br>
+
+## Results 
+|  Case name      | Node_size | Edge_size |                                   Running Time                                                                             |
+| **file name**   |           |           |       isConnected       |       shortestPath       |     shortestPathDist       |        center        |        tsp        |
+|-----------------|-----------|-----------|--------------------------------------------------------------------------------------------------------------------------  |   
+|                 |           |           |           **description**                                                                                                  |
+|                 |           |           |                                                                                                                            |
+|                 |           |           |                                                                                                                            |
+|                 |           |           |                                                                                                                            |
+|                 |           |           |                                                                                                                            |
+|                 |           |           |                                                                                                                            |
+|                 |           |           |                                                                                                                            |
+
 
 
 <br>
