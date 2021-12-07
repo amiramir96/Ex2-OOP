@@ -55,7 +55,7 @@ public class DFS {
         // phase 4
         initMaps(visitedMap, predecessorMap);
         //phase 5
-        HashMap<Integer, HashMap<String, EdgeData>> transposeMap = new HashMap<>();
+        HashMap<Integer, HashMap<String, EdgeData>> transposeMap;
         transposeMap = this.transpose();
         // phase 6
         iterativeDFSTranspose(start, visitedMap, transposeMap);
@@ -137,12 +137,9 @@ public class DFS {
         while (it.hasNext()){
             tempE = it.next();
             if (!outputMap.containsKey(tempE.getDest())){
-                outputMap.put(tempE.getDest(), new HashMap<String, EdgeData>());
-                outputMap.get(tempE.getDest()).put("" + tempE.getDest() + "," + tempE.getSrc(), new Edge(tempE.getDest(), tempE.getWeight(), tempE.getSrc()));
+                outputMap.put(tempE.getDest(), new HashMap<>());
             }
-            else {
-                outputMap.get(tempE.getDest()).put("" + tempE.getDest() + "," + tempE.getSrc(), new Edge(tempE.getDest(), tempE.getWeight(), tempE.getSrc()));
-            }
+            outputMap.get(tempE.getDest()).put("" + tempE.getDest() + "," + tempE.getSrc(), new Edge(tempE.getDest(), tempE.getWeight(), tempE.getSrc()));
         }
         return outputMap;
     }

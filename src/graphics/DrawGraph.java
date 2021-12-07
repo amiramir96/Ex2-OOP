@@ -145,31 +145,41 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     /**
      * executing the draw process via neccessary params (colors etc..)
-     * draw edges then nodes (image look better this way)
+     * split all nodes and edges to two groups: specials, regulars
+     *      specials shall be drawen within the var choosen color
+     *      regulars shall be drawen within default colors ("final colors", cant be changed)
+     * draw phases:
+     *  1- draw regular edges
+     *  2- draw regular nodes
+     *  3- draw special edges
+     *  4- draw special nodes
+     *  in this way, the user will always see in front the data that they looked for in priority
+     *
+     * this function draws on the bufferImage that paints creates (paint function will switch between the buffers)
      * @param g - graphics of the curr drawer
      */
     public void paintComponents(Graphics g){
         Graphics2D graphic = (Graphics2D) g;
 
-        // paint edges
+        // stage 1: paint regular edge
         // init params
         graphic.setStroke(this.edgeStroke);
         double[] cordSrc, cordDest;
         EdgeData tempE;
-        List<EdgeData> edgeDataList = new ArrayList<>();
+        List<EdgeData> edgeDataList = new ArrayList<>(); // for special edges - tranform from "menu languege" to "drawer languege"
         Iterator<EdgeData> itEdge = this.currGraph.edgeIter();
-        while (itEdge.hasNext()){ // draw all edges
+        while (itEdge.hasNext()){ // draw all edges which is not "special" with default color which is blue
             // init edge
             tempE = itEdge.next();
             cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
             cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
             // init color
             if (this.flagAllSameColor || this.specialEdges.containsKey(""+tempE.getSrc()+","+tempE.getDest()) || this.specialEdges.containsKey(""+tempE.getDest()+","+tempE.getSrc())){
-                if (this.flagAllSameColor){
+                if (this.flagAllSameColor){ // true = paint all edges with the special color
                     graphic.setColor(this.colorE);
                     drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
                 }
-                edgeDataList.add(tempE);
+                edgeDataList.add(tempE); // add to special edge to print (transform from "menu languege" to "drawer languege"
 
             }
             else{ // default color
@@ -178,37 +188,27 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             }
         }
 
-        graphic.setStroke(this.edgeStroke);
-        itEdge = edgeDataList.iterator();
-        while(itEdge.hasNext()){
-            tempE = itEdge.next();
-            cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
-            cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
-            graphic.setColor(this.colorE);
-            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
-        }
 
-
-        // paint nodes
+        // stage 2: paint regular nodes
         graphic.setStroke(this.nodeStroke);
         Iterator<NodeData> itNode = this.currGraph.nodeIter();
         double[] cord;
         NodeData tempN;
         graphic.setFont(amirFont);
-        if (this.currGraph != null && this.currGraph.nodeSize() == 1){
-            this.min_max_cord[0] -= 2;
-            this.min_max_cord[1] -= 2;
-            this.min_max_cord[2] += 2;
-            this.min_max_cord[3] += 2;
+        if (this.currGraph != null && this.currGraph.nodeSize() <= 3){// when there is only few nodes - picture shall be defined abit diff
+            this.min_max_cord[0] -= 10;
+            this.min_max_cord[1] -= 10;
+            this.min_max_cord[2] += 10;
+            this.min_max_cord[3] += 10;
         }
 
-        while (itNode.hasNext()) { // draw all nodes
+        while (itNode.hasNext()) {
             // init node
             tempN = itNode.next();
             cord = linearTransform(tempN.getLocation()); // linear transfer regular cord to width/height cord
             // init color
             if (this.flagAllSameColor || this.specialNodes.contains(tempN)){
-                if (this.flagAllSameColor){
+                if (this.flagAllSameColor){ // true = all nodes shall be painted with special color
                     graphic.setColor(this.colorN);
                     // draw curr node
                     graphic.draw(new Ellipse2D.Double(cord[0] - this.widthPoint*zoomInOut/2, cord[1]-this.heightPoint*zoomInOut/2, this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
@@ -224,6 +224,19 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
         }
 
+        // stage 3: paint special edges
+        // note - if flagAllSameColor is true, the edgeDataList is irrelevant
+        graphic.setStroke(this.edgeStroke);
+        itEdge = edgeDataList.iterator();
+        while(itEdge.hasNext() && !this.flagAllSameColor){
+            tempE = itEdge.next();
+            cordSrc = linearTransform(this.currGraph.getNode(tempE.getSrc()).getLocation());
+            cordDest = linearTransform(this.currGraph.getNode(tempE.getDest()).getLocation());
+            graphic.setColor(this.colorE);
+            drawArrow(graphic, cordSrc[0], cordSrc[1], cordDest[0], cordDest[1]); // draw arrow (edge)
+        }
+
+        // stage 4: paint all special nodes
         graphic.setStroke(this.nodeStroke);
         itNode = this.specialNodes.iterator();
         while(itNode.hasNext()){
@@ -232,10 +245,10 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
             graphic.setColor(this.colorN);
             // draw curr node
             graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
-            if (this.flagTsp){
+            if (this.flagTsp){ // true = we in TSP mode! shall print in addition the station String!
                 graphic.drawString(""+tempN.getKey()+" station: "+this.tspString.get(tempN.getKey()), (int)cord[0], (int)cord[1]);
             }
-            else{
+            else{ // just print the node_id
                 graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
             }
         }

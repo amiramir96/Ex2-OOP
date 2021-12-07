@@ -38,7 +38,6 @@ public class Dijkstra{
      * running time O(|E|log|V| + |V|log|V|)
      * Use Nodes weight field to save the distance from src, resetting in the end of the algo run
      * @param src - the given node which we want to know all shortest path to every other node
-     * @return array of all shortest path from the given node "src"
      */
     public void mapPathDijkstra(NodeData src){
         // initialize priority queue, visit - boolean, distance - double arrays
@@ -55,15 +54,12 @@ public class Dijkstra{
         }
         // credit stack overflow https://stackoverflow.com/questions/2555284/java-priority-queue-with-a-custom-anonymous-comparator
         // compare through id ("serial number")
-        PriorityQueue<NodeData> minHeap = new PriorityQueue<>(2 * distMap.size(), new Comparator<NodeData>() {
-            @Override
-            public int compare(NodeData o1, NodeData o2) { // credit to yuval bobnovsky to guide us to fix bug via using epsilon param
-                if (Math.abs(distMap.get(o1.getKey()) - distMap.get(o2.getKey())) < 1e-32){
-                    return 0;
-                }
-                else {
-                    return distMap.get(o1.getKey()) - distMap.get(o2.getKey()) > 0 ? +1 : -1;
-                }
+        PriorityQueue<NodeData> minHeap = new PriorityQueue<>(2 * distMap.size(), (o1, o2) -> { // credit to yuval bobnovsky to guide us to fix bug via using epsilon param
+            if (Math.abs(distMap.get(o1.getKey()) - distMap.get(o2.getKey())) < 1e-32){
+                return 0;
+            }
+            else {
+                return distMap.get(o1.getKey()) - distMap.get(o2.getKey()) > 0 ? +1 : -1;
             }
         });
 
@@ -73,7 +69,7 @@ public class Dijkstra{
 
         // init vars
         int node_id;
-        double newDist, minVal;
+        double newDist;
         Edge tempE;
 
         // "dijkstra" algorithm
@@ -101,11 +97,10 @@ public class Dijkstra{
 
     /**
      *
-     * @param src - starting node
      * @param dest - node
      * @return shortest via "mapPathDijkstra" functions updated maps
      */
-    public double shortestToSpecificNode(NodeData src, NodeData dest){
+    public double shortestToSpecificNode(NodeData dest){
         return this.distMap.get(dest.getKey());
     }
 
@@ -125,11 +120,10 @@ public class Dijkstra{
 
     /**
      * after main dijsktra func used (mapPathDijkstra) - ogenizing path from src to dest via parentsMap
-     * @param src - start node
      * @param dest - last node in path
      * @return - shortestPath represented as List
      */
-    public List<NodeData> shortestPathList(NodeData src, NodeData dest){
+    public List<NodeData> shortestPathList(NodeData dest){
 //        mapPathDijkstra(src); // get the prevMap from the pathDijkstra algo
         HashMap<Integer, Integer> parentsMap = this.prevMap;
         LinkedList<NodeData> outputPath = new LinkedList<>(); // output list
@@ -140,15 +134,5 @@ public class Dijkstra{
         }
         outputPath.removeFirst(); // remove the parent of src which is null
         return outputPath;
-    }
-
-    /**
-     * if we use dikstra thousends of times, its creates thousends of dijkstra objects which could be
-     */
-    public void cleanUp(){
-        // uses maps instead of arrays since the keys of the nodes not guranteed to be ordered one by one
-        this.visitMap = null;
-        this.prevMap = null;
-        this.distMap = null;
     }
 }

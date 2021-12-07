@@ -26,13 +26,13 @@ public class LoadGraph {
 
     /**
      * return DEG from name
-     * @param graph_name
+     * @param graph_name - directory to file
      * @return DirectedWeightedGraph
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException - not directory found
      */
     public static DirectedWeightedGraph loadGraph(String graph_name) throws FileNotFoundException {
         File jsonGraphFile = new File(graph_name); // get file
-        DirectedWeightedGraph dwg = null;
+        DirectedWeightedGraph dwg;
         JsonElement graphElement = JsonParser.parseReader(new FileReader(jsonGraphFile)); // shall read, so have to handle exception
         JsonObject graphObject = graphElement.getAsJsonObject(); // convert to json object, then we can work on fields inside
         // jsonToNode return list of nodes, jsonToEdge return list of edges, both is the req to cons Dwg(directed weighted graph)

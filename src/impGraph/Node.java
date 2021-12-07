@@ -19,7 +19,7 @@ public class Node implements NodeData {
      * @param id - serial num
      */
     public Node(Point3D cord, int id) {
-        this.cord = new Point3D(cord);
+        this.cord = cord;
         this._id = id;
         this.tag = 0;
         this.metaData = "";
