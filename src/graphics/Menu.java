@@ -1,6 +1,10 @@
 package graphics;
 
 import api.*;
+import impGraph.Dwg;
+import impGraph.DwgMagic;
+import impGraph.Node;
+import impGraph.Point3D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,8 +106,8 @@ public class Menu extends JMenuBar implements ActionListener {
             } else {
                 this.algoGraph.load(this.fileChooser.getSelectedFile().getPath());
                 this.drawer.updateDrawer(this.algoGraph);
+                this.drawer.setColors(this.drawer.defNode, this.drawer.defEdge);
                 getTopLevelAncestor().repaint();
-
             }
         }
         else if (e.getSource() == this.saveGraph) { // save graph
@@ -209,12 +213,14 @@ public class Menu extends JMenuBar implements ActionListener {
                                     tspInput.add(algoGraph.getGraph().getNode(i));
                                 }
                                 drawer.specialNodes = algoGraph.tsp(tspInput);
-                                drawer.specialEdges = currPathEdges(drawer.specialNodes);
+
                                 if (drawer.specialNodes == null || drawer.specialNodes.size() == 0){
+                                    drawer.specialNodes = tspInput;
                                     drawer.setColors(Color.RED, drawer.defNode);
                                     drawer.setFlagAllSameColor(false);
                                 }
                                 else {
+                                    drawer.specialEdges = currPathEdges(drawer.specialNodes);
                                     drawer.makeTspString();
                                     drawer.removeDuplicate();
                                     drawer.setFlagTsp(true);
@@ -339,7 +345,7 @@ public class Menu extends JMenuBar implements ActionListener {
                             String[] str = s.split(",");
                             drawer.setColors(drawer.defNode, drawer.defEdge);
                             if (e.getSource() == addNode){
-                                if (str.length > 3){
+                                if (str.length > 3 || algoGraph.getGraph().getNode(Integer.parseInt(str[0])) != null){
                                     invalidInput();
                                 }
                                 algoGraph.getGraph().addNode(new Node(new Point3D(Double.parseDouble(str[1]), Double.parseDouble(str[2]), 0.0), Integer.parseInt(str[0])));
@@ -362,7 +368,7 @@ public class Menu extends JMenuBar implements ActionListener {
                         addCom.dispose();
                         addText.setText("<html> for addNode: please enter node_id and pair of x,y cord via 'int,float,float' pattern <br>" +
                                 "for addEdge: please enter pair of node_id and weight of edge via 'int,int,float' pattern<br> "+
-                                "please ENSURE to enter input without space </html>");
+                                "please ENSURE to enter input without space && node_id is UNIQUE! </html>");
                         JFrame j = new JFrame();
                         j.setBounds(200,200, 550, 150);
                         j.setTitle("ERROR");

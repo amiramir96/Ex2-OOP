@@ -1,5 +1,6 @@
 package graphAlgo;
 import api.*;
+import impGraph.Edge;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -88,9 +89,8 @@ public class DFS {
 
             // "DFS_VISIT" phase
             it = this.currGraph.edgeIter(tempN.getKey());
-            while (it.hasNext()){
+            while (it!=null && it.hasNext()){
                 tempE = it.next();
-                System.out.println(tempE);
                 if (!visitMap.get(tempE.getDest())) {
                     stackNode.push(this.currGraph.getNode(tempE.getDest())); // only if that node wasnt yet in the stack
                     visitMap.replace(tempE.getDest(), true); // the node has been visited

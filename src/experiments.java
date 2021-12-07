@@ -1,4 +1,4 @@
-import api.Edge;
+import impGraph.Edge;
 
 import java.util.HashMap;
 import java.util.Iterator;

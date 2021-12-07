@@ -169,6 +169,10 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         double[] cord;
         NodeData tempN;
         graphic.setFont(amirFont);
+        if (this.currGraph.nodeSize() <= 2){
+
+        }
+
         while (itNode.hasNext()) { // draw all nodes
             // init node
             tempN = itNode.next();

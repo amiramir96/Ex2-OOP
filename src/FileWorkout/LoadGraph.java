@@ -5,6 +5,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import impGraph.Dwg;
+import impGraph.Edge;
+import impGraph.Node;
+import impGraph.Point3D;
 
 import java.io.File;
 import java.io.FileNotFoundException;

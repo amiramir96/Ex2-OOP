@@ -1,18 +1,31 @@
 package graphAlgo;
 
 import api.*;
+import impGraph.Edge;
 
 import java.util.*;
 import java.util.List;
 
+/**
+ * use details:
+ * this is obj represent dijkstra algorithm
+ * please use "mapPathDijkstra" function before u use any other kind of function
+ * IMPLEMENTS Runnable means Dijkstra can be used to Thread object !
+ * (can be used for Center func which asks for alot of dijkstra parallel on dif src node)
+ */
 public class Dijkstra implements Runnable{
     public NodeData src;
     DirectedWeightedGraph currGraph;
+    // uses maps instead of arrays since the keys of the nodes not guranteed to be ordered one by one
     HashMap<Integer, Boolean> visitMap;
     HashMap<Integer, Integer> prevMap;
     HashMap<Integer, Double> distMap;
     public double longestPath;
 
+    /**
+     * @param g - relevant graph
+     * @param src - starting src node
+     */
     public Dijkstra(DirectedWeightedGraph g, NodeData src) {
         this.src = src;
         this.currGraph = g;
@@ -86,20 +99,15 @@ public class Dijkstra implements Runnable{
     }
 
 
-
+    /**
+     *
+     * @param src - starting node
+     * @param dest - node
+     * @return shortest via "mapPathDijkstra" functions updated maps
+     */
     public double shortestToSpecificNode(NodeData src, NodeData dest){
-//        mapPathDijkstra(src);
         return this.distMap.get(dest.getKey());
     }
-//
-//    public double summerizeAllShortestPaths(NodeData src){
-//        HashMap<Integer, Double> dijMap = basicDijkstra(src);
-//        double ans = 0;
-//        for (double value : dijMap.values()) {
-//            ans += value;
-//        }
-//        return ans;
-//    }
 
     public double longestPath(NodeData src){
         mapPathDijkstra(src);
@@ -113,6 +121,10 @@ public class Dijkstra implements Runnable{
         return this.longestPath;
     }
 
+    /**
+     * for use of Center from dwgMagic
+     * returns longest path from the while distMap
+     */
     public void longestPath(){
         this.longestPath = Double.MIN_VALUE;
         for (double value : this.distMap.values()){
@@ -122,12 +134,21 @@ public class Dijkstra implements Runnable{
         }
     }
 
+    /**
+     * for use of threads
+     */
     @Override
     public void run() {
         mapPathDijkstra(this.src);
         longestPath();
     }
 
+    /**
+     * after main dijsktra func used (mapPathDijkstra) - ogenizing path from src to dest via parentsMap
+     * @param src - start node
+     * @param dest - last node in path
+     * @return - shortestPath represented as List
+     */
     public List<NodeData> shortestPathList(NodeData src, NodeData dest){
 //        mapPathDijkstra(src); // get the prevMap from the pathDijkstra algo
         HashMap<Integer, Integer> parentsMap = this.prevMap;
