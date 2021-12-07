@@ -80,7 +80,6 @@ explanation on the algorithm methods:<br>
 
 ## Assigment instructions
 
-<br>
 ## Review of the Literature
 
 
