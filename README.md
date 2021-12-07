@@ -1,4 +1,4 @@
-#Ex2-OOP
+# Ex2-OOP
 Object Oriented Programming exercise 2
 
 in this assigment we were required to implement Directed Weighted Garph and some choosen algorithms via our teacher Interfaces : https://github.com/amiramir96/Ex2-OOP/tree/main/src/api <br> 
