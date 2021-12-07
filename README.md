@@ -13,13 +13,14 @@ in addition, we shall create a GUI programme that support every algorithm that i
 | LoadGraph       |                                                                                                                                                          |
 |    SaveGraph    |                                                                                                                                                          |
  
- <br>
+
 |   package name: |                                                     **graphAlgo**                                                                                      |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **file name**   |      **description**                                                                                                                                     |   
 | DFS             |                                                                                                                                                          |
 |    Dijkstra     |                                                                                                                                                          |
-<br>
+
+
 |   package name: |                                                     **impGraph**                                                                                      |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **file name**   |      **description**                                                                                                                                     |   
@@ -30,7 +31,8 @@ in addition, we shall create a GUI programme that support every algorithm that i
 |    EdgeIter     |                                                                                                                                                          |
 |    DwgMagic     |                                                                                                                                                          |
 |    ThreadPool   |                                                                                                                                                          |
-<br>
+
+
 |   package name: |                                                     **graphics**                                                                                         |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **file name**   |      **description**                                                                                                                                     |   
@@ -47,19 +49,20 @@ the class obj will construct by getting existing Directed Weigthed Graph (even a
 explanation on the algorithm methods:<br>
 ### isConnected
 
-<br>
+
 ### ShortestPath
 
-<br>
+
 ### ShortestPathDist
 
-<br>
+
+
 ### center
 
-<br>
+
 ### tsp - traveler salesmen problem (crafted to be more realistic)
 
-<br>
+
 
 ## graphics - GUI 
 ### logic system
