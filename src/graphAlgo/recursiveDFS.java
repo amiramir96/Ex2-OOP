@@ -1,8 +1,8 @@
 package graphAlgo;
 
-import api.Dwg;
-import api.Edge;
-import api.Node;
+import impGraph.Dwg;
+import impGraph.Edge;
+import impGraph.Node;
 import api.NodeData;
 
 import java.util.HashMap;
