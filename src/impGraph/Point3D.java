@@ -42,6 +42,6 @@ public class Point3D implements GeoLocation {
     public double distance(GeoLocation g) {
         double deltaX = this._x - g.x();
         double deltaY = this._y - g.y();
-        return Math.sqrt(deltaX*deltaX + deltaY+deltaY);
+        return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
     }
 }
