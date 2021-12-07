@@ -1,78 +1,110 @@
 # Ex2-OOP
-exercise two of object oriented programming of Ariel university
+Object Oriented Programming exercise 2
 
-## lets use this readme to module our needs for the excersiece
-### topic of tasks:
-0. load json file input <br>
-1. simple Objects: Node (imp NodeData), Edge (imp NodeData), Point(imp GeoLocation) <br>
-2. Object Dwg (imp DirectedWeightedGraph) <br>
-3. Object DwgMagic (imp DirectedWeightedGraphAlgotithms) <br>
-3.1 algorithms that we need for bullet 3 <br>
-4. GUI Dwg, DwgMagic <br>
+in this assigment we were required to implement Directed Weighted Garph and some choosen algorithms via our teacher Interfaces : https://github.com/amiramir96/Ex2-OOP/tree/main/src/api <br> 
+the directed weigthed graph object shall implemented within the best time run as possible since its can hold alot of vertex and edges. <br>
+in addition, we shall create a GUI programme that support every algorithm that implemented on the graph (for ex, load graph, isConnected, tsp etc..) <br>
 
-### 0. load json file input
-**what is done:** <br>
-loading json files<br>
+## Program Overview
+### structre of the project code
+
+ |   package name: |                                                     **FileWorkout**                                                                                      |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **file name**   |      **description**                                                                                                                                     |   
+| LoadGraph       |             Load a Json file and construct <br> Directed Weighted Graph via the json file                                                                   |
+|    SaveGraph    |             Save an existing Directed Weighted Graph - <br> nodes and edges as json file, at any directory in the computer                                    |
+
+|   package name: |                                                     **graphAlgo**                                                                                        |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **file name**   |      **description**                                                                                                                                     |   
+| DFS             |     implement DFS algorithm, for more details on DFS <br> please look at "Review of the Literature" at the bottom of the readme                               |
+|    Dijkstra     |     implement Dijkstra algorithm, for more details on Dijksta <br> please look at "Review of the Literature" at the bottom of the readme                      |
+
+
+|   package name: |                                                     **impGraph**                                                                                         |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **file name**   |      **description**                                                                                                                                     |   
+| Point3D         |  represents point on the plane, imp GeoLocation                                                                                                          |
+|    Node         |  is vertex in the graph, imp NodeData                                                                                                                    |
+|    Edge         |   edge in graph, imp EdgeData                                                                                                                            |
+|    Dwg          |  1. imp DirectedWeightedGraph, hold iterators for all nodes, edges, edges of specific nodes, <br> 2. support add node and remove/add edge within O(1), <br> 3. support remove key within O(k) while k is the amount of in+out edges of the given node                                                                                                     |
+|    EdgeIter     |   iterator for Edges of curr node, crafted to the needs of our graph (throw exception if graph has been changed since iterator is created)               |
+|    DwgMagic     |    imp DirectedWeigthedGraphAlgorithms, provide solutions for several "known" and "unkown" problem                                                       |
+|    ThreadPool   |    this class exists to support using Dijkstra algorithm on diff nodes in parralel (will be explained more in "center" algorithm)                        |
+
+
+|   package name: |                                                     **graphics**                                                                                         |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **file name**   |      **description**                                                                                                                                     |   
+|       Window    |    inherite from JFrame, represent our JFrame (the visualized window)                                                                                    |
+|    DrawGraph    |    inherite from JPanel and imp ActionListener, and Mouse interfaces, responsible to draw the given graph as it got commanded                            |    |      Menu       | inherite from MenuBar and imp ActionListener, control over the features, <br> decided which feature got clicked and arrange all the needed needs so that the DrawGarph object will be able to focus only via its got defined till the present time                                                          |
+
+
+### Directed Weigthed Graph
+
+## Directed Weighted Graph Algorithms
+supporting some methods via interface https://github.com/amiramir96/Ex2-OOP/blob/main/src/api/DirectedWeightedGraphAlgorithms.java <br>
+the class obj will construct by getting existing Directed Weigthed Graph (even an empty one). <br>
+explanation on the algorithm methods:<br>
+#### isConnected
+
+
+#### ShortestPath
+
+
+#### ShortestPathDist
+
+
+
+#### center
+
+
+#### tsp - traveler salesmen problem (crafted to be more realistic)
+
+
+
+### graphics - GUI 
+#### logic system
+
+
+
+
+#### how to use / tutorial
+
 <br>
-**what have to be done:** <br>
-maybe xfer the functions from Ex2 class to another class that will hold all the functions for load/saving json files (cuz we have at DwgMagic same task + save func)
-- **is done**
 
-### 1. simple Objects: Node (imp NodeData), Edge (imp NodeData), Point(imp GeoLocation) 
-**what is done:** <br>
-kinda everything <br>
+
+### Running The Simulation
+
 <br>
-**what have to be done:** <br>
-to adjust objects (if neccessary) for GUI needes <br>
-that means we probable have to xfer the geoLocation data of nodes to something that will always match to the window sizes <br>
 
-### 2. Object Dwg (imp DirectedWeightedGraph) 
-**what is done:** <br>
-kinda everything <br>
+### Tests
+
 <br>
-**what have to be done:** <br>
-in theory: the minimum of objects that we shall "save" in memory is: once all the nodes, once all the edges <br>
-in my imp (which is very rough and i didnt thought more than few mins on that) there is once all nodes, and 3 times all the edges (its only pointers to the obj but still..) <br>
-also, if we stay with this memory architecture, i have to edit the constructors to be more efficient (will take me prob like 1h +-) <br>
 
-another issue, we shall adjust this obj to work with GUI as neccessary (if there is a need for inner functions)
-
-
-### 3. Object DwgMagic (imp DirectedWeightedGraphAlgotithms) 
-**what is done:** <br>
-basic funcs (1 line code xD)<br>
-center function (base on dijkstra)<br>
-a. isConnected <br>
-b. shortestPath (base on dijkstra)<br>
-c. shortestPathDist (base on dijkstra)<br>
-f. load from Dwg from json file (same as "0. load json file input" <br>
+## Results
 <br>
-**what have to be done:** <br>
 
-d. tsp <br>
-e. save the Dwg object that class worken on to json file <br>
+| **Case name**   |**Node_size**|**Edge_size**|     **isConnected**     |     **shortestPath**     |   **shortestPathDist**     |      **center**      |      **tsp**      |
+|-----------------|-------------|-------------|-------------------------|--------------------------|----------------------------|----------------------|-------------------|   
+|                 |             |             |                         |       **description**    |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
 
-#####
-g. edited - we dont must to but for better TESTS, we shall make "generator" that make kinda random graphs
 
-#### algorithms that we need for bullet 3
- is connected: <br>
-<\t>    1. DFS - **is done** <br>
-<\t>    2. transpose edges for is connected  -  **is done**(we can not impliment that if we stay with same data structres cuz we have there hashmap of all transpose edges) <br>
- shortestPath / Dist: **is done**<br>
-djiksta **done both versa - distance only && can hold list of the shortest path** <br> 
- tsp: <br>
- Option1. kruskel or prim MST algos + DFS <br> 
- Option2. kruskel/prim MST + christofides <br> 
-  and decide if to imp dynamic prog then we can switch in small cases (10~15 nodes) to brute forces with optimal solution
-  
-  
-### 4. GUI Dwg, DwgMagic
-its like a one whole exercise by itself, we shall talk about it deeply <br>
-have alot to implement <br>
-window <br>
-adjust points of nodes in plain to the window of the GUI <br>
-toolbar: save, load <br>
-functions buttons: add/delete node and edge, create new graph <br>
-visualisation of the graph <br>
-visualisation of the algorithms on the graph (who is center, color shortest path and etc depend on the user clicks)
+
+<br>
+
+## Assigment instructions
+
+## Review of the Literature
+
+
+
+<br>
+
+special thanks to Daniel Rosenberg our class mate which helped with some hints and guidence along the gui implementation
