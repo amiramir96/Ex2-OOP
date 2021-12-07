@@ -1,6 +1,8 @@
 import FileWorkout.LoadGraph;
 import FileWorkout.SaveGraph;
 import api.*;
+import impGraph.*;
+import graphAlgo.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -91,7 +93,7 @@ public class RandomGraphGenerator {
 
     @Test
     void testGenerator(){
-        DirectedWeightedGraph g= createRndGraph(100);
+        DirectedWeightedGraph g= createRndGraph(23);
 
     }
 }
