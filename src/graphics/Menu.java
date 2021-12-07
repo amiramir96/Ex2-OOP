@@ -428,17 +428,21 @@ public class Menu extends JMenuBar implements ActionListener {
                             String[] str = s.split(",");
                             drawer.setColors(drawer.defNode, drawer.defEdge);
                             if (e.getSource() == delNode){
-                                if (str.length > 1){
+                                if (str.length > 1){ // delete node
                                     invalidInput();
                                 }
                                 algoGraph.getGraph().removeNode(Integer.parseInt(str[0]));
+                                drawer.specialNodes = new ArrayList<>();
+                                drawer.specialEdges = new HashMap<>();
                                 algoGraph.init(algoGraph.getGraph());
                                 drawer.updateDrawer(algoGraph);
                             }
-                            else if (e.getSource() == delEdge){
+                            else if (e.getSource() == delEdge){ // delete edge
                                 if (str.length > 2){
                                     invalidInput();
                                 }
+                                drawer.specialNodes = new ArrayList<>();
+                                drawer.specialEdges = new HashMap<>();
                                 algoGraph.getGraph().removeEdge(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
                             }
                             getTopLevelAncestor().repaint();
