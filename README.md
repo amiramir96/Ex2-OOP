@@ -84,7 +84,7 @@ explanation on the algorithm methods:<br>
 <br>
 
 ## Results 
-|  Case name      | Node_size | Edge_size |                                   Running Time                                                                             |
+|  Case name      | Node_size | Edge_size |---------------------------------------Running Time-------------------------------------------------------------------------|
 | **file name**   |           |           |       isConnected       |       shortestPath       |     shortestPathDist       |        center        |        tsp        |
 |-----------------|-----------|-----------|-------------------------|--------------------------|----------------------------|----------------------|-------------------|   
 |                 |           |           |                         |       **description**    |                            |                      |                   |
