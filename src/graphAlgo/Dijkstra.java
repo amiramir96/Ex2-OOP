@@ -13,7 +13,7 @@ import java.util.List;
  * IMPLEMENTS Runnable means Dijkstra can be used to Thread object !
  * (can be used for Center func which asks for alot of dijkstra parallel on dif src node)
  */
-public class Dijkstra implements Runnable{
+public class Dijkstra{
     public NodeData src;
     DirectedWeightedGraph currGraph;
     // uses maps instead of arrays since the keys of the nodes not guranteed to be ordered one by one
@@ -109,38 +109,18 @@ public class Dijkstra implements Runnable{
         return this.distMap.get(dest.getKey());
     }
 
-    public double longestPath(NodeData src){
-        mapPathDijkstra(src);
-        HashMap<Integer, Double> dijMap = this.distMap;
-        this.longestPath = Double.MIN_VALUE;
-        for (double value : dijMap.values()){
-            if (value > this.longestPath){
-                this.longestPath = value;
-            }
-        }
-        return this.longestPath;
-    }
-
     /**
      * for use of Center from dwgMagic
      * returns longest path from the while distMap
      */
-    public void longestPath(){
+    public double longestPath(){
         this.longestPath = Double.MIN_VALUE;
         for (double value : this.distMap.values()){
             if (value > this.longestPath){
                 this.longestPath = value;
             }
         }
-    }
-
-    /**
-     * for use of threads
-     */
-    @Override
-    public void run() {
-        mapPathDijkstra(this.src);
-        longestPath();
+        return this.longestPath;
     }
 
     /**
@@ -162,4 +142,13 @@ public class Dijkstra implements Runnable{
         return outputPath;
     }
 
+    /**
+     * if we use dikstra thousends of times, its creates thousends of dijkstra objects which could be
+     */
+    public void cleanUp(){
+        // uses maps instead of arrays since the keys of the nodes not guranteed to be ordered one by one
+        this.visitMap = null;
+        this.prevMap = null;
+        this.distMap = null;
+    }
 }

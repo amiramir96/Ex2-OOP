@@ -9,6 +9,7 @@ import impGraph.Point3D;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -32,19 +33,16 @@ public class Menu extends JMenuBar implements ActionListener {
         this.drawer = d;
         this.algoGraph = g;
         this.menu = new JMenu("File");
-        this.fileChooser = new JFileChooser();
+        this.fileChooser = new JFileChooser(new File(System.getProperty("user.dir")));
         // init menu items ("buttons")
         this.loadGraph = new JMenuItem("load graph");
         this.saveGraph = new JMenuItem("save graph");
 //        this.exitGui = new JMenuItem("exit");
         this.loadGraph.addActionListener(this);
-        this.saveGraph.addActionListener(this);
-//        this.exitGui.addActionListener(this);
-        // add them to the bar
+        this.saveGraph.addActionListener(this); // add them to the bar
         this.menu.add(this.loadGraph);
         this.menu.add(this.saveGraph);
-//        this.menu.add(this.exitGui);
-//        this.loadGraph.setMnemonic(KeyEvent.VK_L);
+
 
         // init one more tool options for the menu
         this.runAlgo = new JMenu("Algo_Command");
@@ -74,7 +72,7 @@ public class Menu extends JMenuBar implements ActionListener {
         this.delNode = new JMenuItem("delete node");
         this.addEdge = new JMenuItem("add edge");
         this.delEdge = new JMenuItem("delete edge");
-        JMenuItem nothing = new JMenuItem("------");
+        JSeparator nothing = new JSeparator();
         this.newDwg = new JMenuItem("create empty graph");
 
         this.addNode.addActionListener(this);

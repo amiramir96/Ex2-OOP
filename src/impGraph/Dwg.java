@@ -357,34 +357,58 @@ public class Dwg implements DirectedWeightedGraph {
      */
     @Override
     public NodeData removeNode(int key) {
-        this.mc += this.edgeInMap.get(key).size() + this.edgeOutMap.get(key).size() + 1;
+        if (this.nodeSize == 1 || this.edgeSize == 0){
+            NodeData n = this.getNode(key);
+            this.nodeMap.remove(key);
+            this.nodeSize--;
+            this.mc++;
+            return n;
+        }
         this.nodeSize--;
-        this.edgeSize = this.edgeSize - this.edgeInMap.get(key).size() - this.edgeOutMap.get(key).size();
-
+        int edgeOutMapSize = 0, edgeInMapSize = 0;
+        if (this.edgeOutMap.get(key) == null || this.edgeOutMap.get(key).size() == 0){
+            edgeOutMapSize = 0;
+        }
+        else {
+            edgeOutMapSize = this.edgeOutMap.get(key).size();
+        }
+        if (this.edgeInMap.get(key) == null || this.edgeInMap.get(key).size() == 0){
+            edgeInMapSize = 0;
+        }
+        else {
+            edgeInMapSize = this.edgeInMap.get(key).size();
+        }
+        this.edgeSize = this.edgeSize - edgeInMapSize - edgeOutMapSize;
+        EdgeData tempE;
+        ArrayList<EdgeData> eList;
+        Iterator<Map.Entry<String, EdgeData>> edgeEntries;
         // used https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
         // since for each loop can grant "unpredictable results" so we do it in old school style :-P
-        Iterator<Map.Entry<String, EdgeData>> edgeEntries = this.edgeOutMap.get(key).entrySet().iterator();
-        EdgeData tempE;
-        ArrayList<EdgeData> eList = new ArrayList<>();
-        while (edgeEntries.hasNext()){
-            // bullet "1-" of the removing process
-            Map.Entry<String, EdgeData> entry = (Map.Entry<String, EdgeData>) (edgeEntries.next());
-            tempE = entry.getValue();
-            eList.add(tempE);
+        if (this.edgeOutMap.get(key) != null && this.edgeOutMap.get(key).size() != 0){
+            edgeEntries = this.edgeOutMap.get(key).entrySet().iterator();
+            eList = new ArrayList<>();
+            while (edgeEntries.hasNext()){
+                // bullet "1-" of the removing process
+                Map.Entry<String, EdgeData> entry = (Map.Entry<String, EdgeData>) (edgeEntries.next());
+                tempE = entry.getValue();
+                eList.add(tempE);
+            }
+            for (EdgeData element : eList){
+                removeEdge(element.getSrc(), element.getDest());
+            }
         }
-        for (EdgeData element : eList){
-            removeEdge(element.getSrc(), element.getDest());
-        }
-        eList = new ArrayList<>();
-        edgeEntries = this.edgeInMap.get(key).entrySet().iterator();
-        while (edgeEntries.hasNext()){
-            // bullet "2-" of the removing process
-            Map.Entry<String, EdgeData> entry = (Map.Entry<String, EdgeData>) (edgeEntries.next());
-            tempE = entry.getValue();
-            eList.add(tempE);
-        }
-        for (EdgeData element : eList){
-            removeEdge(element.getSrc(), element.getDest());
+        if (this.edgeInMap.get(key) != null && this.edgeInMap.get(key).size() != 0){
+            eList = new ArrayList<>();
+            edgeEntries = this.edgeInMap.get(key).entrySet().iterator();
+            while (edgeEntries.hasNext()){
+                // bullet "2-" of the removing process
+                Map.Entry<String, EdgeData> entry = (Map.Entry<String, EdgeData>) (edgeEntries.next());
+                tempE = entry.getValue();
+                eList.add(tempE);
+            }
+            for (EdgeData element : eList){
+                removeEdge(element.getSrc(), element.getDest());
+            }
         }
         // bullet "3-" of the removing process
         this.edgeInMap.remove(key);
@@ -392,6 +416,7 @@ public class Dwg implements DirectedWeightedGraph {
 
         NodeData removedNode = this.nodeMap.get(key);
         this.nodeMap.remove(key);
+        this.mc++;
         return removedNode;
     }
 

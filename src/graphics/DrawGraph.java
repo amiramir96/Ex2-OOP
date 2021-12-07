@@ -10,6 +10,10 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
+/**
+ * inherit from JPanel and impliments Mouse interfaces
+ * responsible on drawing the graph as its ordered (via colors, stroke, etc)
+ */
 public class DrawGraph extends JPanel  implements MouseListener, MouseMotionListener, MouseWheelListener{
     // init params
     final double constWidth = 750*0.8;
@@ -25,7 +29,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     // stroke and fonts
     final Stroke edgeStroke = new BasicStroke((float)1.5);
-    final Stroke nodeStroke = new BasicStroke((float)5);
+    final Stroke nodeStroke = new BasicStroke((float)5.0);
     final Font amirFont = new Font("a", Font.BOLD, 16);
 
     // for representing functions output (via colors)
@@ -33,36 +37,38 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     boolean flagTsp;
     final Color defEdge, defNode; // default colors
     Color colorE, colorN; // special colors for events
-    HashMap<String, Integer> specialEdges;
-    List<NodeData> specialNodes;
-    HashMap<Integer, String> tspString;
-
+    HashMap<String, Integer> specialEdges; // which will be drawed with none default color
+    List<NodeData> specialNodes; // which will be drawed with none default color
+    HashMap<Integer, String> tspString; // helps to management drawing of TSP items
     //save mouse points, help to make picture accurate to client presses
     private Point2D mousePoint;
     private Point2D mousePrevPos;
     private Point2D mouseNextPos;
 
-    public DrawGraph(DirectedWeightedGraphAlgorithms al){
+    DrawGraph(DirectedWeightedGraphAlgorithms al){
         // initialize the drawer parameters and vars
         this.algoGraph = al;
         this.currGraph = al.getGraph();
-        this.min_max_cord = new double[4]; // idx: 0-minX, 1-minY, 2-maxX, 3-maxY
         this.zoomInOut = 1; // can be chaned later
         this.widthArrow = 10.0;
         this.heightArrow = 5.0;
         this.widthPoint = 5.0;
         this.heightPoint = 5.0;
-        mousePoint = new Point(0,0);
-        mousePrevPos = (Point2D)mousePoint.clone();
-        mouseNextPos = (Point2D)mousePoint.clone();
-        updateMinMax();
+        this.mousePoint = new Point(0,0);
+        this.mousePrevPos = new Point(0,0);
+        this.mouseNextPos = new Point(0,0);
+        // responsible to keep all items in the bounds of the 750*750 picture
+        this.min_max_cord = new double[4]; // idx: 0-minX, 1-minY, 2-maxX, 3-maxY
+        if (this.currGraph != null && this.currGraph.nodeSize() >0){
+            updateMinMax();
+        }
 
         // init colors block
         this.defNode = Color.BLACK; // black
         this.defEdge = new Color(0,100,200); // regular blue
-        this.flagAllSameColor = false;
         this.specialNodes = new LinkedList<>();
         this.specialEdges = new HashMap<>();
+        this.flagAllSameColor = false;
         this.flagTsp = false;
 
         // as needed..
@@ -71,6 +77,10 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         this.addMouseWheelListener(this);
     }
 
+    /**
+     * if the graph or its algos parameters have been changed, drawer obj shall be updated
+     * @param newAlgo - for example DwgMagic
+     */
     void updateDrawer(DirectedWeightedGraphAlgorithms newAlgo){
         // init params
         this.algoGraph = newAlgo;
@@ -81,24 +91,40 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         this.widthPoint = 5.0;
         this.heightPoint = 5.0;
         mousePoint = new Point(0,0);
-        mousePrevPos = (Point2D)mousePoint.clone();
-        mouseNextPos = (Point2D)mousePoint.clone();
+        mousePrevPos = new Point(0,0);
+        mouseNextPos = new Point(0,0);
         // init flag for coloring (zeroing)
         this.flagAllSameColor = false;
         this.flagTsp = false;
         // back to default
-        updateMinMax();
+        if (newAlgo.getGraph() != null && newAlgo.getGraph().nodeSize() > 0){
+            updateMinMax();
+        }
     }
 
+    /**
+     * update special colors for node and edges
+     * @param nodeNewColor - color
+     * @param edgeNewColor - color
+     */
     void setColors(Color nodeNewColor, Color edgeNewColor){
         this.colorN = nodeNewColor;
         this.colorE = edgeNewColor;
     }
 
+    /**
+     * update flage "allSameColor" - decide if to draw all color in the same special color
+     * @param b - boolean
+     */
     void setFlagAllSameColor(boolean b){
         this.flagAllSameColor = b;
     }
 
+    /**
+     * update flage "tsp" - decide if to draw special nodes as tsp strategy or regulary
+     * @param b - boolean
+     */
+    public void setFlagTsp(boolean b) { this.flagTsp = b; }
     /**
      * credit to Shai Aharon teacher
      * this function ensure that the program will draw everything on a back image
@@ -169,8 +195,11 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         double[] cord;
         NodeData tempN;
         graphic.setFont(amirFont);
-        if (this.currGraph.nodeSize() <= 2){
-
+        if (this.currGraph != null && this.currGraph.nodeSize() == 1){
+            this.min_max_cord[0] -= 2;
+            this.min_max_cord[1] -= 2;
+            this.min_max_cord[2] += 2;
+            this.min_max_cord[3] += 2;
         }
 
         while (itNode.hasNext()) { // draw all nodes
@@ -182,7 +211,7 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
                 if (this.flagAllSameColor){
                     graphic.setColor(this.colorN);
                     // draw curr node
-                    graphic.draw(new Ellipse2D.Double(cord[0], cord[1], this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
+                    graphic.draw(new Ellipse2D.Double(cord[0] - this.widthPoint*zoomInOut/2, cord[1]-this.heightPoint*zoomInOut/2, this.widthPoint*zoomInOut, this.heightPoint*zoomInOut));
                     graphic.drawString(""+tempN.getKey(), (int)cord[0], (int)cord[1]);
                 }
             }
@@ -212,26 +241,37 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
         }
     }
 
+    /**
+     * remove duplicate nodes which contains in the specialNodes list
+     * helpful for tsp handling which is hard to print without duplicates
+     */
     void removeDuplicate() {
         int size = this.specialNodes.size();
         NodeData n;
+        // iterate over the list
         for (int i=0; i < size; i++){
             n = this.specialNodes.get(0);
+            // remove all pointers to node n
             while (this.specialNodes.contains(n)){
                 this.specialNodes.remove(n);
             }
+            // add node n back to the list
             this.specialNodes.add(n);
         }
     }
-    //HashMap<Integer, String>
+
+    /**
+     *  loop over special nodes list
+     *  creates HashMap with keys - node_id, values - string which shall be printed with the curr node in the end of TSP process
+     */
     void makeTspString() {
         this.tspString = new HashMap<>();
-        int stationCounter=1;
+        int stationCounter=1; // represent the id station which the travel will get to within the i "move"
         for (NodeData element : this.specialNodes){
-            if (!this.tspString.containsKey(element.getKey())){
+            if (!this.tspString.containsKey(element.getKey())){ // first time we handling with the element node
                 this.tspString.put(element.getKey(), ""+stationCounter);
             }
-            else {
+            else { // not the first time
                 this.tspString.replace(element.getKey(), this.tspString.get(element.getKey()) +","+stationCounter);
             }
             stationCounter++;
@@ -327,12 +367,12 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mouseNextPos = e.getPoint();
+        mouseNextPos = e.getPoint(); // update mouse next pos cordinates
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mousePrevPos = (Point2D)mousePoint.clone();
+        mousePrevPos = (Point2D)mousePoint.clone(); // update mouse prev pos cordinates
     }
 
     @Override
@@ -343,6 +383,10 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
     public void mouseExited(MouseEvent e) {
     }
 
+    /**
+     * this func ensure "smooth" dragging over the map
+     * @param e - mouse event
+     */
     @Override
     public void mouseDragged(MouseEvent e) { // credit to Daniel Rosenberg, class student, for formula
         double xMPrev = mousePrevPos.getX(), yMPrev = mousePrevPos.getY();
@@ -359,14 +403,12 @@ public class DrawGraph extends JPanel  implements MouseListener, MouseMotionList
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) { // https://www.javacodex.com/Swing/MouseWheelListener for more data
+        // ensure that the picture wont minimize to size that will be too close to zero zoom
+        // this way of implementation avoids from stuck picture cuz of too much zoom usage
         double temp = ((double)-e.getWheelRotation()) / 7;
         if (this.zoomInOut + temp > 0.05){
             this.zoomInOut = this.zoomInOut + temp;
             repaint();
         }
-    }
-
-    public void setFlagTsp(boolean b) {
-        this.flagTsp = b;
     }
 }

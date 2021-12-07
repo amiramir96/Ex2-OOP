@@ -6,6 +6,7 @@ import FileWorkout.*;
 import graphics.Window;
 import impGraph.Dwg;
 import impGraph.DwgMagic;
+import impGraph.Node;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -135,7 +136,9 @@ public class Ex2 {
 
     //bdika bdika
     public static void main(String[] args) throws IOException {
-       runGUI("data\\G3.json");
+//       DwgMagic d = (DwgMagic) getGrapgAlgo("data\\10000Nodes.json");
+//       System.out.println(d.center().getKey());
+              runGUI("data\\G3.json");
 //        System.out.println("ended const");
 //        System.out.println(d.getGraph().nodeSize()+"  "+d.getGraph().edgeSize());
 //        System.out.println("start dijkstra");

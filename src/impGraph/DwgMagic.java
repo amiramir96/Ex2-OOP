@@ -142,46 +142,6 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
      * @return the Node which is the center (from that node, the sum of paths to all other nodes together is minimum compare to all other nodes)
      */
     // without threads
-    @Override
-    public NodeData center() {
-        NodeData ansNode = null; // init ans
-        // isConnect=-1 -> we dont know yet this data
-        // this.mc != graph.mc -> graph as been changed since last time we could check "isConnected"
-        if (this.isConnected == -1 || this.mc != this.currGraph.getMC()){
-            this.isConnected();
-            this.center = -1;
-        }
-        if (this.center != -1){ // maybe no need to use center again
-            return this.currGraph.getNode(this.center);
-        }
-        if (this.isConnected == 1){ // if not connected - ans is null, go out
-            this.mc = this.currGraph.getMC();
-            // init vars
-            double shortestFromLognests = Double.MAX_VALUE, tempLongest;
-            NodeData tempN;
-            List<Dijkstra> dijkstraList = new ArrayList<>();
-            List<Thread> myFirstThreadList = new ArrayList<>();
-            Iterator<NodeData> it = this.currGraph.nodeIter(); // ez to iterate all over the nodes one by one
-
-            while (it.hasNext()){ // dijkstra on ea node as src one time
-                tempN = it.next();
-                Dijkstra dijObj = new Dijkstra(this.currGraph, tempN);
-                dijkstraList.add(dijObj);
-                dijObj.mapPathDijkstra(tempN);
-                dijObj.longestPath();
-            }
-            for (Dijkstra dijObj : dijkstraList){
-                if (dijObj.longestPath < shortestFromLognests){
-                    shortestFromLognests = dijObj.longestPath;
-                    ansNode = dijObj.src;
-                }
-            }
-            this.center = ansNode.getKey(); // save center value - maybe we will save some resources in futrue :-P
-        }
-        return ansNode;
-    }
-
-    // threads
 //    @Override
 //    public NodeData center() {
 //        NodeData ansNode = null; // init ans
@@ -202,46 +162,15 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
 //            List<Dijkstra> dijkstraList = new ArrayList<>();
 //            List<Thread> myFirstThreadList = new ArrayList<>();
 //            Iterator<NodeData> it = this.currGraph.nodeIter(); // ez to iterate all over the nodes one by one
-//            int idx=0; // serial num via iterations
-//            // init lists that and will split the dijobjects via serial num
-//            List<Dijkstra> dijList0 = new LinkedList<>();
-//            List<Dijkstra> dijList1 = new LinkedList<>();
-//            List<Dijkstra> dijList2 = new LinkedList<>();
-//            List<Dijkstra> dijList3 = new LinkedList<>();
 //
 //            while (it.hasNext()){ // dijkstra on ea node as src one time
 //                tempN = it.next();
 //                Dijkstra dijObj = new Dijkstra(this.currGraph, tempN);
 //                dijkstraList.add(dijObj);
-//                // split all dijobj equally
-//                switch (idx % 4) {
-//                    case 0 -> dijList0.add(dijObj);
-//                    case 1 -> dijList1.add(dijObj);
-//                    case 2 -> dijList2.add(dijObj);
-//                    case 3 -> dijList3.add(dijObj);
-//                }
-//                idx++;
+//                dijObj.mapPathDijkstra(tempN);
+//                dijObj.longestPath();
+//                dijObj.cleanUp();
 //            }
-//            // create the thread objects
-//            ThreadPool thPool0 = new ThreadPool(dijList0, 0);
-//            ThreadPool thPool1 = new ThreadPool(dijList1, 1);
-//            ThreadPool thPool2 = new ThreadPool(dijList2, 2);
-//            ThreadPool thPool3 = new ThreadPool(dijList3, 3);
-//            // start threads
-//            thPool0.start();
-//            thPool1.start();
-//            thPool2.start();
-//            thPool3.start();
-//            try{ // join all
-//                thPool0.join();
-//                thPool1.join();
-//                thPool2.join();
-//                thPool3.join();
-//            }
-//            catch (Exception e){
-//                e.printStackTrace();
-//            }
-//            // take highest value
 //            for (Dijkstra dijObj : dijkstraList){
 //                if (dijObj.longestPath < shortestFromLognests){
 //                    shortestFromLognests = dijObj.longestPath;
@@ -252,6 +181,81 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
 //        }
 //        return ansNode;
 //    }
+
+//     threads
+    @Override
+    public NodeData center() {
+        NodeData ansNode = null; // init ans
+        // isConnect=-1 -> we dont know yet this data
+        // this.mc != graph.mc -> graph as been changed since last time we could check "isConnected"
+        if (this.isConnected == -1 || this.mc != this.currGraph.getMC()){
+            this.isConnected();
+            this.center = -1;
+        }
+        if (this.center != -1){ // maybe no need to use center again
+            return this.currGraph.getNode(this.center);
+        }
+        if (this.isConnected == 1){ // if not connected - ans is null, go out
+            this.mc = this.currGraph.getMC();
+            // init vars
+            double shortestFromLognests = Double.MAX_VALUE, tempLongest;
+            NodeData tempN;
+            List<Dijkstra> dijkstraList = new ArrayList<>();
+            List<Thread> myFirstThreadList = new ArrayList<>();
+            Iterator<NodeData> it = this.currGraph.nodeIter(); // ez to iterate all over the nodes one by one
+            int idx=0; // serial num via iterations
+            // init lists that and will split the dijobjects via serial num
+            List<NodeData> dijList0 = new LinkedList<>();
+            List<NodeData> dijList1 = new LinkedList<>();
+            List<NodeData> dijList2 = new LinkedList<>();
+            while (it.hasNext()){ // dijkstra on ea node as src one time
+                tempN = it.next();
+//                Dijkstra dijObj = new Dijkstra(this.currGraph, tempN);
+//                dijkstraList.add(dijObj);
+                // split all dijobj equally
+                switch (idx % 3) {
+                    case 0 -> dijList0.add(tempN);
+                    case 1 -> dijList1.add(tempN);
+                    case 2 -> dijList2.add(tempN);
+                }
+                idx++;
+            }
+//             create the thread objects
+            ThreadPool thPool0 = new ThreadPool(dijList0, 0, this.currGraph);
+            ThreadPool thPool1 = new ThreadPool(dijList1, 1, this.currGraph);
+            ThreadPool thPool2 = new ThreadPool(dijList2, 2, this.currGraph);
+////             start threads
+            thPool0.start();
+            thPool1.start();
+            thPool2.start();
+
+            try{ // join all
+                thPool0.join();
+                thPool1.join();
+                thPool2.join();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            // take lowest
+            double x;
+            if (thPool0.shortest > thPool1.shortest){
+                ansNode = this.currGraph.getNode(thPool1.centerForNodeList);
+                x = thPool1.shortest;
+            }
+            else {
+                ansNode = this.currGraph.getNode(thPool0.centerForNodeList);
+                x = thPool0.shortest;
+            }
+            if (x > thPool2.shortest){
+                ansNode = this.currGraph.getNode(thPool2.centerForNodeList);
+            }
+
+            this.center = ansNode.getKey(); // save center value - maybe we will save some resources in futrue :-P
+        }
+        return ansNode;
+    }
 
 
 
