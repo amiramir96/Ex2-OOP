@@ -7,38 +7,37 @@ in addition, we shall create a GUI programme that support every algorithm that i
 
 ## Program Overview
 ### structre of the project code
-|   package name: |                                                     **FileWorkout**                                                                                      |
+
+ |   package name: |                                                     **FileWorkout**                                                                                      |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **file name**   |      **description**                                                                                                                                     |   
-| LoadGraph       |                                                                                                                                                          |
-|    SaveGraph    |                                                                                                                                                          |
- 
+| LoadGraph       |             Load a Json file and construct <br> Directed Weighted Graph via the json file                                                                   |
+|    SaveGraph    |             Save an existing Directed Weighted Graph - <br> nodes and edges as json file, at any directory in the computer                                    |
 
-|   package name: |                                                     **graphAlgo**                                                                                      |
+|   package name: |                                                     **graphAlgo**                                                                                        |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **file name**   |      **description**                                                                                                                                     |   
-| DFS             |                                                                                                                                                          |
-|    Dijkstra     |                                                                                                                                                          |
+| DFS             |     implement DFS algorithm, for more details on DFS <br> please look at "Review of the Literature" at the bottom of the readme                               |
+|    Dijkstra     |     implement Dijkstra algorithm, for more details on Dijksta <br> please look at "Review of the Literature" at the bottom of the readme                      |
 
 
-|   package name: |                                                     **impGraph**                                                                                      |
+|   package name: |                                                     **impGraph**                                                                                         |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **file name**   |      **description**                                                                                                                                     |   
-| Point3D         |                                                                                                                                                          |
-|    Node         |                                                                                                                                                          |
-|    Edge         |                                                                                                                                                          |
-|    Dwg          |                                                                                                                                                          |
-|    EdgeIter     |                                                                                                                                                          |
-|    DwgMagic     |                                                                                                                                                          |
-|    ThreadPool   |                                                                                                                                                          |
+| Point3D         |  represents point on the plane, imp GeoLocation                                                                                                          |
+|    Node         |  is vertex in the graph, imp NodeData                                                                                                                    |
+|    Edge         |   edge in graph, imp EdgeData                                                                                                                            |
+|    Dwg          |  1. imp DirectedWeightedGraph, hold iterators for all nodes, edges, edges of specific nodes, <br> 2. support add node and remove/add edge within O(1), <br> 3. support remove key within O(k) while k is the amount of in+out edges of the given node                                                                                                     |
+|    EdgeIter     |   iterator for Edges of curr node, crafted to the needs of our graph (throw exception if graph has been changed since iterator is created)               |
+|    DwgMagic     |    imp DirectedWeigthedGraphAlgorithms, provide solutions for several "known" and "unkown" problem                                                       |
+|    ThreadPool   |    this class exists to support using Dijkstra algorithm on diff nodes in parralel (will be explained more in "center" algorithm)                        |
 
 
 |   package name: |                                                     **graphics**                                                                                         |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **file name**   |      **description**                                                                                                                                     |   
-|       Window    |                                                                                                                                                          |
-|    DrawGraph    |                                                                                                                                                          |
-|    Menu         |                                                                                                                                                          |
+|       Window    |    inherite from JFrame, represent our JFrame (the visualized window)                                                                                    |
+|    DrawGraph    |    inherite from JPanel and imp ActionListener, and Mouse interfaces, responsible to draw the given graph as it got commanded                            |    |      Menu       | inherite from MenuBar and imp ActionListener, control over the features, <br> decided which feature got clicked and arrange all the needed needs so that the DrawGarph object will be able to focus only via its got defined till the present time                                                          |
 
 
 ### Directed Weigthed Graph
@@ -83,17 +82,18 @@ explanation on the algorithm methods:<br>
 
 <br>
 
-## Results 
-|  Case name      | Node_size | Edge_size |---------------------------------------Running Time-------------------------------------------------------------------------|
-| **file name**   |           |           |       isConnected       |       shortestPath       |     shortestPathDist       |        center        |        tsp        |
-|-----------------|-----------|-----------|-------------------------|--------------------------|----------------------------|----------------------|-------------------|   
-|                 |           |           |                         |       **description**    |                            |                      |                   |
-|                 |           |           |                         |                          |                            |                      |                   |
-|                 |           |           |                         |                          |                            |                      |                   |
-|                 |           |           |                         |                          |                            |                      |                   |
-|                 |           |           |                         |                          |                            |                      |                   |
-|                 |           |           |                         |                          |                            |                      |                   |
-|                 |           |           |                         |                          |                            |                      |                   |
+## Results
+<br>
+
+| **Case name**   |**Node_size**|**Edge_size**|     **isConnected**     |     **shortestPath**     |   **shortestPathDist**     |      **center**      |      **tsp**      |
+|-----------------|-------------|-------------|-------------------------|--------------------------|----------------------------|----------------------|-------------------|   
+|                 |             |             |                         |       **description**    |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
+|                 |             |             |                         |                          |                            |                      |                   |
 
 
 
