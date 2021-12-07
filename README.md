@@ -67,7 +67,7 @@ explanation on the algorithm methods:<br>
 ## graphics - GUI 
 ### logic system
 
-<br>
+
 ### how to use / tutorial
 
 <br>
