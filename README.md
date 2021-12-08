@@ -87,10 +87,20 @@ pros of this algorithm: <br>
 - wont return the Optimal running time as dynamic programming (but, dynamic programming running time is O(n^2 * 2^n) which is exponential - the worst)
 <br>
 
+### Tests
+
+<br>
+
 ### graphics - GUI 
+via the GUI, the use can do every action he could from the code via using DirectedWeightedGraphAlgorithms interface commands
+
 #### logic system
-
-
+each class hold a role: <br>
+1. window - hold the Frame that we draw on <br>
+2. drawGarph (a.k.a drawer) - responsible to paint and update himself via outside inputs (menubar - user methods commands, mouse moveing) <br>
+3. menu - get the user orders via clicking on toolbar features, and transform the command click on the bar to: <br>
+     a. actions on the graph and the graph algo objects. <br>
+     b. execute the relevant proccess with the drawer (init the currect details/params and use repaint command)
 
 
 #### how to use / tutorial
@@ -102,9 +112,6 @@ pros of this algorithm: <br>
 
 <br>
 
-### Tests
-
-<br>
 
 ## Results
 <br>
@@ -125,10 +132,18 @@ pros of this algorithm: <br>
 
 ## Assigment instructions
 
+
+
 ## Review of the Literature
+DFS - https://en.wikipedia.org/wiki/Depth-first_search , https://www.youtube.com/watch?v=7fujbpJ0LB4&t=10s 
+Dijksta - https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm , https://www.youtube.com/watch?v=pSqmAO-m7Lk&t=776s
+GUI via Swing - https://www.youtube.com/watch?v=Kmgo00avvEw&t=7097s , 
+tsp algorithms (which irrelevant for this phase) - 
+mathematical way to draw arrow - https://stackoverflow.com/questions/2027613/how-to-draw-a-directed-arrow-line-in-java comment 19
+thread usage - https://www.youtube.com/watch?v=r_MbozD32eo&t=517s 
 
-
+special material - https://github.com/ShaiAharon/OOP_19 credit to our teacher Shai.Aharon, helped alot with GUI and threads as well
 
 <br>
 
-special thanks to Daniel Rosenberg our class mate which helped with some hints and guidence along the gui implementation
+special thanks to Daniel Rosenberg our class mate which helped with some hints and guidence along the GUI implementation
