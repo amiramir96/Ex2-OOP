@@ -150,7 +150,7 @@ class DwgTest {
         Point3D p1 = new Point3D(0,0,0);
         Node n1 = new Node(p1,17);
         dwg.addNode(n1);
-        dwg.connect(17,1,0.4);//TODO debug
+        dwg.connect(17,1,0.4);
 
         int num_of_edges = dwg.edgeSize();
         dwg.removeNode(17);
@@ -160,17 +160,44 @@ class DwgTest {
 
     @Test
     void removeEdge() {
+        int num_of_edges = dwg.edgeSize();
+        dwg.removeEdge(0,16);
+        assertEquals(num_of_edges-1, dwg.edgeSize());
     }
 
     @Test
     void nodeSize() {
+        assertEquals(17, dwg.nodeSize());
+        Point3D p1 = new Point3D(0,0,0);
+        Node n1 = new Node(p1,17);
+        dwg.addNode(n1);
+        assertEquals(18, dwg.nodeSize());
     }
 
     @Test
     void edgeSize() {
+        int num_of_edges = dwg.edgeSize();
+        Point3D p1 = new Point3D(0,0,0);
+        Node n1 = new Node(p1,17);
+        dwg.addNode(n1);
+        dwg.connect(17, 1, 12);
+        assertEquals(num_of_edges+1, dwg.edgeSize());
+        dwg.removeEdge(17, 1);
+        assertEquals(num_of_edges, dwg.edgeSize());
+
     }
 
     @Test
     void getMC() {
+        Dwg dwg = getGraph("test\\resources\\G1.json"); //initialize graph
+        assertEquals(0, dwg.getMC());
+        Point3D p1 = new Point3D(0,0,0);
+        Node n1 = new Node(p1,17);
+        dwg.addNode(n1);
+        assertEquals(1, dwg.getMC());
+        dwg.connect(17,1,0.4);
+        assertEquals(2, dwg.getMC());
+        dwg.removeEdge(17, 1);
+        assertEquals(3, dwg.getMC());
     }
 }
