@@ -79,10 +79,11 @@ algo solution: <br>
 iterate on ea node (name it v_i) from the input list of city and: <br>
 1. if there is direct edge from v_i to any other cities which we didnt visited yet -> choose the minimal direct edge from all the edge to unvisited cities. (and add to output list) <br>
 2. otherwise, use dijkstra on v_i, and loop over all the cities which we didnt visited yet -> take the minimal path from all the unvisited cities and add the whole path to the output list.<br>
+<br>
 pros of this algorithm: <br>
 - running time is polynomial, bound by center time run for worst case, and ea direct edge between pair of nodes, cut by |E|log(|V|) the upper bound time run <br>
 - even if G is unconnected, sub graph cities is unconnected which is the worst, the algo will return solution as long as all cities is part of the same connected component <br>
-cons: <br>
+<br> cons: <br>
 - wont return the Optimal running time as dynamic programming (but, dynamic programming running time is O(n^2 * 2^n) which is exponential - the worst)
 <br>
 
