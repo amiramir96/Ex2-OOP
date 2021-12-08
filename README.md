@@ -100,7 +100,6 @@ For any INVALID input, a popup msg will appear and will explain what the currect
 the gui support mouse inputs as moving screen and zooming in/out the picture<br>
 defualt colors is BLACK for node, BLUE for edge,
 any other kind of color to the graph will represent occure of one of the algorithms command!<br>
-<img src="https://prnt.sc/22d8cbb" width="75" height="75" />
 ![default](https://user-images.githubusercontent.com/89981387/145303879-a5766b8d-9666-4977-a5fb-9b76d228b37f.png)
 <br>File category <br>
 load graph - choose json file from directory and load it while creating new graph. <br>
