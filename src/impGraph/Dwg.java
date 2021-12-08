@@ -378,7 +378,6 @@ public class Dwg implements DirectedWeightedGraph {
         else {
             edgeInMapSize = this.edgeInMap.get(key).size();
         }
-        this.edgeSize = this.edgeSize - edgeInMapSize - edgeOutMapSize;
         EdgeData tempE;
         ArrayList<EdgeData> eList;
         Iterator<Map.Entry<String, EdgeData>> edgeEntries;
