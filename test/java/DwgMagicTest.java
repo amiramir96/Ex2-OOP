@@ -1,42 +1,119 @@
+import FileWorkout.LoadGraph;
 import api.DirectedWeightedGraph;
 import api.NodeData;
 import impGraph.Dwg;
 import impGraph.DwgMagic;
+import impGraph.Node;
+import impGraph.Point3D;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DwgMagicTest {
-//
+
+    DirectedWeightedGraph g1, g2;
+    {
+        try {
+            g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
+            g2 = LoadGraph.loadGraph("test\\resources\\G2.json");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    DwgMagic dm = new DwgMagic(g1);
+
+
     @Test
     void init() {
+        assertEquals(g1.nodeSize(), dm.getGraph().nodeSize());
+        dm.init(g2);
+        assertEquals(g2.nodeSize(), dm.getGraph().nodeSize());
+        dm.init(g1);
     }
 
     @Test
     void getGraph() {
+        DirectedWeightedGraph g3 = dm.getGraph();
+        assertEquals(g1.edgeSize(), g3.edgeSize());
+        assertEquals(g1, g3);
     }
 
     @Test
     void copy() {
+        DirectedWeightedGraph g3 = dm.copy();
+        g3.removeNode(0);
+        //independence
+        assertEquals(g3.nodeSize()+1, dm.getGraph().nodeSize());
     }
 
     @Test
     void isConnected() {
+        assertTrue(dm.isConnected());
+        Point3D p1 = new Point3D(0,0,0);
+        Node n1 = new Node(p1,20);
+        // add new node
+        dm.getGraph().addNode(n1);
+        assertFalse(dm.isConnected());
     }
 
     @Test
     void shortestPathDist() {
+        try {
+            g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        dm.init(g1);
+        Point3D p1 = new Point3D(0,0,0);
+        Node n1 = new Node(p1,20);
+        Point3D p2 = new Point3D(3,4,0);
+        Node n2 = new Node(p2,21);
+        //add nodes
+        dm.getGraph().addNode(n1);
+        dm.getGraph().addNode(n2);
+        //create path
+        dm.getGraph().connect(1, 20, 2.2);
+        dm.getGraph().connect(20, 21, 1.9);
+        assertEquals(4.1, dm.shortestPathDist(1, 21));
     }
 
     @Test
     void shortestPath() {
+        try {
+            g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        dm.init(g1);
+        Point3D p1 = new Point3D(0,0,0);
+        Node n1 = new Node(p1,20);
+        Point3D p2 = new Point3D(3,4,0);
+        Node n2 = new Node(p2,21);
+        //add nodes
+        dm.getGraph().addNode(n1);
+        dm.getGraph().addNode(n2);
+        //create path
+        dm.getGraph().connect(1, 20, 2.2);
+        dm.getGraph().connect(20, 21, 1.9);
+        LinkedList<NodeData> path = (LinkedList<NodeData>) dm.shortestPath(1,21);
+        assertTrue(path.contains(n1));
+        assertTrue(path.contains(n2));
     }
 
     @Test
     void center() {
+        // I built this graph so that it's center is 1
+        try {
+            g1 = LoadGraph.loadGraph("test\\resources\\GShfiut.json");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        dm.init(g1);
+        assertEquals(0, dm.center().getKey());
     }
 
     @Test
