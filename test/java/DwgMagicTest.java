@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DwgMagicTest {
-
+//
     @Test
     void init() {
     }
@@ -144,7 +144,7 @@ class DwgMagicTest {
     @Test
     void save() {
     }
-
+//
     @Test
     void load() {
     }
