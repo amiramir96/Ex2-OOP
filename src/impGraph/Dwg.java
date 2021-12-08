@@ -4,22 +4,17 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Dwg implements DirectedWeightedGraph {
-
     HashMap<Integer, NodeData> nodeMap; // all nodes
     /**
      * given edge within src and dest nodes which their id keys is: src.getKey():=x, dest.getKey():=y
-     * hashMaps String key is: "x,y"
+     * hashMaps first key is: x , hashmap second key is y
      */
-    HashMap<String, EdgeData> edgeMap; // all edges
-    HashMap<Integer, HashMap<String, EdgeData>> edgeOutMap; // order is via the node that the edge starting from
-    HashMap<Integer, HashMap<String, EdgeData>> edgeInMap; // order is via the node that the edge coming into
+    HashMap<Integer, HashMap<Integer, HashMap<Integer, EdgeData>>> edgeOutMap; // order is via the node that the edge starting from
+    HashMap<Integer, HashMap<Integer, HashMap<Integer, EdgeData>>> edgeInMap; // order is via the node that the edge coming into
 
     int nodeSize, edgeSize; // sizes
     int mc; // mode counter
@@ -29,7 +24,6 @@ public class Dwg implements DirectedWeightedGraph {
      */
     public Dwg(){
         this.nodeMap = new HashMap<>();
-        this.edgeMap = new HashMap<>();
         this.nodeSize = 0;
         this.edgeSize = 0;
         this.mc = 0;
@@ -37,6 +31,15 @@ public class Dwg implements DirectedWeightedGraph {
         //construct hashmaps for edges via nodes
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
+        for (int i=0; i<1000; i++){
+            this.edgeOutMap.put(i, new HashMap<>());
+            this.edgeInMap.put(i, new HashMap<>());
+        }
+
+    }
+
+    private int KeyTransform(int id){
+        return id%1000;
     }
 
     /**
@@ -48,44 +51,45 @@ public class Dwg implements DirectedWeightedGraph {
      * 3- edgeInMap - first use node id key to get relevant hashmap that hold all the edges that the curr node is coming into
      *
      *                          IMPORTANT, DONT MISS!!!!
-     * bullets 2,3 inner HashMap key is via the formula: (String type) edge key = ""+src_node_id+","+dest_node_id
+     * bullets 2,3 inner HashMap key is via the formula: edge key = dest_node_id
      *                          IMPORTANT, DONT MISS!!!!
      *
      * @param nodeMap - hashmap of nodes, key is the node id
-     * @param edgeMap - hashmap of edges, key is ""+src_node_id+","+dest_node_id (for example "0,5", edge from 0 to 5)
+     * @param listOfEdges - list of edges
      */
-    public Dwg(HashMap<Integer, NodeData> nodeMap, HashMap<String, EdgeData> edgeMap) {
+    public Dwg(HashMap<Integer, NodeData> nodeMap, List<EdgeData> listOfEdges) {
         this.nodeMap = nodeMap;
-        this.edgeMap = edgeMap;
         this.nodeSize = nodeMap.size();
-        this.edgeSize = edgeMap.size();
+        this.edgeSize = listOfEdges.size();
         this.mc = 0;
 
         //construct hashmaps for edges via nodes
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
-//        for (NodeData n : nodeMap.values()){
-//            // const hashmap for each node
-//            this.edgeOutMap.put(n.getKey(), new HashMap<>());
-//            this.edgeInMap.put(n.getKey(), new HashMap<>());
-//        }
 
-        int tempSrc, tempDest;
-        Iterator<EdgeData> iter = this.edgeMap.values().iterator();
+        for (int i=0; i<1000; i++){
+            this.edgeOutMap.put(i, new HashMap<>());
+            this.edgeInMap.put(i, new HashMap<>());
+        }
+
+        int tempSrc, tempDest, keyTrans1, keyTrans2;
+        Iterator<EdgeData> iter = listOfEdges.iterator();
         EdgeData tempE;
         while(iter.hasNext()){ // is stable since we doשמע nt remove any item from the map
             // set at each hashmap of node i, the relevant edges
             tempE = iter.next();
+            keyTrans1 = KeyTransform(tempE.getSrc());
+            keyTrans2 = KeyTransform(tempE.getDest());
             tempSrc = tempE.getSrc();
             tempDest = tempE.getDest();
-            if (!this.edgeOutMap.containsKey(tempSrc)) {
-                this.edgeOutMap.put(tempSrc, new HashMap<>());
+            if (!this.edgeOutMap.get(keyTrans1).containsKey(tempSrc)) {
+                this.edgeOutMap.get(keyTrans1).put(tempSrc, new HashMap<>());
             }
-            if (!this.edgeInMap.containsKey(tempDest)) {
-                this.edgeInMap.put(tempDest, new HashMap<>());
+            if (!this.edgeInMap.get(keyTrans2).containsKey(tempDest)) {
+                this.edgeInMap.get(keyTrans2).put(tempDest, new HashMap<>());
             }
-            this.edgeOutMap.get(tempSrc).put(""+tempSrc+","+tempDest, tempE);
-            this.edgeInMap.get(tempDest).put(""+tempDest+","+tempSrc, tempE);
+            this.edgeOutMap.get(keyTrans1).get(tempSrc).put(tempDest, tempE);
+            this.edgeInMap.get(keyTrans2).get(tempDest).put(tempSrc, tempE);
         }
     }
 
@@ -100,6 +104,11 @@ public class Dwg implements DirectedWeightedGraph {
         this.edgeSize = existingDwg.edgeSize();
         this.mc = 0;
 
+        for (int i=0; i<1000; i++){
+            this.edgeOutMap.put(i, new HashMap<>());
+            this.edgeInMap.put(i, new HashMap<>());
+        }
+
         // iterating over nodes and deep copy
         Iterator<NodeData> itNode = existingDwg.nodeIter();
         NodeData tempN;
@@ -109,10 +118,9 @@ public class Dwg implements DirectedWeightedGraph {
             tempN = new Node(tempN);
             this.nodeMap.put(tempN.getKey(), new Node(tempN));
         }
-        this.edgeMap = new HashMap<>();
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
-
+        int keyTrans1, keyTrans2;
         // iterating over edges and deep copy
         Iterator<EdgeData> itEdge = existingDwg.edgeIter();
         EdgeData tempE;
@@ -120,17 +128,18 @@ public class Dwg implements DirectedWeightedGraph {
         while(itEdge.hasNext()){
             tempE = itEdge.next();
             tempE = new Edge(tempE);
+            keyTrans1 = KeyTransform(tempE.getSrc());
+            keyTrans2 = KeyTransform(tempE.getDest());
             tempSrc = tempE.getSrc();
             tempDest = tempE.getDest();
-            if (!this.edgeOutMap.containsKey(tempSrc)) {
-                this.edgeOutMap.put(tempSrc, new HashMap<>());
+            if (!this.edgeOutMap.get(keyTrans1).containsKey(tempSrc)) {
+                this.edgeOutMap.get(keyTrans1).put(tempSrc, new HashMap<>());
             }
-            if (!this.edgeInMap.containsKey(tempDest)) {
-                this.edgeInMap.put(tempDest, new HashMap<>());
+            if (!this.edgeInMap.get(keyTrans2).containsKey(tempDest)) {
+                this.edgeInMap.get(keyTrans2).put(tempDest, new HashMap<>());
             }
-            this.edgeMap.put(""+tempSrc+","+tempDest, new Edge(tempE));
-            this.edgeOutMap.get(tempSrc).put(""+tempSrc+","+tempDest, new Edge(tempE));
-            this.edgeInMap.get(tempDest).put(""+tempDest+","+tempSrc, new Edge (tempE));
+            this.edgeOutMap.get(keyTrans1).get(tempSrc).put(tempDest, new Edge(tempE));
+            this.edgeInMap.get(keyTrans2).get(tempDest).put(tempSrc, new Edge (tempE));
         }
     }
 
@@ -150,7 +159,7 @@ public class Dwg implements DirectedWeightedGraph {
      */
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return this.edgeMap.get(""+src+","+dest);
+        return this.edgeOutMap.get(KeyTransform(src)).get(src).get(dest);
     }
 
     /**
@@ -173,15 +182,14 @@ public class Dwg implements DirectedWeightedGraph {
     @Override
     public void connect(int src, int dest, double w) {
         Edge tempE = new Edge(src, w, dest);
-        this.edgeMap.put(""+src+","+dest, tempE);
-        if (!this.edgeOutMap.containsKey(src)){
-            this.edgeOutMap.put(src, new HashMap<>());
+        if (!this.edgeOutMap.get(KeyTransform(src)).containsKey(src)){
+            this.edgeOutMap.get(KeyTransform(src)).put(src, new HashMap<>());
         }
-        if (!this.edgeInMap.containsKey(dest)){
-            this.edgeInMap.put(dest, new HashMap<>());
+        if (!this.edgeInMap.get(KeyTransform(dest)).containsKey(dest)){
+            this.edgeInMap.get(KeyTransform(dest)).put(dest, new HashMap<>());
         }
-        this.edgeOutMap.get(src).put(""+src+","+dest, tempE);
-        this.edgeInMap.get(dest).put(""+dest+","+src, tempE);
+        this.edgeOutMap.get(KeyTransform(src)).get(src).put(dest, tempE);
+        this.edgeInMap.get(KeyTransform(dest)).get(dest).put(src, tempE);
         this.mc++;
         this.edgeSize++;
     }
@@ -248,45 +256,13 @@ public class Dwg implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return new Iterator<>() {
-            int originModeCounter = mc; //
-            final Iterator<EdgeData> edgeIterator = edgeMap.values().iterator(); // regular iterator DO NOT REMOVE ANY ITEM FROM!
-            EdgeData tempE;
-
-            @Override
-            public boolean hasNext() {
-                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-                }; // added the throw RunTimeException
-                return edgeIterator.hasNext();
+        ArrayList<Iterator<EdgeData>> linkedIterators = new ArrayList<>();
+        for (NodeData n : this.nodeMap.values()){
+            if (this.edgeOutMap.get(KeyTransform(n.getKey())).containsKey(n.getKey())){
+                linkedIterators.add(new edgeIter(this, n.getKey()));
             }
-
-            @Override
-            public EdgeData next() {
-                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-                }; // added the throw RunTimeException
-                tempE = edgeIterator.next();
-                return tempE;
-            }
-
-            @Override
-            public void remove() {
-                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-                }; // added the throw RunTimeException
-                else {
-                    removeEdge(tempE.getSrc(), tempE.getDest());
-                    originModeCounter = mc;
-                }
-            }
-
-            // https://stackoverflow.com/questions/42465871/whats-the-point-of-having-both-iterator-foreachremaining-and-iterable-foreach/42466144
-            // comment #1, helped to understand how its worked
-            @Override
-            public void forEachRemaining(Consumer<? super EdgeData> action) {
-                while(edgeIterator.hasNext()){
-                    action.accept(next());
-                }
-            }
-        };
+        }
+        return new mergedIterators(this, linkedIterators);
     }
     /**
      * we had to make our own iterator since the interface claims is to throw an exception if the mode counter(mc) has been changed
@@ -301,50 +277,6 @@ public class Dwg implements DirectedWeightedGraph {
         edgeIter e = new edgeIter(this, node_id);
         return e;
     }
-
-    private Iterator<EdgeData> edgeIterReverse(int node_id) {
-        return new Iterator<>() {
-            int originModeCounter = mc;
-            final Iterator<EdgeData> edgeIterator = edgeInMap.get(node_id).values().iterator(); // regular iterator DO NOT REMOVE ANY ITEM FROM!
-            EdgeData tempE;
-
-            @Override
-            public boolean hasNext() {
-                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-                }; // added the throw RunTimeException
-                return edgeIterator.hasNext();
-            }
-
-            @Override
-            public EdgeData next() {
-                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-                }; // added the throw RunTimeException
-                tempE = edgeIterator.next();
-                return tempE;
-            }
-
-            @Override
-            public void remove() {
-                if (mc != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-                }; // added the throw RunTimeException
-                else {
-                    removeEdge(tempE.getSrc(), tempE.getDest());
-                    originModeCounter = mc;
-                }
-            }
-
-            // https://stackoverflow.com/questions/42465871/whats-the-point-of-having-both-iterator-foreachremaining-and-iterable-foreach/42466144
-            // comment #1, helped to understand how its worked
-            @Override
-            public void forEachRemaining(Consumer<? super EdgeData> action) {
-                while(edgeIterator.hasNext()){
-                    action.accept(next());
-                }
-            }
-
-        };
-    }
-
 
     /**
      * update mc for all the edges that gonna be deleted with that node + the curr node
@@ -366,29 +298,17 @@ public class Dwg implements DirectedWeightedGraph {
         }
         this.nodeSize--;
         int edgeOutMapSize = 0, edgeInMapSize = 0;
-        if (this.edgeOutMap.get(key) == null || this.edgeOutMap.get(key).size() == 0){
-            edgeOutMapSize = 0;
-        }
-        else {
-            edgeOutMapSize = this.edgeOutMap.get(key).size();
-        }
-        if (this.edgeInMap.get(key) == null || this.edgeInMap.get(key).size() == 0){
-            edgeInMapSize = 0;
-        }
-        else {
-            edgeInMapSize = this.edgeInMap.get(key).size();
-        }
         EdgeData tempE;
         ArrayList<EdgeData> eList;
-        Iterator<Map.Entry<String, EdgeData>> edgeEntries;
+        Iterator<Map.Entry<Integer, EdgeData>> edgeEntries;
         // used https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
         // since for each loop can grant "unpredictable results" so we do it in old school style :-P
-        if (this.edgeOutMap.get(key) != null && this.edgeOutMap.get(key).size() != 0){
-            edgeEntries = this.edgeOutMap.get(key).entrySet().iterator();
+        if (this.edgeOutMap.get(KeyTransform(key)).get(key) != null && this.edgeOutMap.get(KeyTransform(key)).get(key).size() != 0){
+            edgeEntries = this.edgeOutMap.get(KeyTransform(key)).get(key).entrySet().iterator();
             eList = new ArrayList<>();
             while (edgeEntries.hasNext()){
                 // bullet "1-" of the removing process
-                Map.Entry<String, EdgeData> entry = (Map.Entry<String, EdgeData>) (edgeEntries.next());
+                Map.Entry<Integer, EdgeData> entry = (Map.Entry<Integer, EdgeData>) (edgeEntries.next());
                 tempE = entry.getValue();
                 eList.add(tempE);
             }
@@ -396,12 +316,12 @@ public class Dwg implements DirectedWeightedGraph {
                 removeEdge(element.getSrc(), element.getDest());
             }
         }
-        if (this.edgeInMap.get(key) != null && this.edgeInMap.get(key).size() != 0){
+        if (this.edgeInMap.get(KeyTransform(key)).get(key) != null && this.edgeInMap.get(KeyTransform(key)).get(key).size() != 0){
             eList = new ArrayList<>();
-            edgeEntries = this.edgeInMap.get(key).entrySet().iterator();
+            edgeEntries = this.edgeInMap.get(KeyTransform(key)).get(key).entrySet().iterator();
             while (edgeEntries.hasNext()){
                 // bullet "2-" of the removing process
-                Map.Entry<String, EdgeData> entry = (Map.Entry<String, EdgeData>) (edgeEntries.next());
+                Map.Entry<Integer, EdgeData> entry = (Map.Entry<Integer, EdgeData>) (edgeEntries.next());
                 tempE = entry.getValue();
                 eList.add(tempE);
             }
@@ -410,8 +330,8 @@ public class Dwg implements DirectedWeightedGraph {
             }
         }
         // bullet "3-" of the removing process
-        this.edgeInMap.remove(key);
-        this.edgeOutMap.remove(key);
+        this.edgeInMap.get(KeyTransform(key)).remove(key);
+        this.edgeOutMap.get(KeyTransform(key)).remove(key);
 
         NodeData removedNode = this.nodeMap.get(key);
         this.nodeMap.remove(key);
@@ -427,16 +347,15 @@ public class Dwg implements DirectedWeightedGraph {
      */
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        EdgeData removedEdge = this.edgeOutMap.get(src).get(""+src+","+dest);
-        this.edgeMap.remove(""+src+","+dest);
-        this.edgeOutMap.get(src).remove(""+src+","+dest);
-        this.edgeInMap.get(dest).remove(""+dest+","+src);
+        EdgeData removedEdge = this.edgeOutMap.get(KeyTransform(src)).get(src).get(dest);
+        this.edgeOutMap.get(KeyTransform(src)).get(src).remove(dest);
+        this.edgeInMap.get(KeyTransform(dest)).get(dest).remove(src);
         this.edgeSize--;
-        if (this.edgeOutMap.get(src).isEmpty()){
-            this.edgeOutMap.remove(src);
+        if (this.edgeOutMap.get(KeyTransform(src)).get(src).isEmpty()){
+            this.edgeOutMap.get(KeyTransform(src)).remove(src);
         }
-        if (this.edgeInMap.get(dest).isEmpty()){
-            this.edgeInMap.remove(dest);
+        if (this.edgeInMap.get(KeyTransform(dest)).get(dest).isEmpty()){
+            this.edgeInMap.get(KeyTransform(dest)).remove(dest);
         }
         this.mc++;
         return removedEdge;

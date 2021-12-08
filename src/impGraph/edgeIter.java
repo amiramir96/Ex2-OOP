@@ -1,6 +1,7 @@
 package impGraph;
 
 import api.EdgeData;
+import api.NodeData;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,15 +19,16 @@ public class edgeIter implements Iterator<EdgeData> {
     Iterator<EdgeData> edgeIterator; // regular iterator DO NOT REMOVE ANY ITEM FROM!
     EdgeData tempE;
 
+    // constructor for specific node iterator (iterate over all edges that going from that node)
     edgeIter(Dwg g, int node_id){
         this.currGraph = g;
         this.originModeCounter = g.getMC();
         // below is the main reason why we use this class and not "unnamed iterator"
         if (this.currGraph.edgeOutMap.containsKey(node_id)){
-            edgeIterator = this.currGraph.edgeOutMap.get(node_id).values().iterator();
+            edgeIterator = this.currGraph.edgeOutMap.get(node_id%1000).get(node_id).values().iterator();
         }
         else {
-            edgeIterator = new HashMap<String, EdgeData>().values().iterator(); //will iterate over 0 items but not null!
+            edgeIterator = new HashMap<Integer, EdgeData>().values().iterator(); //will iterate over 0 items but not null!
         }
     }
 

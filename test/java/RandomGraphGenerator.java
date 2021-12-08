@@ -13,10 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 public class RandomGraphGenerator {
 
@@ -58,7 +55,8 @@ public class RandomGraphGenerator {
             System.exit(0);
         }
         try {
-            g = LoadGraph.loadGraph("test\\resources\\random_graph.json");
+            LoadGraph l = new LoadGraph();
+            g = l.loadGraph("test\\resources\\random_graph.json.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.out.println("Failed to load random graph");
@@ -98,7 +96,8 @@ public class RandomGraphGenerator {
     @Test
     void testGenerator(){
         Random rnd = new Random();
-        DirectedWeightedGraph g= createRndGraph(50 + rnd.nextInt(4500));
-
+        DirectedWeightedGraph g= createRndGraph(4500 + rnd.nextInt(1));
+        DwgMagic gal = new DwgMagic(g);
+        gal.load("test\\resources\\random_graph.json");
     }
 }

@@ -27,11 +27,10 @@ public class Ex2 {
         DirectedWeightedGraph ans = null;
 
         try {
-            JsonElement graphElement = JsonParser.parseReader(new FileReader(jsonGraphFile)); // shall read, so have to handle exception
-            JsonObject graphObject = graphElement.getAsJsonObject(); // convert to json object, then we can work on fields inside
-            // jsonToNode return list of nodes, jsonToEdge return list of edges, both is the req to cons Dwg(directed weighted graph)
-            LoadGraph g = new LoadGraph(graphObject);
-            ans = new Dwg(g.jsonToNode(), g.jsonToEdge());
+            // shall read, so have to handle exception
+            // the load graph return dwg object
+            LoadGraph g = new LoadGraph();
+            ans = g.loadGraph(json_file);
         }
         catch (FileNotFoundException err){ // throw exception..
             err.printStackTrace();
