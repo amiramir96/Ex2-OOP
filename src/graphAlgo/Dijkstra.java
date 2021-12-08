@@ -71,7 +71,6 @@ public class Dijkstra{
         int node_id;
         double newDist;
         Edge tempE;
-
         // "dijkstra" algorithm
         while(!minHeap.isEmpty()){
             // out loop, run over the heap till its empty (will be empty only after visited at all the nodes)
@@ -124,7 +123,7 @@ public class Dijkstra{
      * @return - shortestPath represented as List
      */
     public List<NodeData> shortestPathList(NodeData dest){
-//        mapPathDijkstra(src); // get the prevMap from the pathDijkstra algo
+         // get the prevMap from the pathDijkstra algo
         HashMap<Integer, Integer> parentsMap = this.prevMap;
         LinkedList<NodeData> outputPath = new LinkedList<>(); // output list
         if (parentsMap.get(dest.getKey()) == -1) { return outputPath; } // -1 == not exist, both nodes is not connected

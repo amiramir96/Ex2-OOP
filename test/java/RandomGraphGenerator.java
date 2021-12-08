@@ -13,10 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 public class RandomGraphGenerator {
 
@@ -29,7 +26,7 @@ public class RandomGraphGenerator {
     public static DirectedWeightedGraph createRndGraph(int nodes_size){
         DirectedWeightedGraph g = new Dwg();
         Random rnd = new Random();
-        HashMap<Integer, Node> nodes = new HashMap<Integer, Node>();
+        HashMap<Integer, Node> nodes = new HashMap<>();
         //create nodes
         for (int i = 0; i < nodes_size; i++) {
             //range: -nodes_size/2 to nodes_size/2
@@ -57,16 +54,17 @@ public class RandomGraphGenerator {
             System.out.println("Failed to save random graph");
             System.exit(0);
         }
-        try {
-            g = LoadGraph.loadGraph("test\\resources\\random_graph.json");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("Failed to load random graph");
-            System.exit(0);
-
-        }
-        System.out.println(g.edgeSize());
-        System.out.println(g.nodeSize());
+//        try {
+//            LoadGraph l = new LoadGraph();
+//            g = l.loadGraph("test\\resources\\GMilion.json.json");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            System.out.println("Failed to load random graph");
+//            System.exit(0);
+//
+//        }
+//        System.out.println(g.edgeSize());
+//        System.out.println(g.nodeSize());
 
         return g;
     }
@@ -92,13 +90,14 @@ public class RandomGraphGenerator {
         graph_json.add("Nodes", json_nodes);
         // write to file
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Files.writeString(Paths.get("test\\resources\\random_graph.json"), gson.toJson(graph_json));
+        Files.writeString(Paths.get("test\\resources\\G10K.json"), gson.toJson(graph_json));
     }
 
     @Test
     void testGenerator(){
         Random rnd = new Random();
-        DirectedWeightedGraph g= createRndGraph(50 + rnd.nextInt(4500));
-
+        DirectedWeightedGraph g= createRndGraph(10000 + rnd.nextInt(1));
+        DwgMagic gal = new DwgMagic(g);
+        gal.load("test\\resources\\G10K.json");
     }
 }
