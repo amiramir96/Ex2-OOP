@@ -135,14 +135,14 @@ each class hold a role: <br>
 
 
 ## Review of the Literature
-DFS - https://en.wikipedia.org/wiki/Depth-first_search , https://www.youtube.com/watch?v=7fujbpJ0LB4&t=10s 
-Dijksta - https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm , https://www.youtube.com/watch?v=pSqmAO-m7Lk&t=776s
-GUI via Swing - https://www.youtube.com/watch?v=Kmgo00avvEw&t=7097s , 
-tsp algorithms (which irrelevant for this phase) - 
-mathematical way to draw arrow - https://stackoverflow.com/questions/2027613/how-to-draw-a-directed-arrow-line-in-java comment 19
-thread usage - https://www.youtube.com/watch?v=r_MbozD32eo&t=517s 
+DFS - https://en.wikipedia.org/wiki/Depth-first_search , https://www.youtube.com/watch?v=7fujbpJ0LB4&t=10s <br>
+Dijksta - https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm , https://www.youtube.com/watch?v=pSqmAO-m7Lk&t=776s <br>
+GUI via Swing - https://www.youtube.com/watch?v=Kmgo00avvEw&t=7097s <br>
+tsp algorithms (which helped to get ideas) - https://www.youtube.com/watch?v=M5UggIrAOME , https://en.wikipedia.org/wiki/Travelling_salesman_problem <br>
+mathematical way to draw arrow - https://stackoverflow.com/questions/2027613/how-to-draw-a-directed-arrow-line-in-java comment 19 <br>
+thread usage - https://www.youtube.com/watch?v=r_MbozD32eo&t=517s <br>
 
-special material - https://github.com/ShaiAharon/OOP_19 credit to our teacher Shai.Aharon, helped alot with GUI and threads as well
+special material - https://github.com/ShaiAharon/OOP_19 credit to our teacher Shai.Aharon, helped alot with GUI and threads as well <br>
 
 <br>
 
