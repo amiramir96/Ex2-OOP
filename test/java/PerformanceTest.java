@@ -1,5 +1,3 @@
-package running_time;
-
 import FileWorkout.LoadGraph;
 import api.DirectedWeightedGraph;
 import api.NodeData;
