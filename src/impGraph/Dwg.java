@@ -104,6 +104,9 @@ public class Dwg implements DirectedWeightedGraph {
         this.edgeSize = existingDwg.edgeSize();
         this.mc = 0;
 
+        //construct hashmaps for edges via nodes
+        this.edgeInMap = new HashMap<>();
+        this.edgeOutMap = new HashMap<>();
         for (int i=0; i<1000; i++){
             this.edgeOutMap.put(i, new HashMap<>());
             this.edgeInMap.put(i, new HashMap<>());
@@ -118,8 +121,6 @@ public class Dwg implements DirectedWeightedGraph {
             tempN = new Node(tempN);
             this.nodeMap.put(tempN.getKey(), new Node(tempN));
         }
-        this.edgeInMap = new HashMap<>();
-        this.edgeOutMap = new HashMap<>();
         int keyTrans1, keyTrans2;
         // iterating over edges and deep copy
         Iterator<EdgeData> itEdge = existingDwg.edgeIter();
@@ -208,7 +209,7 @@ public class Dwg implements DirectedWeightedGraph {
         return new Iterator<>() {
 
             int originModeCounter = mc; //
-            final Iterator<NodeData> currIterator = nodeMap.values().iterator(); // regular iterator DO NOT REMOVE ANY ITEM FROM!
+            Iterator<NodeData> currIterator = nodeMap.values().iterator(); // regular iterator DO NOT REMOVE ANY ITEM FROM!
             NodeData tempN;
 
             @Override

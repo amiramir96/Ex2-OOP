@@ -26,15 +26,13 @@ public class LoadGraph {
      * @return DirectedWeightedGraph
      * @throws FileNotFoundException - not directory found
      */
-    public static DirectedWeightedGraph loadGraph (String file_direct) throws FileNotFoundException {
-        JsonObject currGraphObject;
-        DirectedWeightedGraph newGraph;
-        newGraph = new Dwg();
+    public DirectedWeightedGraph loadGraph (String file_direct) throws FileNotFoundException {
+        this.newGraph = new Dwg();
         File jsonGraphFile = new File(file_direct); // get file
         JsonElement graphElement = JsonParser.parseReader(new FileReader(jsonGraphFile)); // shall read, so have to handle exception
-        currGraphObject = graphElement.getAsJsonObject();
-        JsonArray arrOfEdges = currGraphObject.get("Edges").getAsJsonArray(); // get all the edge objects
-        JsonArray arrOfNodes = currGraphObject.get("Nodes").getAsJsonArray(); // get all the edge objects
+        this.currGraphObject = graphElement.getAsJsonObject();
+        JsonArray arrOfEdges = this.currGraphObject.get("Edges").getAsJsonArray(); // get all the edge objects
+        JsonArray arrOfNodes = this.currGraphObject.get("Nodes").getAsJsonArray(); // get all the edge objects
 
         // declare our var that we gonna work with inside the loop
         int tempId;
