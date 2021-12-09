@@ -1,7 +1,6 @@
 package impGraph;
 
-import api.DirectedWeightedGraph;
-import api.EdgeData;
+import api.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +8,7 @@ import java.util.Iterator;
 /**
  * Cycle through iterators
  */
-public class mergedIterators implements Iterator<EdgeData> {
+public class mergedIterators<O> implements Iterator<O> {
 
     /**
      * this object purpose is to merge between Iterators type EdgeData
@@ -17,7 +16,7 @@ public class mergedIterators implements Iterator<EdgeData> {
      * https://stackoverflow.com/questions/9200080/join-multiple-iterators-in-java?lq=1 comment 0
      */
 
-    ArrayList<Iterator<EdgeData>> mergedIter; // iterators list (will loop over them)
+    ArrayList<Iterator<O>> mergedIter; // iterators list (will loop over them)
     DirectedWeightedGraph currGraph; // our graph
     int currectIdx; // represent which iterator in use now
 
@@ -26,7 +25,7 @@ public class mergedIterators implements Iterator<EdgeData> {
      * @param g - relevant graph
      * @param itList - list of iterators
      */
-    mergedIterators(DirectedWeightedGraph g, ArrayList<Iterator<EdgeData>> itList){
+    mergedIterators(DirectedWeightedGraph g, ArrayList<Iterator<O>> itList){
         this.mergedIter = itList;
         this.currGraph = g;
         this.currectIdx = 0;
@@ -54,7 +53,7 @@ public class mergedIterators implements Iterator<EdgeData> {
      * @return next Edge (null if there isnt next)
      */
     @Override
-    public EdgeData next() {
+    public O next() {
         // check if we shall forward to the next iterator in the list
         if (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
             this.currectIdx++;
