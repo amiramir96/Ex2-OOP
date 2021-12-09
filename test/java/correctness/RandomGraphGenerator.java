@@ -62,7 +62,6 @@ public class RandomGraphGenerator {
             e.printStackTrace();
             System.out.println("Failed to load random graph");
             System.exit(0);
-
         }
 
         return g;
