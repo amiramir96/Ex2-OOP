@@ -59,9 +59,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
      * @return deep copy of the graph
      */
     @Override
-    public DirectedWeightedGraph copy() {
-        return new Dwg(this.currGraph);
-    }
+    public DirectedWeightedGraph copy() {return new Dwg(this.currGraph);}
 
     /**
      * choose randomally vertex v of the currGraph and use DFS algorithm twice (for more details on dfs algo: https://en.wikipedia.org/wiki/Depth-first_search)
