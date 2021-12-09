@@ -6,6 +6,10 @@ import graphAlgo.Dijkstra;
 import java.util.List;
 
 public class ThreadPool extends Thread{
+    /**
+     * this object purpose is to make (inherite from) Thread that help to the Center function of DwgMagic
+     * for more data on the whole "picture" look at center function in DwgMagic class
+     */
     List<NodeData> nodeList; // use to iterate over all the engaged nodes (from the dwgMagic center)
     int id; // serial num of the threads.. ezier for tests
     public int centerForNodeList; // the end line
@@ -33,6 +37,7 @@ public class ThreadPool extends Thread{
     public void run() {
         Dijkstra tempDij; // just var
         for (NodeData d : nodeList){
+            // use dijkstra on curr node and save his longest value path if its the shortest till now (and the node_id)
             tempDij = new Dijkstra(this.currGraph, d);
             tempDij.mapPathDijkstra(d);
             if (tempDij.longestPath() < this.shortest){ // update shortest

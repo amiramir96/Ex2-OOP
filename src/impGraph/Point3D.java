@@ -11,18 +11,28 @@ import api.GeoLocation;
 public class Point3D implements GeoLocation {
     double _x, _y, _z;
 
+    /**
+     * constructor
+     * @param x - cord
+     * @param y - cord
+     * @param z - cord
+     */
     public Point3D(double x, double y, double z) {
         this._x = x;
         this._y = y;
         this._z = z;
     }
 
+    /**
+     * deep copy
+     * @param location - point location
+     */
     public Point3D(GeoLocation location) {
         this._x = location.x();
         this._y = location.y();
         this._z = location.z();
     }
-
+    // getters
     @Override
     public double x() {
         return this._x;
@@ -38,6 +48,11 @@ public class Point3D implements GeoLocation {
         return this._z;
     }
 
+    /**
+     * cal distance from curr point to input location
+     * @param g - point
+     * @return - distance (double)
+     */
     @Override
     public double distance(GeoLocation g) {
         double deltaX = this._x - g.x();

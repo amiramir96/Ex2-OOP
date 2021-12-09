@@ -7,8 +7,8 @@ import api.NodeData;
  * implement as writen in the interface.
  */
 public class Node implements NodeData {
-    private Point3D cord; // point on plane
-    private int _id; // serial num
+    private final Point3D cord; // point on plane
+    private final int _id; // serial num
     private int tag; // for user decision
     private String metaData; // same as above
     private double weight; // same as above

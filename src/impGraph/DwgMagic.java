@@ -5,14 +5,8 @@ import FileWorkout.SaveGraph;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import graphAlgo.DFS;
 import graphAlgo.Dijkstra;
-
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
@@ -27,6 +21,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
      * @param g - graph
      */
     public DwgMagic(DirectedWeightedGraph g) {
+        // zeroing vars
         this.currGraph = g;
         this.isConnected = -1;
         this.mc = g.getMC();
@@ -39,6 +34,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public void init(DirectedWeightedGraph g) {
+        // zeroing vars
         this.isConnected = -1;
         this.center = -1;
         this.mc = 0;
@@ -173,11 +169,11 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
                 }
                 idx++;
             }
-//             create the thread objects
+            // create the thread objects
             ThreadPool thPool0 = new ThreadPool(dijList0, 0, this.currGraph);
             ThreadPool thPool1 = new ThreadPool(dijList1, 1, this.currGraph);
             ThreadPool thPool2 = new ThreadPool(dijList2, 2, this.currGraph);
-////             start threads
+            // start threads
             thPool0.start();
             thPool1.start();
             thPool2.start();

@@ -1,17 +1,22 @@
 package impGraph;
-
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
-
 import java.util.*;
 import java.util.function.Consumer;
 
 public class Dwg implements DirectedWeightedGraph {
     HashMap<Integer, NodeData> nodeMap; // all nodes
     /**
+     * for reduce sequent size block in the memory in huge graph cases, this strategy avoid from creating hashmaps of milions of items
+     * ea of the maps, contains 3 shells:
+     * 1- hasg all nodes to 1000 diffrent groups by KeyTransform function (simple modulo arithmetic cal)
+     * 2- at ea group, there is map for every certain group of edges that represented via SRC_id node
+     * 3- to get from ea group the exact edge, input the Dest_id node of the edge as key
+     * ------------------in summary:----------------------
      * given edge within src and dest nodes which their id keys is: src.getKey():=x, dest.getKey():=y
-     * hashMaps first key is: x , hashmap second key is y
+     * hashMap keys: key1 := src_node_id%1000 , key2 := src_node_id key3 := dest_node_id
+     * (key1, key2, key3)
      */
     HashMap<Integer, HashMap<Integer, HashMap<Integer, EdgeData>>> edgeOutMap; // order is via the node that the edge starting from
     HashMap<Integer, HashMap<Integer, HashMap<Integer, EdgeData>>> edgeInMap; // order is via the node that the edge coming into
@@ -19,6 +24,16 @@ public class Dwg implements DirectedWeightedGraph {
     int nodeSize, edgeSize; // sizes
     int mc; // mode counter
 
+    /**
+     *  transform node_id num to "key1" (first key) for edge Hashmaps
+     * @param id - node.getKey()
+     * @return
+     */
+    private int KeyTransform(int id){
+        return id%1000;
+    }
+
+    // constructor
     /**
      * construct empty graph
      */
@@ -28,7 +43,8 @@ public class Dwg implements DirectedWeightedGraph {
         this.edgeSize = 0;
         this.mc = 0;
 
-        //construct hashmaps for edges via nodes
+        // construct hashmaps for edges via nodes
+        // shall initialize all modulo groups
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
         for (int i=0; i<1000; i++){
@@ -38,22 +54,15 @@ public class Dwg implements DirectedWeightedGraph {
 
     }
 
-    private int KeyTransform(int id){
-        return id%1000;
-    }
-
     /**
      * construct three hashmaps:
-     * 1- all the nodes in, via integer id (just copy pointer, not deep copy)
-     *
-     * struct of the next bullets is: HashMap<Integer, HashMap<String, Edge>>
-     * 2- edgeOutMap - first use node id key to get relevant hashmap that hold all the edges that the curr node is starting from
-     * 3- edgeInMap - first use node id key to get relevant hashmap that hold all the edges that the curr node is coming into
-     *
-     *                          IMPORTANT, DONT MISS!!!!
-     * bullets 2,3 inner HashMap key is via the formula: edge key = dest_node_id
-     *                          IMPORTANT, DONT MISS!!!!
-     *
+     * map for nodes
+     * map for edges ordered via "from" node
+     * map for edges ordered via "to" node
+     *                          Reminder!!!!
+     * edgeMaps keys: key1 := src_node_id%1000 , key2 := src_node_id key3 := dest_node_id
+     *                      (key1, key2, key3)
+     *                          Reminder!!!!
      * @param nodeMap - hashmap of nodes, key is the node id
      * @param listOfEdges - list of edges
      */
@@ -63,31 +72,34 @@ public class Dwg implements DirectedWeightedGraph {
         this.edgeSize = listOfEdges.size();
         this.mc = 0;
 
-        //construct hashmaps for edges via nodes
+        // construct hashmaps for edges via nodes
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
-
+        // create modulo external maps
         for (int i=0; i<1000; i++){
             this.edgeOutMap.put(i, new HashMap<>());
             this.edgeInMap.put(i, new HashMap<>());
         }
-
+        // init vars
         int tempSrc, tempDest, keyTrans1, keyTrans2;
         Iterator<EdgeData> iter = listOfEdges.iterator();
         EdgeData tempE;
-        while(iter.hasNext()){ // is stable since we doשמע nt remove any item from the map
+        while(iter.hasNext()){
             // set at each hashmap of node i, the relevant edges
             tempE = iter.next();
+            // get key1
             keyTrans1 = KeyTransform(tempE.getSrc());
             keyTrans2 = KeyTransform(tempE.getDest());
             tempSrc = tempE.getSrc();
             tempDest = tempE.getDest();
+            // construct new map(category) for nodes that doesnt have edges till curr edge
             if (!this.edgeOutMap.get(keyTrans1).containsKey(tempSrc)) {
                 this.edgeOutMap.get(keyTrans1).put(tempSrc, new HashMap<>());
             }
             if (!this.edgeInMap.get(keyTrans2).containsKey(tempDest)) {
                 this.edgeInMap.get(keyTrans2).put(tempDest, new HashMap<>());
             }
+            // add edges to the exact place
             this.edgeOutMap.get(keyTrans1).get(tempSrc).put(tempDest, tempE);
             this.edgeInMap.get(keyTrans2).get(tempDest).put(tempSrc, tempE);
         }
@@ -105,8 +117,10 @@ public class Dwg implements DirectedWeightedGraph {
         this.mc = 0;
 
         //construct hashmaps for edges via nodes
+
         this.edgeInMap = new HashMap<>();
         this.edgeOutMap = new HashMap<>();
+        // create modulo external maps
         for (int i=0; i<1000; i++){
             this.edgeOutMap.put(i, new HashMap<>());
             this.edgeInMap.put(i, new HashMap<>());
@@ -129,16 +143,19 @@ public class Dwg implements DirectedWeightedGraph {
         while(itEdge.hasNext()){
             tempE = itEdge.next();
             tempE = new Edge(tempE);
+            // get key1
             keyTrans1 = KeyTransform(tempE.getSrc());
             keyTrans2 = KeyTransform(tempE.getDest());
             tempSrc = tempE.getSrc();
             tempDest = tempE.getDest();
+            // construct new map(category) for nodes that doesnt have edges till curr edge
             if (!this.edgeOutMap.get(keyTrans1).containsKey(tempSrc)) {
                 this.edgeOutMap.get(keyTrans1).put(tempSrc, new HashMap<>());
             }
             if (!this.edgeInMap.get(keyTrans2).containsKey(tempDest)) {
                 this.edgeInMap.get(keyTrans2).put(tempDest, new HashMap<>());
             }
+            // add edge
             this.edgeOutMap.get(keyTrans1).get(tempSrc).put(tempDest, new Edge(tempE));
             this.edgeInMap.get(keyTrans2).get(tempDest).put(tempSrc, new Edge (tempE));
         }
@@ -182,13 +199,16 @@ public class Dwg implements DirectedWeightedGraph {
      */
     @Override
     public void connect(int src, int dest, double w) {
+        // build edge
         Edge tempE = new Edge(src, w, dest);
+        // construct new map(category) for nodes that doesnt have edges till curr edge
         if (!this.edgeOutMap.get(KeyTransform(src)).containsKey(src)){
             this.edgeOutMap.get(KeyTransform(src)).put(src, new HashMap<>());
         }
         if (!this.edgeInMap.get(KeyTransform(dest)).containsKey(dest)){
             this.edgeInMap.get(KeyTransform(dest)).put(dest, new HashMap<>());
         }
+        // add edge to maps
         this.edgeOutMap.get(KeyTransform(src)).get(src).put(dest, tempE);
         this.edgeInMap.get(KeyTransform(dest)).get(dest).put(src, tempE);
         this.mc++;
@@ -247,13 +267,13 @@ public class Dwg implements DirectedWeightedGraph {
             }
         };
     }
+
     /**
-     * we had to make our own iterator since the interface claims is to throw an exception if the mode counter(mc) has been changed
-     * look for https://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-
-     * category - abstract method
-     * implemented only the absract (what we must to..) which is hasNext and next funcs
-     * the other functions can be used from the super class Iterator
-     * @return ourNodeIterator - iterator that hold all the Edge objects of the graph
+     * chain between iterators of ea node by:
+     * loop over all nodes and add to ArrayList edgeIter(node_i_id)
+     * use mergedIterators object to merge between them
+     * for more details on mergedIterators, look at mergedIterators class
+     * @return mergedIterators
      */
     @Override
     public Iterator<EdgeData> edgeIter() {
@@ -298,7 +318,6 @@ public class Dwg implements DirectedWeightedGraph {
             return n;
         }
         this.nodeSize--;
-        int edgeOutMapSize = 0, edgeInMapSize = 0;
         EdgeData tempE;
         ArrayList<EdgeData> eList;
         Iterator<Map.Entry<Integer, EdgeData>> edgeEntries;
@@ -335,6 +354,7 @@ public class Dwg implements DirectedWeightedGraph {
         this.edgeOutMap.get(KeyTransform(key)).remove(key);
 
         NodeData removedNode = this.nodeMap.get(key);
+        // update vars
         this.nodeMap.remove(key);
         this.mc++;
         return removedNode;
@@ -348,16 +368,20 @@ public class Dwg implements DirectedWeightedGraph {
      */
     @Override
     public EdgeData removeEdge(int src, int dest) {
+        // save the removed edge
         EdgeData removedEdge = this.edgeOutMap.get(KeyTransform(src)).get(src).get(dest);
+        // remove the edges from the edge maps
         this.edgeOutMap.get(KeyTransform(src)).get(src).remove(dest);
         this.edgeInMap.get(KeyTransform(dest)).get(dest).remove(src);
-        this.edgeSize--;
+        // remove node_id maps if tehre is no more edge from/to him
         if (this.edgeOutMap.get(KeyTransform(src)).get(src).isEmpty()){
             this.edgeOutMap.get(KeyTransform(src)).remove(src);
         }
         if (this.edgeInMap.get(KeyTransform(dest)).get(dest).isEmpty()){
             this.edgeInMap.get(KeyTransform(dest)).remove(dest);
         }
+        // update vars
+        this.edgeSize--;
         this.mc++;
         return removedEdge;
     }

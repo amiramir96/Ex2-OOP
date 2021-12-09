@@ -6,8 +6,9 @@ import api.EdgeData;
  * implemented as writen in the interface EdgeData
  */
 public class Edge implements EdgeData {
-    private int _src, _dest, tag; // via interface
-    private double _weight; // via interface
+    private final int _src, _dest;
+    private int tag; // via interface
+    private final double _weight; // via interface
     private String metaData; // via interface
 
     /**
