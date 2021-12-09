@@ -189,14 +189,16 @@ class DwgTest {
     @Test
     void getMC() {
         Dwg dwg = getGraph("test\\resources\\G1.json"); //initialize graph
-        assertEquals(0, dwg.getMC());
+        //how many insertions when building graph?
+        int insertions = dwg.edgeSize()+ dwg.nodeSize();
+        assertEquals(insertions, dwg.getMC());
         Point3D p1 = new Point3D(0,0,0);
         Node n1 = new Node(p1,17);
         dwg.addNode(n1);
-        assertEquals(1, dwg.getMC());
+        assertEquals(insertions+1, dwg.getMC());
         dwg.connect(17,1,0.4);
-        assertEquals(2, dwg.getMC());
+        assertEquals(insertions+2, dwg.getMC());
         dwg.removeEdge(17, 1);
-        assertEquals(3, dwg.getMC());
+        assertEquals(insertions+3, dwg.getMC());
     }
 }

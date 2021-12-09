@@ -22,19 +22,16 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return directed weighted graph
      */
-    public static DirectedWeightedGraph getGrapg(String json_file) {
+    public static DirectedWeightedGraph getGrapg(String json_file) throws FileNotFoundException {
         File jsonGraphFile = new File(json_file); // get file
         DirectedWeightedGraph ans = null;
 
-        try {
-            // shall read, so have to handle exception
-            // the load graph return dwg object
-            LoadGraph g = new LoadGraph();
-            ans = g.loadGraph(json_file);
-        }
-        catch (FileNotFoundException err){ // throw exception..
-            err.printStackTrace();
-        }
+
+        // shall read, so have to handle exception
+        // the load graph return dwg object
+        LoadGraph g = new LoadGraph();
+        ans = g.loadGraph(json_file);
+
 
         return ans;
     }
@@ -43,7 +40,7 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return dwg algorithms
      */
-    public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
+    public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) throws FileNotFoundException {
         DirectedWeightedGraph workGraph;
         DirectedWeightedGraphAlgorithms ans;
         workGraph = getGrapg(json_file); // const the Dwg via the above func :-)
@@ -55,7 +52,7 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      *
      */
-    public static void runGUI(String json_file) {
+    public static void runGUI(String json_file) throws FileNotFoundException {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         Window w = new Window(alg);
     }

@@ -368,7 +368,7 @@ public class Dwg implements DirectedWeightedGraph {
     public int nodeSize() { return this.nodeSize; }
 
     /**
-     * @return amounf of edges in the graph
+     * @return amount of edges in the graph
      */
     @Override
     public int edgeSize() {
