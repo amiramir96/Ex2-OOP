@@ -1,12 +1,11 @@
 # Ex2-OOP
-Object Oriented Programming exercise 2
-
+Object Oriented Programming exercise 2<br>
+## Program Overview
 in this assigment we were required to implement Directed Weighted Garph and some choosen algorithms via our teacher Interfaces : https://github.com/amiramir96/Ex2-OOP/tree/main/src/api <br> 
 the directed weigthed graph/algorithms objects shall implemented within the best time run as possible since its can hold alot of vertex and edges. <br>
 in addition, we shall create a GUI programme that support every algorithm that implemented on the graph (for ex, load graph, isConnected, tsp etc..) <br>
 
-## Program Overview
-### structre of the project code
+## structre of the project code
 the project splits to packges: api (interfaces of our teacher, as explained above), FileWorkout, impGraph, graphAlgo, graphics, tests (will be explained below, not in this topic)
 
 |**package name:**|                                                     **Description**                                                                                      |
@@ -18,16 +17,16 @@ the project splits to packges: api (interfaces of our teacher, as explained abov
 | **Tests**       |   2 categories - 1) Currectness: test each of the public class methods to return currect answer, 2) RunningTime - testing only algorithms for big graphs | 
 | **JsonFiles**   |   Concentrate all the json files at the same package                                                                                                     |
 
-### Tests
+## Tests
 אורי אם אתה חושב שצריך להוסיף משהו אז בבקשה.. אבל לדעתי אפשר למחוק את הטופיק הזה
 <br>
 
-### graphics - GUI 
+## graphics - GUI 
 via the GUI, the use can do every action he could from the code via using DirectedWeightedGraphAlgorithms interface commands <br>
 supports loading, saving graph from json files <br>
 supports add, delete commands to node, edges and create new Directed Weigthed Graph <br>
 
-#### logic system
+### logic system
 each class hold a role: <br>
 1. window - hold the Frame that we draw on <br>
 2. drawGarph (a.k.a drawer) - responsible to paint and update himself via outside inputs (menubar - user methods commands, mouse moveing) <br>
@@ -36,35 +35,38 @@ each class hold a role: <br>
      b. execute the relevant proccess with the drawer (init the currect details/params and use repaint command)
 
 
-#### how to use / tutorial
+### how to use / tutorial
 MenuBar - the user can execute all the features of the algorithms, editting the graph nodes/edges and load/save graph <br>
 For any INVALID input, a popup msg will appear and will explain what the currect format that require to be sent next time <br>
 the gui support mouse inputs as moving screen and zooming in/out the picture<br>
-defualt colors is BLACK for node, BLUE for edge, <br>
+defualt colors is BLACK for node, BLUE for edge, for example: <img src="https://user-images.githubusercontent.com/89981387/145404360-8810e39f-1229-4eb7-905a-157ee689cb6c.jpg" width="75" height="75">
+ <br>
 any other kind of color to the graph will represent occure of one of the algorithms command! <br>
 <br>File category <br>
 load graph - choose json file from directory and load it while creating new graph. <br>
-<img src="![default](https://user-images.githubusercontent.com/89981387/145403755-64f829c8-56a2-420d-81a0-f7d5655f9099.jpg)" width="300", height="300">
-
 save graph - choose folder at directory to extract to the graph to json file. <br>
 <br>
 Algo_Command category<br>
-isConnected - true = all nodes drawn to GREEN, false - RED <br>
-![isConnected](https://user-images.githubusercontent.com/89981387/145305314-39acf3aa-3420-47bd-bcf9-9f4a77953499.png)
+isConnected - true = all nodes drawn to GREEN, false - RED <br> 
+<img src="https://user-images.githubusercontent.com/89981387/145404367-044e39c2-d637-47bb-a5be-b0048b3cdb26.jpg" width="200" height="200">
+<img src="https://user-images.githubusercontent.com/89981387/145405687-61ce5384-af8e-4df9-b4fb-f6c472093beb.png" width="200" height="200">
 
-center - the center node drawn to bright yellow, if garph is not connected - popup a msg to the user. <br>
-![center](https://user-images.githubusercontent.com/89981387/145305342-a9a194a5-9528-440b-baf7-7e3517b12cc9.png)
+<br>
+center - the center node drawn to bright yellow, if garph is not connected - popup a msg to the user. <br> 
+<img src="https://user-images.githubusercontent.com/89981387/145404369-5aed4b73-202c-47dd-bcb6-f65bd2297d18.jpg" width="200" height="200">
+ <br>
 
 shortestPathDist - ask from user input via format "node_id,node_id" (int,int) and draw green for nodes, pink for edges(if there is no path, nothing will happen)  and popup msg with the distance of the path <br>
-shortestPath - same as above, diff colors (pink for nodes, red for edges). <br> 
-![ShortestPath](https://user-images.githubusercontent.com/89981387/145305331-87ef9cb4-f644-4a68-b353-b0aa8a73b135.png)
+shortestPath - same as above, diff colors (pink for nodes, red for edges).<br>
+<img src="https://user-images.githubusercontent.com/89981387/145404370-394acdf5-5b63-4040-8c51-d7f92470a070.jpg" width="200" height="200">
+<br> 
 
 
 tsp - ask from user input via format "node_id,node_id,....,node_id" (int,int,...,int), if there is solution -> draw nodes in green and add string to the node_id with 
-the station idx along the road, edges with pink \ if there is no solution - draw all nodes of the input to red. <br>
-![tsp](https://user-images.githubusercontent.com/89981387/145305351-79742b51-c79d-4412-bb46-154762dfdb70.png)
-
+the station idx along the road, edges with pink \ if there is no solution - draw all nodes of the input to red. <br> <img src="https://user-images.githubusercontent.com/89981387/145404376-369f8dc4-c9af-4691-b4d4-47bc835d6d11.jpg" width="200" height="200">
+<img src="https://user-images.githubusercontent.com/89981387/145405679-e9442608-f8d6-4a7e-83ba-525e38cedc3f.png" width="200" height="200">
 <br>
+
 Graph_Management category <br>
 add node - ask for user input via "node_id,x,y" (int,float,float) and add node to the currect graph <br>
 add edge - same as above, valid input is: "node_id_src,node_id_dest,weight" ("int,int,float") <br>
@@ -74,7 +76,7 @@ create new graph - remove the currect graph and start a clean new graph (zero no
 <br>
 
 
-### Running The Simulation
+## Running The Simulation
 
 <br>
 
