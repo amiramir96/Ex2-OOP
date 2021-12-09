@@ -33,7 +33,7 @@ public class DFS {
      * 3- check if there is a node which not visited -> if there is, the graph is not connection by definition
      * 4- initMaps again
      * 5- create "transposeMap" which is structure that hold all Edges via Nodes_id key as TRANSPOSED!!!
-     *          5.1 - use transpose function on the graph to copy the edges as transposed tothe transMap
+     *          5.1 - use transpose function on the graph to copy the edges as transposed to the transMap
      * 6- DFS(given node) - same as above but now on the graph edges is from the transMap
      * 7- check if there is node which not visited -> graph isnt connected (else, we end with true)
      * @param start - node to start DFS on (which is not relevant in this process since we check "isConnected")
