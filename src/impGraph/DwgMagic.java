@@ -156,51 +156,42 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
             Iterator<NodeData> it = this.currGraph.nodeIter(); // ez to iterate all over the nodes one by one
             int idx=0; // serial num via iterations
             // init lists that and will split the dijobjects via serial num
-            List<NodeData> dijList0 = new LinkedList<>();
-            List<NodeData> dijList1 = new LinkedList<>();
-            List<NodeData> dijList2 = new LinkedList<>();
+            List<LinkedList<NodeData>> thNodes = new ArrayList<>();
+            for (int i=0; i < 8; i++){
+                thNodes.add(new LinkedList<>());
+            }
             while (it.hasNext()){ // dijkstra on ea node as src one time
                 tempN = it.next();
                 // split all dijobj equally
-                switch (idx % 3) {
-                    case 0 -> dijList0.add(tempN);
-                    case 1 -> dijList1.add(tempN);
-                    case 2 -> dijList2.add(tempN);
-                }
+                thNodes.get(idx%8).add(tempN);
                 idx++;
             }
             // create the thread objects
-            ThreadPool thPool0 = new ThreadPool(dijList0, 0, this.currGraph);
-            ThreadPool thPool1 = new ThreadPool(dijList1, 1, this.currGraph);
-            ThreadPool thPool2 = new ThreadPool(dijList2, 2, this.currGraph);
+            LinkedList<ThreadPool> thPool = new LinkedList<>();
+            for (int i=0; i<8; i++){
+                if (thNodes.get(i).size()>0){
+                    thPool.add(new ThreadPool(thNodes.get(i), i, this.currGraph));
+                    thPool.getLast().start();
+                }
+            }
             // start threads
-            thPool0.start();
-            thPool1.start();
-            thPool2.start();
-
             try{ // join all
-                thPool0.join();
-                thPool1.join();
-                thPool2.join();
+                for (ThreadPool threadDij : thPool){
+                    threadDij.join();
+                }
             }
             catch (Exception e){
                 e.printStackTrace();
             }
 
             // take lowest
-            double x;
-            if (thPool0.shortest > thPool1.shortest){
-                ansNode = this.currGraph.getNode(thPool1.centerForNodeList);
-                x = thPool1.shortest;
+            double x = Double.MAX_VALUE;
+            for (ThreadPool threadPool : thPool){
+                if (threadPool.shortest < x){
+                    x = threadPool.shortest;
+                    ansNode = this.currGraph.getNode(threadPool.centerForNodeList);
+                }
             }
-            else {
-                ansNode = this.currGraph.getNode(thPool0.centerForNodeList);
-                x = thPool0.shortest;
-            }
-            if (x > thPool2.shortest){
-                ansNode = this.currGraph.getNode(thPool2.centerForNodeList);
-            }
-
             this.center = ansNode.getKey(); // save center value - maybe we will save some resources in futrue :-P
         }
         return ansNode;

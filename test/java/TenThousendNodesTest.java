@@ -89,6 +89,7 @@ class TenThousendNodesTest {
     void center() {
         this.thousend.center();
         assertEquals(thousend.getGraph().nodeSize(), this.size);
+        assertEquals(thousend.getGraph().nodeSize(), this.size);
     }
 
     @Test
