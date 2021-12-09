@@ -58,9 +58,11 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
     public DirectedWeightedGraph copy() {return new Dwg(this.currGraph);}
 
     /**
+     * definition: graph is connected if and only if there is path from every node to every node
      * choose randomally vertex v of the currGraph and use DFS algorithm twice (for more details on dfs algo: https://en.wikipedia.org/wiki/Depth-first_search)
      * 1- use DFS on v at currGraph
      * 2- use DFS on v at transpose(currGraph)
+     * O(|V|+|E|)
      * the assumption is - given v vertex of G, if possible to get to any other node in G from v and from every node to v - graph is connected
      * if both DFS finishingTime(v) is the highest -> means the assumption is true, else - false
      * credit to Doctor Nivash Gabriel for teaching us this algo and methods.
@@ -129,7 +131,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
 
     /**
      * first term is that the graph isConnected, so - will start "center" process if and only if isConnected is true
-     * using dijkstra * |V| => O((|V|)*O(|E|log|V| + |V|log|V|)
+     * using dijkstra * |V| => O((|V|)*O(|E|log|V| + |V|log|V|) => O(|V|*|E|log(|V|))
      * |V| is the amount of nodes in the graph (V for vertex)
      * |E| is the amount of edges in the graph (E for edges)
      * for more details on dijkstra algorithm: https://www.youtube.com/watch?v=pSqmAO-m7Lk || https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
@@ -220,6 +222,8 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
      * 6 - return list of shortest path along the cities, orginized
      ***** side note *****
      * if there is path value of inifinity as minimum path between two cities, algorithm is done immedietly and returns null (since no connection between both node in any way)
+     * running time : O(n*|E|log(|V|)) while n is the amount of the cities BUT for every direct edge between two cities
+     * running time is decreasing (lower bound is o(n^2))
      * @param cities - list of nodes
      * @return - shortest path as possible that moving over all the cities at least once
      */
