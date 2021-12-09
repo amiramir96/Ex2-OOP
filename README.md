@@ -2,82 +2,24 @@
 Object Oriented Programming exercise 2
 
 in this assigment we were required to implement Directed Weighted Garph and some choosen algorithms via our teacher Interfaces : https://github.com/amiramir96/Ex2-OOP/tree/main/src/api <br> 
-the directed weigthed graph object shall implemented within the best time run as possible since its can hold alot of vertex and edges. <br>
+the directed weigthed graph/algorithms objects shall implemented within the best time run as possible since its can hold alot of vertex and edges. <br>
 in addition, we shall create a GUI programme that support every algorithm that implemented on the graph (for ex, load graph, isConnected, tsp etc..) <br>
 
 ## Program Overview
 ### structre of the project code
 the project splits to packges: api (interfaces of our teacher, as explained above), FileWorkout, impGraph, graphAlgo, graphics, tests (will be explained below, not in this topic)
 
- |   package name: |                                                     **FileWorkout**                                                                                      |
+|**package name:**|                                                     **Description**                                                                                      |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **file name**   |      **description**                                                                                                                                     |   
-| LoadGraph       |             Load a Json file and construct <br> Directed Weighted Graph via the json file                                                                   |
-|    SaveGraph    |             Save an existing Directed Weighted Graph - <br> nodes and edges as json file, at any directory in the computer                                    |
-
-|   package name: |                                                     **graphAlgo**                                                                                        |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **file name**   |      **description**                                                                                                                                     |   
-| DFS             |     implement DFS algorithm, for more details on DFS <br> please look at "Review of the Literature" at the bottom of the readme                               |
-|    Dijkstra     |     implement Dijkstra algorithm, for more details on Dijksta <br> please look at "Review of the Literature" at the bottom of the readme                      |
-
-
-|   package name: |                                                     **impGraph**                                                                                         |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **file name**   |      **description**                                                                                                                                     |   
-| Point3D         |  represents point on the plane, imp GeoLocation                                                                                                          |
-|    Node         |  is vertex in the graph, imp NodeData                                                                                                                    |
-|    Edge         |   edge in graph, imp EdgeData                                                                                                                            |
-|    Dwg          |  1. imp DirectedWeightedGraph, hold iterators for all nodes, edges, edges of specific nodes, <br> 2. support add node and remove/add edge within O(1), <br> 3. support remove key within O(k) while k is the amount of in+out edges of the given node                                                                                                     |
-|merged & EdgeIter|   iterator for Edges of curr node, crafted to the needs of our graph (throw exception if graph has been changed since iterator is created)               |
-|    DwgMagic     |    imp DirectedWeigthedGraphAlgorithms, provide solutions for several "known" and "unkown" problem                                                       |
-|    ThreadPool   |    this class exists to support using Dijkstra algorithm on diff nodes in parralel (will be explained more in "center" algorithm)                        |
-
-
-|   package name: |                                                     **graphics**                                                                                         |
-|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **file name**   |      **description**                                                                                                                                     |   
-|       Window    |    inherite from JFrame, represent our JFrame (the visualized window)                                                                                    |
-|    DrawGraph    |    inherite from JPanel and imp ActionListener, and Mouse interfaces, responsible to draw the given graph as it got commanded                            |   |    hartabepita  |  1                                                                                       
-|      Menu       | inherite from MenuBar and imp ActionListener, control over the features, <br> decided which feature got clicked and arrange all the needed needs so that <br> the DrawGarph object will be able to focus only via its got defined till the present time | 
-
-
-### Directed Weigthed Graph
-אורי אין לי מה לכתוב פה.. אני מתלבט אם להסיר את הבולט הזה
-אם ישלך מה לרשום פה אז בכבוד..
-
-
-### Directed Weighted Graph Algorithms
-supporting some methods via interface https://github.com/amiramir96/Ex2-OOP/blob/main/src/api/DirectedWeightedGraphAlgorithms.java <br>
-the class obj will construct by getting existing Directed Weigthed Graph (even an empty one). <br>
-explanation on the algorithm methods:<br>
-
-given G=(V,E) directed weighted graph, while V-set of all vertexes, E-set of all edge:
-
-#### isConnected O(|V|+|E|)
-definition: graph is connected if and only if there is path from every node to every node <br>
-solution: used DFS algorithm twice on same node, the second time on the "transposed" edges <br>
-
-#### ShortestPath O(|E|log(|V|))
-return list of nodes that represent the shortest path between pair of given nodes. <br>
-via using dijkstra algorithm we can find the shortest path between pair of vertexes, and that what we did.
-<br>
-
-#### ShortestPathDist O(|E|log(|V|))
-same pattern as ShortestPath - just return instead the distance between the pair of nodes (that value can be taken within O(1) after using dijkstra algo on the relevant node). <br>
-
-#### center O(|V|\*|E|log(|V|))
-(a.k.a shortest from longests) returns the node that has the shortest path out of all the longest paths of all the other nodes <br>
-use dijkstra algorithm on ea node and save his longest value => then loop over all the nodes once and take the shortest from all the longests values (and returns the adjust node)<br>
-for getting better time run results we split all the nodes of G to 3 equal sizes lists and use ThreadPool (class extends Thread) to run all this dijkstra calculation in seprate 3 threads
-
-#### tsp - traveler salesmen problem (crafted to be more realistic) O(n*|E|log(|V|)), while n is the amount of the cities
-problem description: <br>
-find the shortest path posible that move over all the nodes in the input list (can move more than once over one node and doesn't need to return to the start node) <br>
-algo solution: is bases on nearest neighbour algorithm with little twist - if there is no direct edge to any other nodes in the list, use dijkstra on that node and choose the shortest path <br>
+| **api**         |    interfaces of graph, node, edge, point(geolocation) and graph algorithms.                                                                             | 
+| **FileWorkout** |     implement DFS algorithm, for more details on DFS <br> please look at "Review of the Literature" at the bottom of the readme                          |   
+|  **impGraph**   |     implmentation of all interfaces from api package, also, hold some inner class to manage threads, iterators                                           |   | **graphAlgo**   |    hold implementation for the known algorithms DFS, Dijkstra to support the graphAlgorithms methods                                                     |
+|  **graphics**   |    represent all the GUI classes, with constructing the Window class, the GUI gets open for the user usage                                               |
+| **Tests**       |   2 categories - 1) Currectness: test each of the public class methods to return currect answer, 2) RunningTime - testing only algorithms for big graphs | 
+| **JsonFiles**   |   Concentrate all the json files at the same package                                                                                                     |
 
 ### Tests
-
+אורי אם אתה חושב שצריך להוסיף משהו אז בבקשה.. אבל לדעתי אפשר למחוק את הטופיק הזה
 <br>
 
 ### graphics - GUI 
@@ -98,11 +40,12 @@ each class hold a role: <br>
 MenuBar - the user can execute all the features of the algorithms, editting the graph nodes/edges and load/save graph <br>
 For any INVALID input, a popup msg will appear and will explain what the currect format that require to be sent next time <br>
 the gui support mouse inputs as moving screen and zooming in/out the picture<br>
-defualt colors is BLACK for node, BLUE for edge,
-any other kind of color to the graph will represent occure of one of the algorithms command!<br>
-![default](https://user-images.githubusercontent.com/89981387/145303879-a5766b8d-9666-4977-a5fb-9b76d228b37f.png)
+defualt colors is BLACK for node, BLUE for edge, <br>
+any other kind of color to the graph will represent occure of one of the algorithms command! <br>
 <br>File category <br>
 load graph - choose json file from directory and load it while creating new graph. <br>
+<img src="![default](https://user-images.githubusercontent.com/89981387/145403755-64f829c8-56a2-420d-81a0-f7d5655f9099.jpg)" width="300", height="300">
+
 save graph - choose folder at directory to extract to the graph to json file. <br>
 <br>
 Algo_Command category<br>
