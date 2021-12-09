@@ -5,6 +5,8 @@ in this assigment we were required to implement Directed Weighted Garph and some
 the directed weigthed graph/algorithms objects shall implemented within the best time run as possible since its can hold alot of vertex and edges. <br>
 in addition, we shall create a GUI programme that support every algorithm that implemented on the graph (for ex, load graph, isConnected, tsp etc..) <br>
 
+Our implementation works in O(1) for all basic operations on the graph (get/add/remove node/edge) and is very modular- all data transfer between classes is done through the api.
+
 ## structre of the project code
 the project splits to packges: api (interfaces of our teacher, as explained above), FileWorkout, impGraph, graphAlgo, graphics, tests (will be explained below, not in this topic)
 
