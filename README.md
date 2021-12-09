@@ -18,7 +18,10 @@ the project splits to packges: api (interfaces of our teacher, as explained abov
 | **JsonFiles**   |   Concentrate all the json files at the same package                                                                                                     |
 
 ## Tests
-אורי אם אתה חושב שצריך להוסיף משהו אז בבקשה.. אבל לדעתי אפשר למחוק את הטופיק הזה
+The "PerformanceTest.jar" file is used totest the performaence of the algorithm on graphs with different sizes.  
+It can be called from the cmd or be given the number of nodes for the graph.  
+`java -jar PerformanceTest.jar` or `java -jar PerformanceTest.jar 200` for example.  
+The program will create a random graph with the specified number of nodes in the folder and test the elapsed time of multiple implemented methods on that graph.
 <br>
 
 ## graphics - GUI 
@@ -77,7 +80,8 @@ create new graph - remove the currect graph and start a clean new graph (zero no
 
 
 ## Running The Simulation
-
+Running the simulation is performed as instracted, by calling `java -jar Ex2.jar Graph_Name.json` for a graph in the folder (or in nested 'data' folder).
+The program will open a window with visual representation of the graph and menu bar with different algorithms that can be triggered.
 <br>
 
 
@@ -99,8 +103,9 @@ create new graph - remove the currect graph and start a clean new graph (zero no
 <br>
 
 ## Assigment instructions
-
-
+The instructions for this assignment can be found here (Hebrew):  
+https://docs.google.com/document/d/17h5VGIHtqWHrzgoRjH05_PjHgCn8-EDcecrkR9sVChQ/edit
+<br>
 
 ## Review of the Literature
 DFS - https://en.wikipedia.org/wiki/Depth-first_search , https://www.youtube.com/watch?v=7fujbpJ0LB4&t=10s <br>
