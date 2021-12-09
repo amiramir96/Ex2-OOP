@@ -12,10 +12,9 @@ class SaveGraphTest {
 
     @Test
     void save() throws IOException {
-        LoadGraph loader = new LoadGraph();
-        DirectedWeightedGraph dwg = loader.loadGraph("test\\resources\\G1.json");
+        DirectedWeightedGraph dwg = LoadGraph.loadGraph("test\\resources\\G1.json");
         SaveGraph.save("test\\resources\\saved_graph.json", dwg);
-        DirectedWeightedGraph dwg2 = loader.loadGraph("test\\resources\\saved_graph.json");
+        DirectedWeightedGraph dwg2 = LoadGraph.loadGraph("test\\resources\\saved_graph.json");
         assertEquals(dwg.edgeSize(), dwg2. edgeSize());
         assertEquals(dwg.nodeSize(), dwg2.nodeSize());
 
@@ -23,13 +22,12 @@ class SaveGraphTest {
 
     @Test
     void edgeToObject() {
+        // nested in save
     }
 
     @Test
     void nodeToObject() {
+        // nested in save
     }
 
-    @Test
-    void runSave() {
-    }
 }

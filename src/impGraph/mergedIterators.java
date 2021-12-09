@@ -6,6 +6,9 @@ import api.EdgeData;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Cycle through iterators
+ */
 public class mergedIterators implements Iterator<EdgeData> {
 
     /**
