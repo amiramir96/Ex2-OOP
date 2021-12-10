@@ -22,7 +22,7 @@ public class TarjanStronglyConnected {
     Stack<Integer> stack;
     ArrayList<HashMap<Integer, Integer>> indexMap; // index of node (when we found it)
     ArrayList<HashMap<Integer, Integer>> lowLinkMap; // lowlink
-    ArrayList<HashMap<Integer, Boolean>> onStackMap; // visited?
+    ArrayList<HashMap<Integer, Boolean>> visitedMap; // visited?
     int idx; // idx control over which num to give a given node in the indexMap
     // construct maps
     public TarjanStronglyConnected(DirectedWeightedGraph g){
@@ -30,7 +30,7 @@ public class TarjanStronglyConnected {
         this.stack = new Stack<>();
         this.indexMap = new ArrayList<>();
         this.lowLinkMap = new ArrayList<>();
-        this.onStackMap = new ArrayList<>();
+        this.visitedMap = new ArrayList<>();
         initMaps();
         this.idx = 0;
     }
@@ -49,7 +49,7 @@ public class TarjanStronglyConnected {
         this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, idx);
         idx++;
         this.stack.push(node_id);
-        this.onStackMap.get(KeyTransform(node_id)).replace(node_id, true);
+        this.visitedMap.get(KeyTransform(node_id)).replace(node_id, true);
 
         int tempE_dest;
 
@@ -57,31 +57,87 @@ public class TarjanStronglyConnected {
         Iterator<EdgeData> itEdge = this.currGraph.edgeIter(node_id);
         while (itEdge.hasNext()){
             tempE_dest = itEdge.next().getDest();
-            if (this.indexMap.get(KeyTransform(tempE_dest)).get(tempE_dest) == -1){
+            // if we didnt visited this vertex yet, go in depth! (DFS !)
+            if (this.lowLinkMap.get(KeyTransform(tempE_dest)).get(tempE_dest) == -1){
                 // start the recursion before the command!!! here is the magic
-                // i cant xfer it to iterative :/
                 tarjanRecursive(this.currGraph.getNode(tempE_dest));
                 this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, Math.min(this.lowLinkMap.get(KeyTransform(node_id)).get(node_id), this.lowLinkMap.get(KeyTransform(tempE_dest)).get(tempE_dest)));
             }
-            else if (this.onStackMap.get(KeyTransform(tempE_dest)).get(tempE_dest)){
-                this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, Math.min(this.lowLinkMap.get(KeyTransform(node_id)).get(node_id), this.lowLinkMap.get(KeyTransform(tempE_dest)).get(tempE_dest)));
+            else if (this.visitedMap.get(KeyTransform(tempE_dest)).get(tempE_dest)){
+                this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, Math.min(this.lowLinkMap.get(KeyTransform(node_id)).get(node_id), this.indexMap.get(KeyTransform(tempE_dest)).get(tempE_dest)));
             }
         }
+
+        if (this.lowLinkMap.get(KeyTransform(node_id)).get(node_id) == this.indexMap.get(KeyTransform(node_id)).get(node_id)){
+
+        }
+
     }
 
+
+    public void tarjanIterative(NodeData n){
+        // init vars
+        int node_id = n.getKey();
+        this.indexMap.get(KeyTransform(node_id)).replace(node_id, idx);
+        this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, idx);
+        idx++;
+        this.stack.push(node_id);
+        this.visitedMap.get(KeyTransform(node_id)).replace(node_id, true);
+        int tempE_dest;
+        Iterator<EdgeData> itEdge;
+
+        while (!this.stack.isEmpty()){
+            node_id = this.stack.pop();
+            // iteratte all over the edges of the given node
+            itEdge = this.currGraph.edgeIter(node_id);
+            while (itEdge.hasNext()){
+                tempE_dest = itEdge.next().getDest();
+                // if we didnt visited this vertex yet, go in depth! (DFS !)
+                if (this.indexMap.get(KeyTransform(tempE_dest)).get(tempE_dest)==1){
+                    // start the recursion before the command!!! here is the magic
+//                    tarjanRecursive(this.currGraph.getNode(tempE_dest));
+
+                    this.lowLinkMap.get(KeyTransform(tempE_dest)).replace(tempE_dest, idx);
+                    idx++;
+                    this.stack.push(tempE_dest);
+                    this.visitedMap.get(KeyTransform(tempE_dest)).replace(tempE_dest, true);
+
+//                    this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, Math.min(this.lowLinkMap.get(KeyTransform(node_id)).get(node_id), this.lowLinkMap.get(KeyTransform(tempE_dest)).get(tempE_dest)));
+                }
+                //else if (this.visitedMap.get(KeyTransform(tempE_dest)).get(tempE_dest))
+                else {
+                    this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, Math.min(this.lowLinkMap.get(KeyTransform(node_id)).get(node_id), this.lowLinkMap.get(KeyTransform(tempE_dest)).get(tempE_dest)));
+                }
+            }
+        }
+
+    }
+// if(this.indexMap.get(KeyTransform(tempE_dest)).get(tempE_dest) == -1 || this.visitedMap.get(KeyTransform(tempE_dest)).get(tempE_dest))
+//      this.lowLinkMap.get(KeyTransform(node_id)).replace(node_id, Math.min(this.lowLinkMap.get(KeyTransform(node_id)).get(node_id), this.lowLinkMap.get(KeyTransform(tempE_dest)).get(tempE_dest)));
     /**
      * check if there is unvisited node -> graph is not connected
      * @return boolean. graph is connected
      */
     public boolean tarjanConnected(){
         boolean ans = true;
-        for (HashMap<Integer, Boolean> element : this.onStackMap){
-            for (Boolean b : element.values()){
-                if (!b){
-                    ans = b;
+//        int parentAll = 0;
+        for (HashMap<Integer, Integer> element : this.lowLinkMap){
+            for (Integer b : element.values()){
+                System.out.println(b);
+                if (b == -1) {
+                    ans = false;
+                    break;
                 }
             }
         }
+//        for (HashMap<Integer, Boolean> element : this.visitedMap){
+//            for (Boolean b : element.values()){
+//                if (!b){
+//                    ans = false;
+//                    break;
+//                }
+//            }
+//        }
         return ans;
     }
 
@@ -96,7 +152,7 @@ public class TarjanStronglyConnected {
         for (int i=0; i<1000 ;i++){
             this.indexMap.add(new HashMap<>());
             this.lowLinkMap.add(new HashMap<>());
-            this.onStackMap.add(new HashMap<>());
+            this.visitedMap.add(new HashMap<>());
         }
         Iterator<NodeData> itN = this.currGraph.nodeIter();
         int node_id, trans_id;
@@ -105,7 +161,7 @@ public class TarjanStronglyConnected {
             trans_id = KeyTransform(node_id);
             this.indexMap.get(trans_id).put(node_id, -1);
             this.lowLinkMap.get(trans_id).put(node_id, -1);
-            this.onStackMap.get(trans_id).put(node_id, false);
+            this.visitedMap.get(trans_id).put(node_id, false);
         }
     }
 

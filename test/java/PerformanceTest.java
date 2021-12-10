@@ -17,18 +17,16 @@ public class PerformanceTest {
 
     
     public static void main(String[] args) {
-
-//        if (args.length > 0){
-//            g = RandomGraphGenerator.createRndGraph(Integer.parseInt(args[0]));
-//        }
-//        else{
-//            System.out.println("set number of nodes:");
-//            Scanner sc = new Scanner(System.in);
-//            g = RandomGraphGenerator.createRndGraph(sc.nextInt());
-//        }
-        System.out.println("set number of nodes:");
-        Scanner sc = new Scanner(System.in);
-        int param = sc.nextInt();
+        int param;
+        if (args.length > 0){
+            param = Integer.parseInt(args[0]);
+        }
+        else{
+            System.out.println("set number of nodes:");
+            Scanner sc = new Scanner(System.in);
+            param = sc.nextInt();
+        }
+        long start = System.nanoTime();
         DirectedWeightedGraph g = new Dwg();
         for (int i=0; i < param; i++){
             g.addNode(new Node(new Point3D(Math.random()*100, Math.random()*100,0.0), i));
@@ -55,36 +53,42 @@ public class PerformanceTest {
                 j++;
             }
         }
+        long finish = System.nanoTime();
+        System.out.println("create and load random graph time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+
         System.out.println("Number of nodes: "+ g.nodeSize());
         System.out.println("Number of edges: "+ g.edgeSize());
+
         //is connected
-        long start = System.nanoTime();
+        start = System.nanoTime();
         dm.isConnected();
-        long finish = System.nanoTime();
+        finish = System.nanoTime();
         System.out.println("isConnected time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+        //center
+        start = System.nanoTime();
+        dm.center();
+        finish = System.nanoTime();
+        System.out.println("center time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
         //shortest path
         start = System.nanoTime();
         dm.shortestPathDist(0, g.nodeSize()-1);
         finish = System.nanoTime();
         System.out.println("shortestPath time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
-        //center
-//        start = System.nanoTime();
-//        dm.center();
-//        finish = System.nanoTime();
-//        System.out.println("center time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
-        //tsp
+         //tsp
         int num_of_nodes = g.nodeSize();
         LinkedList<NodeData> l1 = new LinkedList<>();
-        l1.add(g.getNode(0));
-        l1.add(g.getNode(num_of_nodes/2));
-        l1.add(g.getNode(num_of_nodes/3));
-        l1.add(g.getNode(num_of_nodes/4));
-        l1.add(g.getNode(num_of_nodes/5));
+        // add 15 nodes to the list
+        for (int i = 2; i < 17; i++) {
+            l1.add(g.getNode(num_of_nodes/i));
+        }
         start = System.nanoTime();
         dm.tsp(l1);
         finish = System.nanoTime();
-        System.out.println("tsp for 5 cities time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
-
-
+        System.out.println("tsp for 15 cities time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+        //copy graph
+        start = System.nanoTime();
+        dm.copy();
+        finish = System.nanoTime();
+        System.out.println("copy time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
     }
 }
