@@ -7,6 +7,8 @@ import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
 import graphAlgo.DFS;
 import graphAlgo.Dijkstra;
+import graphAlgo.TarjanStronglyConnected;
+
 import java.io.IOException;
 import java.util.*;
 
