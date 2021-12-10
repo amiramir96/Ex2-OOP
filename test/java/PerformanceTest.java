@@ -1,5 +1,6 @@
 import FileWorkout.LoadGraph;
 import api.DirectedWeightedGraph;
+import api.EdgeData;
 import api.NodeData;
 import correctness.RandomGraphGenerator;
 import impGraph.Dwg;
@@ -9,9 +10,7 @@ import impGraph.Point3D;
 
 import java.io.FileNotFoundException;
 import java.sql.Time;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class PerformanceTest {
@@ -40,7 +39,24 @@ public class PerformanceTest {
             }
         }
         DwgMagic dm = new DwgMagic(g);
+        if (dm.getGraph().nodeSize() > 800000){
+            Iterator<NodeData> n = dm.getGraph().nodeIter();
+            ArrayList<NodeData> p = new ArrayList<>();
+            for (int i=0; n.hasNext() && i<100000; i++){
+                n.next();
+                p.add(n.next());
+            }
+            NodeData ni = n.next();
+            dm.getGraph().removeNode(ni.getKey());
+            dm.getGraph().addNode(ni);
+            int j=0;
+            for (int i=dm.getGraph().edgeSize(); i<dm.getGraph().nodeSize()*20; i++){
+                dm.getGraph().connect(p.get(j).getKey(),p.get(j+1).getKey(), Math.random()*1000);
+                j++;
+            }
+        }
         System.out.println("Number of nodes: "+ g.nodeSize());
+        System.out.println("Number of edges: "+ g.edgeSize());
         //is connected
         long start = System.nanoTime();
         dm.isConnected();

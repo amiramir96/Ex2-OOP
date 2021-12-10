@@ -40,7 +40,7 @@ public class mergedIterators<O> implements Iterator<O> {
     @Override
     public boolean hasNext() {
         // check if we shall forward to the next iterator in the list
-        if (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
+        while (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
             this.currectIdx++;
         }
         // return has next
@@ -55,7 +55,7 @@ public class mergedIterators<O> implements Iterator<O> {
     @Override
     public O next() {
         // check if we shall forward to the next iterator in the list
-        if (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
+        while (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
             this.currectIdx++;
         }
         return this.mergedIter.get(currectIdx).next();

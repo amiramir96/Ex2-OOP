@@ -14,12 +14,12 @@ public class nodeIter implements Iterator<NodeData> {
     NodeData tempN;
 
     // constructor for specific idx of the list (nodemaps) an iterator
-    nodeIter(Dwg g, int node_id){
+    nodeIter(Dwg g, HashMap<Integer, NodeData> node_list){
         this.currGraph = g;
         this.originModeCounter = g.getMC();
         // below is the main reason why we use this class and not "unnamed iterator"
-        if (!this.currGraph.nodeMap.get(node_id%1000).isEmpty()){
-            this.nodeIterator = this.currGraph.nodeMap.get(node_id%1000).values().iterator();
+        if (!node_list.isEmpty()){
+            this.nodeIterator = node_list.values().iterator();
         }
         else {
             this.nodeIterator = new HashMap<Integer, NodeData>().values().iterator(); //will iterate over 0 items but not null!
@@ -30,6 +30,8 @@ public class nodeIter implements Iterator<NodeData> {
     public boolean hasNext() {
         if (this.currGraph.getMC() != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
         }; // added the throw RunTimeException
+        if (tempN != null){
+        }
         return nodeIterator.hasNext();
     }
 
