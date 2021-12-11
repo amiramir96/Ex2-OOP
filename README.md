@@ -87,18 +87,16 @@ The program will open a window with visual representation of the graph and menu 
 <br>
 
 
-## Results
+## Running Time Results
 <br>
 
-| **Case name**   |**Node_size**|**Edge_size**|     **isConnected**     |     **shortestPath**     |   **shortestPathDist**     |      **center**      |      **tsp**      |
-|-----------------|-------------|-------------|-------------------------|--------------------------|----------------------------|----------------------|-------------------|   
-|                 |             |             |                         |       **description**    |                            |                      |                   |
-|                 |             |             |                         |                          |                            |                      |                   |
-|                 |             |             |                         |                          |                            |                      |                   |
-|                 |             |             |                         |                          |                            |                      |                   |
-|                 |             |             |                         |                          |                            |                      |                   |
-|                 |             |             |                         |                          |                            |                      |                   |
-|                 |             |             |                         |                          |                            |                      |                   |
+|**Node_size**|**Edge_size**|**construct graph**|**isConnected**   |**shortestPath**  | **shortestPathDist** |  **center**         |     **tsp**      |
+|-------------|-------------|-------------------|------------------|------------------|----------------------|---------------------|------------------|
+|    100      |    2000     |less than 1 second |less than 1 second|less than 1 second| less than 1 second   | less than 1 second  |less than 1 second|
+|   1,000     |  20,000     |less than 1 second |less than 1 second|less than 1 second|less than 1 second    | less than 1 second  |less than 1 second|
+| 10,000      | 200,000     |less than 1 second |less than 1 second|less than 1 second|less than 1 second    | 337 seconds         |     2 seconds    |
+| 100,000     | 2,000,000   |1 seconds          | 1 second         | 2 seconds        |       2 seconds      |timeout(apx 84 hours)| 34 seconds       |
+| 1,000,000   |  20,000,000 |18 seconds         |   23 seconds     | 28 seconds       |  28 seconds          |timeout(apx 10 years)| 577 seconds      |
 
 
 

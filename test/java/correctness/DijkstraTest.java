@@ -15,7 +15,7 @@ class DijkstraTest {
     DwgMagic m = new DwgMagic(new Dwg());
     @Test
     void mapPathDijkstra() {
-        m.load("test\\resources\\G1.json");
+        m.load("json_graphs\\G1.json");
         double ans1 = 1.8015954015822042;
         double ans2 = 4.8330358613553095;
         Dijkstra dij1 = new Dijkstra(m.getGraph(), m.getGraph().getNode(1));
@@ -33,7 +33,7 @@ class DijkstraTest {
         assertEquals(dij2.shortestToSpecificNode(m.getGraph().getNode(4)), ans4);
 
 
-        m.load("test\\resources\\G3.json");
+        m.load("json_graphs\\G3.json");
         Dijkstra dij3 = new Dijkstra(m.getGraph(), m.getGraph().getNode(8));
         dij3.mapPathDijkstra(m.getGraph().getNode(8));
         assertEquals(dij3.src.getKey(), 8);
@@ -47,7 +47,7 @@ class DijkstraTest {
 
     @Test
     void shortestToSpecificNode() {
-        m.load("test\\resources\\G1.json");
+        m.load("json_graphs\\G1.json");
         double ans1 = 1.8015954015822042;
         double ans2 = 4.8330358613553095;
         Dijkstra dij1 = new Dijkstra(m.getGraph(), m.getGraph().getNode(1));
@@ -65,7 +65,7 @@ class DijkstraTest {
         assertEquals(dij2.shortestToSpecificNode(m.getGraph().getNode(4)), ans4);
 
 
-        m.load("test\\resources\\G3.json");
+        m.load("json_graphs\\G3.json");
         Dijkstra dij3 = new Dijkstra(m.getGraph(), m.getGraph().getNode(8));
         dij3.mapPathDijkstra(m.getGraph().getNode(8));
         assertEquals(dij3.src.getKey(), 8);
@@ -78,7 +78,7 @@ class DijkstraTest {
 
     @Test
     void longestPath() {
-        m.load("test\\resources\\G1.json");
+        m.load("json_graphs\\G1.json");
         Dijkstra dij1 = new Dijkstra(m.getGraph(), m.getGraph().getNode(1));
         dij1.mapPathDijkstra(m.getGraph().getNode(1));
         assertEquals(dij1.src.getKey(), 1);
@@ -91,7 +91,7 @@ class DijkstraTest {
         double ans2 = 9.925289024973141;
         assertEquals(dij2.longestPath(), ans2);
 
-        m.load("test\\resources\\G3.json");
+        m.load("json_graphs\\G3.json");
         Dijkstra dij3 = new Dijkstra(m.getGraph(), m.getGraph().getNode(8));
         dij3.mapPathDijkstra(m.getGraph().getNode(8));
         assertEquals(dij3.src.getKey(), 8);
@@ -102,7 +102,7 @@ class DijkstraTest {
 
     @Test
     void shortestPathList() {
-        m.load("test\\resources\\G1.json");
+        m.load("json_graphs\\G1.json");
         Dijkstra dij1 = new Dijkstra(m.getGraph(), m.getGraph().getNode(1));
         dij1.mapPathDijkstra(m.getGraph().getNode(1));
         List<NodeData> l1 = dij1.shortestPathList(m.getGraph().getNode(7));
@@ -123,7 +123,7 @@ class DijkstraTest {
         assertEquals(l2.get(5).getKey(), 13);
         assertEquals(l2.size(), 6);
 
-        m.load("test\\resources\\G3.json");
+        m.load("json_graphs\\G3.json");
         Dijkstra dij3 = new Dijkstra(m.getGraph(), m.getGraph().getNode(8));
         dij3.mapPathDijkstra(m.getGraph().getNode(8));
         List<NodeData> l3 = dij3.shortestPathList(m.getGraph().getNode(41));

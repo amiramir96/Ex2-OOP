@@ -14,9 +14,9 @@ class SaveGraphTest {
 
     @Test
     void save() throws IOException {
-        DirectedWeightedGraph dwg = LoadGraph.loadGraph("test\\resources\\G1.json");
-        SaveGraph.save("test\\resources\\saved_graph.json", dwg);
-        DirectedWeightedGraph dwg2 = LoadGraph.loadGraph("test\\resources\\saved_graph.json");
+        DirectedWeightedGraph dwg = LoadGraph.loadGraph("json_graphs\\G1.json");
+        SaveGraph.save("json_graphs\\saved_graph.json", dwg);
+        DirectedWeightedGraph dwg2 = LoadGraph.loadGraph("json_graphs\\saved_graph.json");
         assertEquals(dwg.edgeSize(), dwg2. edgeSize());
         assertEquals(dwg.nodeSize(), dwg2.nodeSize());
 

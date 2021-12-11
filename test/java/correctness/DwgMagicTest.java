@@ -20,8 +20,8 @@ class DwgMagicTest {
     DirectedWeightedGraph g1, g2;
     {
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
-            g2 = LoadGraph.loadGraph("test\\resources\\G2.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\G1.json");
+            g2 = LoadGraph.loadGraph("json_graphs\\G2.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -65,7 +65,7 @@ class DwgMagicTest {
     @Test
     void shortestPathDist() {
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\G1.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -86,7 +86,7 @@ class DwgMagicTest {
     @Test
     void shortestPath() {
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\G1.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -110,7 +110,7 @@ class DwgMagicTest {
     void center() {
         // I built this graph so that it's center is 0
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\GShfiut.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\GShfiut.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -122,7 +122,7 @@ class DwgMagicTest {
     void tsp() {
         DwgMagic m = new DwgMagic(new Dwg());
         DirectedWeightedGraph g;
-        m.load("test\\resources\\G1.json");
+        m.load("json_graphs\\G1.json");
         g = m.getGraph();
         List<NodeData> l1 = new LinkedList<>();
         l1.add(g.getNode(9));
@@ -136,7 +136,7 @@ class DwgMagicTest {
         assertEquals(l1.get(4).getKey(), 2);
         assertEquals(l1.size(), 5);
 
-        m.load("test\\resources\\G3.json");
+        m.load("json_graphs\\G3.json");
         g = m.getGraph();
         l1 = new LinkedList<>();
         // 21,24,14,3,10,7
@@ -168,7 +168,7 @@ class DwgMagicTest {
     @Test
     void save() {
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\GShfiut.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\GShfiut.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -177,10 +177,10 @@ class DwgMagicTest {
         Point3D p1 = new Point3D(0,0,0);
         Node n1 = new Node(p1,20);
         dm.getGraph().addNode(n1);// add new node
-        dm.save("test\\resources\\saved_test_graph.json");
+        dm.save("json_graphs\\saved_graph.json");
         //reload graph
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\saved_test_graph.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\saved_graph.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

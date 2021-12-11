@@ -16,7 +16,7 @@ class ThreadPoolTest {
         DirectedWeightedGraph g1 = null;
         {
             try {
-                g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
+                g1 = LoadGraph.loadGraph("json_graphs\\G1.json");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
