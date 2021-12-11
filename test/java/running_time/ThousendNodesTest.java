@@ -103,7 +103,18 @@ class ThousendNodesTest {
         l1.add(this.d.getNode(761));
         l1.add(this.d.getNode(892));
         l1.add(this.d.getNode(135));
-
+        l1.add(this.d.getNode(777));
+        l1.add(this.d.getNode(666));
+        l1.add(this.d.getNode(11));
+        l1.add(this.d.getNode(73));
+        l1.add(this.d.getNode(55));
+        l1.add(this.d.getNode(24));
+        l1.add(this.d.getNode(33));
+        l1.add(this.d.getNode(71));
+        l1.add(this.d.getNode(82));
+        l1.add(this.d.getNode(15));
+        l1.add(this.d.getNode(77));
+        l1.add(this.d.getNode(66));
         this.thousend.tsp(l1);
         assertEquals(thousend.getGraph().nodeSize(), this.size);
     }

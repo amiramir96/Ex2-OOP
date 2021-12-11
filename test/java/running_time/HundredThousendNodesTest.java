@@ -107,7 +107,16 @@ class HundredThousendNodesTest {
         l1.add(this.d.getNode(9752));
         l1.add(this.d.getNode(78));
         l1.add(this.d.getNode(931));
-
+        l1.add(this.d.getNode(11721));
+        l1.add(this.d.getNode(73028));
+        l1.add(this.d.getNode(58453));
+        l1.add(this.d.getNode(22841));
+        l1.add(this.d.getNode(32183));
+        l1.add(this.d.getNode(97169));
+        l1.add(this.d.getNode(81711));
+        l1.add(this.d.getNode(13561));
+        l1.add(this.d.getNode(93752));
+        l1.add(this.d.getNode(878));
         this.thousend.tsp(l1);
         assertEquals(thousend.getGraph().nodeSize(), this.size);
     }}

@@ -107,7 +107,16 @@ class TenThousendNodesTest {
         l1.add(this.d.getNode(1345));
         l1.add(this.d.getNode(9752));
         l1.add(this.d.getNode(23));
-
+        l1.add(this.d.getNode(1211));
+        l1.add(this.d.getNode(703));
+        l1.add(this.d.getNode(585));
+        l1.add(this.d.getNode(2944));
+        l1.add(this.d.getNode(3273));
+        l1.add(this.d.getNode(9771));
+        l1.add(this.d.getNode(8132));
+        l1.add(this.d.getNode(1145));
+        l1.add(this.d.getNode(9352));
+        l1.add(this.d.getNode(233));
         this.thousend.tsp(l1);
         assertEquals(thousend.getGraph().nodeSize(), this.size);
     }

@@ -106,6 +106,22 @@ class HundredNodesTest {
         l1.add(this.d.getNode(55));
         l1.add(this.d.getNode(44));
         l1.add(this.d.getNode(33));
+        l1.add(this.d.getNode(34));
+        l1.add(this.d.getNode(88));
+        l1.add(this.d.getNode(93));
+        l1.add(this.d.getNode(31));
+        l1.add(this.d.getNode(41));
+        l1.add(this.d.getNode(43));
+        l1.add(this.d.getNode(72));
+        l1.add(this.d.getNode(89));
+        l1.add(this.d.getNode(91));
+        l1.add(this.d.getNode(97));
+        l1.add(this.d.getNode(2));
+        l1.add(this.d.getNode(14));
+        l1.add(this.d.getNode(18));
+        l1.add(this.d.getNode(22));
+        l1.add(this.d.getNode(65));
+
         this.hundred.tsp(l1);
         assertEquals(hundred.getGraph().nodeSize(), this.size);
     }
