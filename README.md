@@ -93,7 +93,7 @@ The program will open a window with visual representation of the graph and menu 
 |**Node_size**|**Edge_size**|**construct graph**|**isConnected**   |**shortestPath**  | **shortestPathDist** |  **center**         | **tsp for 20 nodes** |
 |-------------|-------------|-------------------|------------------|------------------|----------------------|---------------------|----------------------|
 |    100      |    2000     |30 ms              |13 ms             |107 ms            | 5 ms                 | 259 ms              | 12 ms                |
-|   1,000     |  20,000     | 31ms              | 43 ms            | 150 ms           | 15 ms                | 1 second            | 10 ms                | 
+|   1,000     |  20,000     | 31ms              | 43 ms            | 150 ms           | 15 ms                | 1 second            | 62 ms                | 
 | 10,000      | 200,000     |121 ms             |less than 1 second| 532 ms           | 140 ms               | 337 seconds         |     2 seconds        |
 | 100,000     | 2,000,000   |1 seconds          | 1 second         | 2 seconds        |       2 seconds      |timeout(apx 84 hours)| 34 seconds           |
 | 1,000,000   |  20,000,000 |18 seconds         |   23 seconds     | 28 seconds       |  28 seconds          |timeout(apx 10 years)| 577 seconds          |
