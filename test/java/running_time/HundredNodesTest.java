@@ -46,13 +46,13 @@ class HundredNodesTest {
         return ans;
     }
 
-    DirectedWeightedGraph d = getGraph("test\\resources\\G100.json"); //initialize graph
+    DirectedWeightedGraph d = getGraph("json_graphs\\G100.json"); //initialize graph
     DwgMagic hundred = new DwgMagic(d);
     int size = 100;
 
     @Test
     void load() {
-        hundred.load("test\\resources\\G100.json");
+        hundred.load("json_graphs\\G100.json");
         assertEquals(hundred.getGraph().nodeSize(), size);
     }
     @Test

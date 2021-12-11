@@ -41,13 +41,13 @@ class ThousendNodesTest {
         return ans;
     }
 
-    DirectedWeightedGraph d = getGraph("test\\resources\\G1K.json"); //initialize graph
+    DirectedWeightedGraph d = getGraph("json_graphs\\G1K.json"); //initialize graph
     DwgMagic thousend = new DwgMagic(d);
     int size = 1000;
 
     @Test
     void load() {
-        thousend.load("test\\resources\\G1K.json");
+        thousend.load("json_graphs\\G1K.json");
         assertEquals(thousend.getGraph().nodeSize(), size);
     }
     @Test
