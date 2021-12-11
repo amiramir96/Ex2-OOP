@@ -1,15 +1,10 @@
-import FileWorkout.LoadGraph;
 import api.DirectedWeightedGraph;
-import api.EdgeData;
 import api.NodeData;
 import correctness.RandomGraphGenerator;
 import impGraph.Dwg;
 import impGraph.DwgMagic;
 import impGraph.Node;
 import impGraph.Point3D;
-
-import java.io.FileNotFoundException;
-import java.sql.Time;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -54,41 +49,88 @@ public class PerformanceTest {
             }
         }
         long finish = System.nanoTime();
-        System.out.println("create and load random graph time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
-
+        System.out.println("create graph time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
         System.out.println("Number of nodes: "+ g.nodeSize());
         System.out.println("Number of edges: "+ g.edgeSize());
+        int num_of_nodes = g.nodeSize();
+        int num_of_edges = g.edgeSize();
 
         //is connected
         start = System.nanoTime();
-        dm.isConnected();
+        boolean connected = dm.isConnected();
         finish = System.nanoTime();
         System.out.println("isConnected time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
-        //center
-        start = System.nanoTime();
-        dm.center();
-        finish = System.nanoTime();
-        System.out.println("center time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+//        //center
+        if (dm.getGraph().nodeSize() + dm.getGraph().edgeSize() < 550000){
+            start = System.nanoTime();
+            dm.center();
+            finish = System.nanoTime();
+            System.out.println("center time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+        }
+        else if (!connected){
+            start = System.nanoTime();
+            dm.center();
+            finish = System.nanoTime();
+            System.out.println("center time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds" + " graph is not connected, easy case");
+        }
+        else {
+            double approximateCenter = ((double)(num_of_nodes+num_of_edges)) / 210000;
+            int approximateCenter210kObj = 5;
+            approximateCenter = Math.pow(approximateCenter, 3) * approximateCenter210kObj;
+            System.out.println("total graph objects is more than 500k, will take too long to end center proccess for connected graph");
+            System.out.println("approximate time for center is: "+ approximateCenter/60 + " hours");
+        }
         //shortest path
         start = System.nanoTime();
         dm.shortestPathDist(0, g.nodeSize()-1);
         finish = System.nanoTime();
         System.out.println("shortestPath time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
          //tsp
-        int num_of_nodes = g.nodeSize();
         LinkedList<NodeData> l1 = new LinkedList<>();
-        // add 15 nodes to the list
-        for (int i = 2; i < 17; i++) {
-            l1.add(g.getNode(num_of_nodes/i));
+        if (dm.getGraph().nodeSize() > 20){
+            // add 20 nodes to the list
+            for (int i = 2; i < 22; i++) {
+                l1.add(g.getNode(num_of_nodes/i));
+            }
+            start = System.nanoTime();
+            dm.tsp(l1);
+            finish = System.nanoTime();
+            System.out.println("tsp for 20 cities time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
         }
-        start = System.nanoTime();
-        dm.tsp(l1);
-        finish = System.nanoTime();
-        System.out.println("tsp for 15 cities time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
-        //copy graph
+        else {
+            Iterator<NodeData> itN = dm.getGraph().nodeIter();
+            while (itN.hasNext()){
+                l1.add(itN.next());
+            }
+            start = System.nanoTime();
+            dm.tsp(l1);
+            finish = System.nanoTime();
+            System.out.println("tsp for all the node graph as cities time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+        }
+        // copy graph
         start = System.nanoTime();
         dm.copy();
         finish = System.nanoTime();
         System.out.println("copy time: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+        // load graph
+        if (dm.getGraph().nodeSize() + dm.getGraph().edgeSize() < 4000001){
+            start = System.nanoTime();
+            g = RandomGraphGenerator.createRndGraph(dm.getGraph().nodeSize());
+            finish = System.nanoTime();
+            System.out.println("load time from json file: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+        }
+        else {
+            System.out.println("cannot simulate more than 4 milion objects loading from json, Heap would get out of memory");
+        }
+        // save graph
+        if (dm.getGraph().nodeSize() + dm.getGraph().edgeSize() < 4000001){
+            start = System.nanoTime();
+            dm.save("random_graph_simulation_of_save.json");
+            finish = System.nanoTime();
+            System.out.println("save time to json file: " + TimeUnit.SECONDS.convert((finish - start), TimeUnit.NANOSECONDS) + " seconds");
+        }
+        else {
+            System.out.println("cannot simulate more than 4 milion objects saving to json, Heap would get out of memory");
+        }
     }
 }

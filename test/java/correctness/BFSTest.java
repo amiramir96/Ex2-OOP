@@ -3,7 +3,7 @@ package correctness;
 import FileWorkout.LoadGraph;
 import api.DirectedWeightedGraph;
 import api.NodeData;
-import graphAlgo.DFS;
+import graphAlgo.BFS;
 import impGraph.Node;
 import impGraph.Point3D;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DFSTest {
+class BFSTest {
 
     @Test
     void mainProcessIsConnected() {
@@ -22,7 +22,7 @@ class DFSTest {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        DFS dfs = new DFS(g1);
+        BFS dfs = new BFS(g1);
         NodeData n1 = g1.nodeIter().next();
         assertTrue(dfs.mainProcessIsConnected(n1));
         // disconnect the graph

@@ -28,18 +28,18 @@ public class RandomGraphGenerator {
     public static DirectedWeightedGraph createRndGraph(int nodes_size){
         DirectedWeightedGraph g = new Dwg();
         Random rnd = new Random();
-        HashMap<Integer, Node> nodes = new HashMap<Integer, Node>();
+        List<NodeData> nodes = new LinkedList<>();
         //create nodes
         for (int i = 0; i < nodes_size; i++) {
             //range: -nodes_size/2 to nodes_size/2
             double x_coordinate= (-nodes_size/2.0)+(nodes_size* rnd.nextDouble());
             double y_coordinate= (-nodes_size/2.0)+(nodes_size* rnd.nextDouble());
             Point3D p = new Point3D(x_coordinate, y_coordinate, 0.0);
-            nodes.put(i, new Node(p, i));// create new node
+            nodes.add(new Node(p, i));// create new node
             //System.out.println(x_coordinate+","+ y_coordinate);
         }
         //create edges
-        ArrayList<Edge> edges = new ArrayList<>();
+        List<EdgeData> edges = new LinkedList<>();
         for (int i = 0; i < nodes_size*20; i++) {
             int src = rnd.nextInt(nodes.size());
             int dest = rnd.nextInt(nodes.size());
@@ -67,9 +67,9 @@ public class RandomGraphGenerator {
         return g;
     }
 
-    private static void saveGraph(HashMap<Integer, Node> nodes, ArrayList<Edge> edges) throws IOException {
-        Iterator<Edge> edge_it = edges.iterator();
-        Iterator<Node> node_it = nodes.values().iterator();
+    private static void saveGraph(List<NodeData> nodes, List<EdgeData> edges) throws IOException {
+        Iterator<EdgeData> edge_it = edges.iterator();
+        Iterator<NodeData> node_it = nodes.iterator();
         // combine edges
         JsonArray json_edges = new JsonArray();
         while (edge_it.hasNext()){

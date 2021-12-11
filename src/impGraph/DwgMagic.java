@@ -5,9 +5,8 @@ import FileWorkout.SaveGraph;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
-import graphAlgo.DFS;
+import graphAlgo.BFS;
 import graphAlgo.Dijkstra;
-import graphAlgo.TarjanStronglyConnected;
 
 import java.io.IOException;
 import java.util.*;
@@ -81,7 +80,7 @@ public class DwgMagic implements DirectedWeightedGraphAlgorithms {
         }
         else {
             this.mc = this.currGraph.getMC(); // update mc
-            DFS dfsObj = new DFS(this.currGraph); // use DFS algo
+            BFS dfsObj = new BFS(this.currGraph); // use DFS algo
             Iterator <NodeData> it = this.currGraph.nodeIter();
             NodeData n;
             if (it.hasNext()){
