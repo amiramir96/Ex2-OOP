@@ -17,7 +17,7 @@ class mergedIteratorsTest {
     DirectedWeightedGraph g1;
     {
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\G1.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\G1.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

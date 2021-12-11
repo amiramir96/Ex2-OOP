@@ -18,7 +18,7 @@ class BFSTest {
     void mainProcessIsConnected() {
         DirectedWeightedGraph g1 = null;
         try {
-            g1 = LoadGraph.loadGraph("test\\resources\\GShfiut.json");
+            g1 = LoadGraph.loadGraph("json_graphs\\GShfiut.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -43,7 +43,7 @@ class DwgTest {
         return ans;
     }
 
-    Dwg dwg = getGraph("test\\resources\\G1.json"); //initialize graph
+    Dwg dwg = getGraph("json_graphs\\G1.json"); //initialize graph
 
     /*
     excerpt from G1.json:
@@ -147,7 +147,7 @@ class DwgTest {
 
     @Test
     void removeNode() {
-        Dwg dwg = getGraph("test\\resources\\G1.json"); //initialize graph
+        Dwg dwg = getGraph("json_graphs\\G1.json"); //initialize graph
         Point3D p1 = new Point3D(0,0,0);
         Node n1 = new Node(p1,17);
         dwg.addNode(n1);
@@ -190,7 +190,7 @@ class DwgTest {
 
     @Test
     void getMC() {
-        Dwg dwg = getGraph("test\\resources\\G1.json"); //initialize graph
+        Dwg dwg = getGraph("json_graphs\\G1.json"); //initialize graph
         //how many insertions when building graph?
         int insertions = dwg.edgeSize()+ dwg.nodeSize();
         assertEquals(insertions, dwg.getMC());

@@ -4,6 +4,6 @@ public class Ex2Test {
 
     @Test
     void testRun(){
-        Ex2.main(new String[]{"test\\resources\\random_graph.json"});
+        Ex2.main(new String[]{"random_graph.json"});
     }
 }

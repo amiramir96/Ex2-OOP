@@ -15,7 +15,7 @@ class LoadGraphTest {
         RandomGraphGenerator.createRndGraph(50);
         DirectedWeightedGraph g= null;
         try {
-            g = LoadGraph.loadGraph("test\\resources\\random_graph.json");
+            g = LoadGraph.loadGraph("random_graph.json");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

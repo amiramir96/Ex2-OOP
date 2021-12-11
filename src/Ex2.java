@@ -64,7 +64,7 @@ public class Ex2 {
             }
             catch (Exception e){
                 try{
-                    runGUI("data\\" + args[0]);
+                    runGUI("json_graphs\\" + args[0]);
                 }
                 catch (Exception e2){
                     System.out.println("File doesn't exist");
@@ -81,7 +81,7 @@ public class Ex2 {
             }
             catch (Exception e){
                 try{
-                    runGUI("data\\" + g);
+                    runGUI("json_graphs\\" + g);
                 }
                 catch (Exception e2){
                     System.out.println("File doesn't exist");
