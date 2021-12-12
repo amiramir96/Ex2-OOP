@@ -28,8 +28,8 @@ public class nodeIter implements Iterator<NodeData> {
 
     @Override
     public boolean hasNext() {
-        if (this.currGraph.getMC() != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-        }; // added the throw RunTimeException
+//        if (this.currGraph.getMC() != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+//        }; // added the throw RunTimeException
         if (tempN != null){
         }
         return nodeIterator.hasNext();
@@ -37,20 +37,21 @@ public class nodeIter implements Iterator<NodeData> {
 
     @Override
     public NodeData next() {
-        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-        }; // added the throw RunTimeException
+//        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+//        }; // added the throw RunTimeException
         this.tempN = nodeIterator.next();
         return this.tempN;
     }
 
     @Override
     public void remove() {
-        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-        }; // added the throw RunTimeException
-        else {
-            this.currGraph.removeNode(tempN.getKey());
-            this.originModeCounter = this.currGraph.getMC();
-        }
+//        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+//        }; // added the throw RunTimeException
+
+        nodeIterator.remove();;
+        this.currGraph.removeNodeInOut(tempN.getKey());
+        this.originModeCounter = this.currGraph.getMC();
+
     }
 
     // https://stackoverflow.com/questions/42465871/whats-the-point-of-having-both-iterator-foreachremaining-and-iterable-foreach/42466144

@@ -4,6 +4,7 @@ import api.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 /**
  * Cycle through iterators
@@ -19,6 +20,7 @@ public class mergedIterators<O> implements Iterator<O> {
     ArrayList<Iterator<O>> mergedIter; // iterators list (will loop over them)
     DirectedWeightedGraph currGraph; // our graph
     int currectIdx; // represent which iterator in use now
+    int MC;
 
     /**
      * basic constructor
@@ -29,6 +31,7 @@ public class mergedIterators<O> implements Iterator<O> {
         this.mergedIter = itList;
         this.currGraph = g;
         this.currectIdx = 0;
+        this.MC = g.getMC();
     }
 
     /**
@@ -60,5 +63,21 @@ public class mergedIterators<O> implements Iterator<O> {
         }
         return this.mergedIter.get(currectIdx).next();
 
+    }
+
+
+    @Override
+    public void remove() {
+        // check if we shall forward to the next iterator in the list
+//        while (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
+//            this.currectIdx++;
+//        }
+        this.mergedIter.get(currectIdx).remove();
+        MC++;
+    }
+
+    @Override
+    public void forEachRemaining(Consumer<? super O> action) {
+        Iterator.super.forEachRemaining(action);
     }
 }

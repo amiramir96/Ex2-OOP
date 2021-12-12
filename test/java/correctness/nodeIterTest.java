@@ -47,10 +47,12 @@ class nodeIterTest {
     void remove() {
         int node_size = g1.nodeSize();
         Iterator<NodeData> it = g1.nodeIter();
+        it.next();
         it.remove();
-        assertEquals(node_size-1, g1.edgeSize());
+        assertEquals(node_size-1, g1.nodeSize());
+        it.next();
         it.remove();
-        assertEquals(node_size-2, g1.edgeSize());
+        assertEquals(node_size-2, g1.nodeSize());
     }
 
     @Test

@@ -303,6 +303,49 @@ public class Dwg implements DirectedWeightedGraph {
     }
 
     /**
+     * removes node from "IN" and "OUT" maps, assumes already removed from node map
+     * @param key
+     */
+    public void removeNodeInOut(int key){
+        EdgeData tempE;
+        ArrayList<EdgeData> eList;
+        Iterator<Map.Entry<Integer, EdgeData>> edgeEntries;
+        // remove associated edges:
+        // used https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
+        // since for each loop can grant "unpredictable results" so we do it in old school style :-P
+        if (this.edgeOutMap.get(KeyTransform(key)).get(key) != null && this.edgeOutMap.get(KeyTransform(key)).get(key).size() != 0){
+            edgeEntries = this.edgeOutMap.get(KeyTransform(key)).get(key).entrySet().iterator();
+            eList = new ArrayList<>();
+            while (edgeEntries.hasNext()){
+                // bullet "1-" of the removing process
+                Map.Entry<Integer, EdgeData> entry = (Map.Entry<Integer, EdgeData>) (edgeEntries.next());
+                tempE = entry.getValue();
+                eList.add(tempE);
+            }
+            for (EdgeData element : eList){
+                removeEdge(element.getSrc(), element.getDest());
+            }
+        }
+        if (this.edgeInMap.get(KeyTransform(key)).get(key) != null && this.edgeInMap.get(KeyTransform(key)).get(key).size() != 0){
+            eList = new ArrayList<>();
+            edgeEntries = this.edgeInMap.get(KeyTransform(key)).get(key).entrySet().iterator();
+            while (edgeEntries.hasNext()){
+                // bullet "2-" of the removing process
+                Map.Entry<Integer, EdgeData> entry = (Map.Entry<Integer, EdgeData>) (edgeEntries.next());
+                tempE = entry.getValue();
+                eList.add(tempE);
+            }
+            for (EdgeData element : eList){
+                removeEdge(element.getSrc(), element.getDest());
+            }
+        }
+        this.edgeInMap.get(KeyTransform(key)).remove(key);
+        this.edgeOutMap.get(KeyTransform(key)).remove(key);
+        this.nodeSize--;
+        this.mc++;
+    }
+
+    /**
      * remove specific edge from the graph
      * @param src - id of node start
      * @param dest - id of node "to"
@@ -315,7 +358,7 @@ public class Dwg implements DirectedWeightedGraph {
         // remove the edges from the edge maps
         this.edgeOutMap.get(KeyTransform(src)).get(src).remove(dest);
         this.edgeInMap.get(KeyTransform(dest)).get(dest).remove(src);
-        // remove node_id maps if tehre is no more edge from/to him
+        // remove node_id maps if there is no more edge from/to him
         if (this.edgeOutMap.get(KeyTransform(src)).get(src).isEmpty()){
             this.edgeOutMap.get(KeyTransform(src)).remove(src);
         }
@@ -326,6 +369,21 @@ public class Dwg implements DirectedWeightedGraph {
         this.edgeSize--;
         this.mc++;
         return removedEdge;
+    }
+
+    /**
+     * removes edge from "IN" map, assumes already deleted from "OUT" map
+     * @param src
+     * @param dest
+     */
+    public void removeEdgeIn(int src, int dest){
+        this.edgeInMap.get(KeyTransform(dest)).get(dest).remove(src);
+        // remove node_id maps if there is no more edge from/to him
+        if (this.edgeInMap.get(KeyTransform(dest)).get(dest).isEmpty()){
+            this.edgeInMap.get(KeyTransform(dest)).remove(dest);
+        }
+        this.edgeSize--;
+        this.mc++;
     }
 
     /**

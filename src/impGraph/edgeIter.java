@@ -16,7 +16,7 @@ public class edgeIter implements Iterator<EdgeData> {
 
     Dwg currGraph;
     int originModeCounter;
-    Iterator<EdgeData> edgeIterator; // regular iterator DO NOT REMOVE ANY ITEM FROM!
+    Iterator<EdgeData> edgeIterator; // regular iterator implements remove
     EdgeData tempE;
 
     // constructor for specific node iterator (iterate over all edges that going from that node)
@@ -34,27 +34,28 @@ public class edgeIter implements Iterator<EdgeData> {
 
     @Override
     public boolean hasNext() {
-        if (this.currGraph.getMC() != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-        }; // added the throw RunTimeException
+//        if (this.currGraph.getMC() != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+//        }; // added the throw RunTimeException
         return edgeIterator.hasNext();
     }
 
     @Override
     public EdgeData next() {
-        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-        }; // added the throw RunTimeException
+//        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+//        }; // added the throw RunTimeException
         tempE = edgeIterator.next();
         return tempE;
     }
 
     @Override
     public void remove() {
-        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
-        }; // added the throw RunTimeException
-        else {
-            this.currGraph.removeEdge(tempE.getSrc(), tempE.getDest());
-            this.originModeCounter = this.currGraph.getMC();
-        }
+//        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+//        }; // added the throw RunTimeException
+
+        edgeIterator.remove();
+        this.currGraph.removeEdgeIn(tempE.getSrc(), tempE.getDest());
+        this.originModeCounter = this.currGraph.getMC();
+
     }
 
     // https://stackoverflow.com/questions/42465871/whats-the-point-of-having-both-iterator-foreachremaining-and-iterable-foreach/42466144
