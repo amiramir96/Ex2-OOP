@@ -239,7 +239,7 @@ public class Dwg implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return new edgeIter(this, node_id);
+        return new singleEdgeIter(this, node_id);
     }
 
     /**

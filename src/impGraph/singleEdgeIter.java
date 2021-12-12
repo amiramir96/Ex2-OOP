@@ -1,7 +1,6 @@
 package impGraph;
 
 import api.EdgeData;
-import api.NodeData;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,7 +11,7 @@ import java.util.function.Consumer;
  * why? ez and ordered way to avoid from iteration on null (in place of iterating on hashmap size 0)
  */
 
-public class edgeIter implements Iterator<EdgeData> {
+public class singleEdgeIter implements Iterator<EdgeData> {
 
     Dwg currGraph;
     int originModeCounter;
@@ -20,8 +19,7 @@ public class edgeIter implements Iterator<EdgeData> {
     EdgeData tempE;
 
     // constructor for specific node iterator (iterate over all edges that going from that node)
-    //the iterator will serve as sub-iterator of the mergedIterator class
-    edgeIter(Dwg g, int node_id){
+    singleEdgeIter(Dwg g, int node_id){
         this.currGraph = g;
         this.originModeCounter = g.getMC();
         // below is the main reason why we use this class and not "unnamed iterator"
@@ -35,17 +33,24 @@ public class edgeIter implements Iterator<EdgeData> {
 
     @Override
     public boolean hasNext() {
+        if (this.currGraph.getMC() != originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+        }; // added the throw RunTimeException
         return edgeIterator.hasNext();
     }
 
     @Override
     public EdgeData next() {
+        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isn't the same as it was") {
+        }; // added the throw RunTimeException
         tempE = edgeIterator.next();
         return tempE;
     }
 
     @Override
     public void remove() {
+        if (this.currGraph.getMC() != this.originModeCounter) throw new RuntimeException("the graph isnt the same as it was") {
+        }; // added the throw RunTimeException
+
         edgeIterator.remove();
         this.currGraph.removeEdgeIn(tempE.getSrc(), tempE.getDest());
         this.originModeCounter = this.currGraph.getMC();

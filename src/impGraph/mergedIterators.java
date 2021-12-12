@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 /**
  * Cycle through iterators
  */
-public class mergedIterators<O> implements Iterator<O> {
+public class mergedIterators<O> implements Iterator<O>{
 
     /**
      * this object purpose is to merge between Iterators type EdgeData
@@ -42,6 +42,8 @@ public class mergedIterators<O> implements Iterator<O> {
      */
     @Override
     public boolean hasNext() {
+        if (this.currGraph.getMC() != this.MC)
+            throw new McChangeException("the graph isn't the same as it was"); // added the throw RunTimeException
         // check if we shall forward to the next iterator in the list
         while (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
             this.currectIdx++;
@@ -56,7 +58,10 @@ public class mergedIterators<O> implements Iterator<O> {
      * @return next Edge (null if there isnt next)
      */
     @Override
-    public O next() {
+    public O next(){
+        if (this.currGraph.getMC() != this.MC) {
+            throw new McChangeException("the graph isn't the same as it was"); // added the throw RunTimeException
+        }
         // check if we shall forward to the next iterator in the list
         while (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
             this.currectIdx++;
@@ -68,16 +73,25 @@ public class mergedIterators<O> implements Iterator<O> {
 
     @Override
     public void remove() {
-        // check if we shall forward to the next iterator in the list
-//        while (this.currectIdx < this.mergedIter.size() && !this.mergedIter.get(currectIdx).hasNext()){
-//            this.currectIdx++;
-//        }
+        if (this.currGraph.getMC() != this.MC)
+            throw new McChangeException("the graph isn't the same as it was"); // added the throw RunTimeException
         this.mergedIter.get(currectIdx).remove();
-        MC++;
+        MC = currGraph.getMC();
     }
 
     @Override
     public void forEachRemaining(Consumer<? super O> action) {
-        Iterator.super.forEachRemaining(action);
+        for (int i = 0; i < mergedIter.size(); i++) {
+            while(mergedIter.get(i).hasNext()){
+                action.accept(next());
+            }
+        }
+    }
+
+    public static class McChangeException extends RuntimeException {
+
+        public McChangeException(String message) {
+            super(message);
+        }
     }
 }
