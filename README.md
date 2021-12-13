@@ -80,6 +80,9 @@ del edge - as above, valid input is: "node_id_src,node_id_dest" (int,int)
 create new graph - remove the currect graph and start a clean new graph (zero nodes and edges)
 <br>
 
+## Download
+one option is to download the whole project <br>
+another option is to download the V1.0 release (Ex2 jar) which grants u few graph for use and the jar file that includes gui and running the algorithms (this release is without the PerformanceTest.jar file that test the running time of the algorithms)
 
 ## Running The Simulation
 Running the simulation is performed as instracted, by calling `java -jar Ex2.jar Graph_Name.json` for a graph in the folder (or in nested 'data' folder).
